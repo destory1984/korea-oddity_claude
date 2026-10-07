@@ -1,0 +1,13 @@
+{
+  "note": "위키백과와 위키데이터에 좌표가 없던 칸. 지도를 떠올려 적은 어림 값이다. 원 자료로 확인해야 한다.",
+  "coords": {
+    "dumulmeori": [37.531, 127.315],
+    "jindo": [34.42, 126.36],
+    "gunsan": [35.99, 126.711],
+    "geoje": [34.745, 128.663],
+    "saryeoni": [33.42, 126.63],
+    "ulleungdo": [37.52, 130.87],
+    "jeungdo": [34.99, 126.14]
+  },
+  "areaOnly": ["jeongseonMarket", "damyang", "yeongyang"]
+}

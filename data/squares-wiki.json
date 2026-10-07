@@ -1,0 +1,602 @@
+[
+ {
+  "no": 1,
+  "id": "gyeongbokgung",
+  "ko": "경복궁",
+  "wiki": "경복궁"
+ },
+ {
+  "no": 2,
+  "id": "changdeokgung",
+  "ko": "창덕궁 후원",
+  "wiki": "창덕궁"
+ },
+ {
+  "no": 3,
+  "id": "jongmyo",
+  "ko": "종묘 정전",
+  "wiki": "종묘"
+ },
+ {
+  "no": 4,
+  "id": "bukchon",
+  "ko": "북촌",
+  "wiki": "북촌한옥마을"
+ },
+ {
+  "no": 5,
+  "id": "namsan",
+  "ko": "남산",
+  "wiki": "남산 (서울)"
+ },
+ {
+  "no": 6,
+  "id": "cheonggyecheon",
+  "ko": "청계천",
+  "wiki": "청계천"
+ },
+ {
+  "no": 7,
+  "id": "hangang",
+  "ko": "한강 반포",
+  "wiki": "반포한강공원"
+ },
+ {
+  "no": 8,
+  "id": "museum",
+  "ko": "국립중앙박물관",
+  "wiki": "국립중앙박물관"
+ },
+ {
+  "no": 9,
+  "id": "seoulWall",
+  "ko": "한양도성 낙산",
+  "wiki": "서울 한양도성"
+ },
+ {
+  "no": 10,
+  "id": "ddp",
+  "ko": "동대문 DDP",
+  "wiki": "동대문디자인플라자"
+ },
+ {
+  "no": 11,
+  "id": "hwaseong",
+  "ko": "수원 화성",
+  "wiki": "수원 화성"
+ },
+ {
+  "no": 12,
+  "id": "namhansanseong",
+  "ko": "남한산성",
+  "wiki": "남한산성"
+ },
+ {
+  "no": 13,
+  "id": "imjingak",
+  "ko": "임진각",
+  "wiki": "임진각"
+ },
+ {
+  "no": 14,
+  "id": "yongmunsa",
+  "ko": "용문사",
+  "wiki": "용문사 (양평군)"
+ },
+ {
+  "no": 15,
+  "id": "dumulmeori",
+  "ko": "두물머리",
+  "wiki": "두물머리"
+ },
+ {
+  "no": 16,
+  "id": "ganghwaDolmen",
+  "ko": "강화 고인돌",
+  "wiki": "강화 부근리 지석묘"
+ },
+ {
+  "no": 17,
+  "id": "jeondeungsa",
+  "ko": "전등사",
+  "wiki": "전등사"
+ },
+ {
+  "no": 18,
+  "id": "incheonPort",
+  "ko": "인천 개항장",
+  "wiki": "인천 차이나타운"
+ },
+ {
+  "no": 19,
+  "id": "arboretum",
+  "ko": "국립수목원",
+  "wiki": "국립수목원"
+ },
+ {
+  "no": 20,
+  "id": "yeongneung",
+  "ko": "영릉",
+  "wiki": "영릉 (조선 세종)"
+ },
+ {
+  "no": 21,
+  "id": "seoraksan",
+  "ko": "설악산 울산바위",
+  "wiki": "울산바위"
+ },
+ {
+  "no": 22,
+  "id": "jeongdongjin",
+  "ko": "정동진",
+  "wiki": "정동진역"
+ },
+ {
+  "no": 23,
+  "id": "gyeongpo",
+  "ko": "경포호",
+  "wiki": "경포호"
+ },
+ {
+  "no": 24,
+  "id": "ojukheon",
+  "ko": "오죽헌",
+  "wiki": "강릉 오죽헌"
+ },
+ {
+  "no": 25,
+  "id": "naksansa",
+  "ko": "낙산사",
+  "wiki": "낙산사"
+ },
+ {
+  "no": 26,
+  "id": "hantangang",
+  "ko": "한탄강 주상절리",
+  "wiki": "한탄강"
+ },
+ {
+  "no": 27,
+  "id": "unification",
+  "ko": "고성 통일전망대",
+  "wiki": "통일전망대"
+ },
+ {
+  "no": 28,
+  "id": "namiseom",
+  "ko": "남이섬",
+  "wiki": "남이섬"
+ },
+ {
+  "no": 29,
+  "id": "daegwallyeong",
+  "ko": "대관령",
+  "wiki": "대관령"
+ },
+ {
+  "no": 30,
+  "id": "geomnyongso",
+  "ko": "검룡소",
+  "wiki": "검룡소"
+ },
+ {
+  "no": 31,
+  "id": "jeongseonMarket",
+  "ko": "정선 오일장",
+  "wiki": "정선군"
+ },
+ {
+  "no": 32,
+  "id": "hwanseon",
+  "ko": "환선굴",
+  "wiki": "환선굴"
+ },
+ {
+  "no": 33,
+  "id": "buyeo",
+  "ko": "부여 정림사지",
+  "wiki": "부여 정림사지"
+ },
+ {
+  "no": 34,
+  "id": "gongju",
+  "ko": "공주 공산성, 무령왕릉",
+  "wiki": "공주 공산성"
+ },
+ {
+  "no": 35,
+  "id": "sobaeksan",
+  "ko": "소백산 천문대",
+  "wiki": "소백산천문대"
+ },
+ {
+  "no": 36,
+  "id": "dodam",
+  "ko": "도담삼봉",
+  "wiki": "도담삼봉"
+ },
+ {
+  "no": 37,
+  "id": "beopjusa",
+  "ko": "법주사",
+  "wiki": "법주사"
+ },
+ {
+  "no": 38,
+  "id": "kkotji",
+  "ko": "꽃지 해변",
+  "wiki": "꽃지해수욕장"
+ },
+ {
+  "no": 39,
+  "id": "expo",
+  "ko": "엑스포 과학공원",
+  "wiki": "엑스포과학공원"
+ },
+ {
+  "no": 40,
+  "id": "heungdeoksa",
+  "ko": "흥덕사지",
+  "wiki": "청주 흥덕사지"
+ },
+ {
+  "no": 41,
+  "id": "haemi",
+  "ko": "해미읍성",
+  "wiki": "서산 해미읍성"
+ },
+ {
+  "no": 42,
+  "id": "daecheon",
+  "ko": "대천해수욕장",
+  "wiki": "대천해수욕장"
+ },
+ {
+  "no": 43,
+  "id": "oeam",
+  "ko": "외암마을",
+  "wiki": "아산 외암마을"
+ },
+ {
+  "no": 44,
+  "id": "sudeoksa",
+  "ko": "수덕사",
+  "wiki": "수덕사"
+ },
+ {
+  "no": 45,
+  "id": "jeonjuHanok",
+  "ko": "전주 한옥마을, 경기전",
+  "wiki": "전주한옥마을"
+ },
+ {
+  "no": 46,
+  "id": "gwanghallu",
+  "ko": "광한루",
+  "wiki": "광한루"
+ },
+ {
+  "no": 47,
+  "id": "chaeseokgang",
+  "ko": "채석강",
+  "wiki": "채석강"
+ },
+ {
+  "no": 48,
+  "id": "gochangDolmen",
+  "ko": "고창 고인돌",
+  "wiki": "고창 죽림리 지석묘군"
+ },
+ {
+  "no": 49,
+  "id": "damyang",
+  "ko": "담양 메타세쿼이아길",
+  "wiki": "담양군"
+ },
+ {
+  "no": 50,
+  "id": "boseong",
+  "ko": "보성 녹차밭",
+  "wiki": "대한다원"
+ },
+ {
+  "no": 51,
+  "id": "suncheonBay",
+  "ko": "순천만 습지",
+  "wiki": "순천만"
+ },
+ {
+  "no": 52,
+  "id": "seonamsa",
+  "ko": "선암사",
+  "wiki": "선암사"
+ },
+ {
+  "no": 53,
+  "id": "yeosu",
+  "ko": "여수 오동도",
+  "wiki": "오동도"
+ },
+ {
+  "no": 54,
+  "id": "jindo",
+  "ko": "진도 바닷길",
+  "wiki": "진도신비의바닷길축제"
+ },
+ {
+  "no": 55,
+  "id": "dasan",
+  "ko": "다산초당",
+  "wiki": "강진 정약용 유적"
+ },
+ {
+  "no": 56,
+  "id": "wolchulsan",
+  "ko": "월출산",
+  "wiki": "월출산"
+ },
+ {
+  "no": 57,
+  "id": "mudeungsan",
+  "ko": "무등산 입석대",
+  "wiki": "무등산"
+ },
+ {
+  "no": 58,
+  "id": "gunsan",
+  "ko": "군산 근대거리",
+  "wiki": "군산근대역사박물관"
+ },
+ {
+  "no": 59,
+  "id": "naejangsan",
+  "ko": "내장산",
+  "wiki": "내장산"
+ },
+ {
+  "no": 60,
+  "id": "deogyusan",
+  "ko": "덕유산 향적봉",
+  "wiki": "덕유산"
+ },
+ {
+  "no": 61,
+  "id": "bulguksa",
+  "ko": "불국사",
+  "wiki": "불국사"
+ },
+ {
+  "no": 62,
+  "id": "seokguram",
+  "ko": "석굴암",
+  "wiki": "석굴암"
+ },
+ {
+  "no": 63,
+  "id": "cheomseongdae",
+  "ko": "첨성대",
+  "wiki": "경주 첨성대"
+ },
+ {
+  "no": 64,
+  "id": "wolji",
+  "ko": "동궁과 월지",
+  "wiki": "경주 동궁과 월지"
+ },
+ {
+  "no": 65,
+  "id": "yangdong",
+  "ko": "양동마을",
+  "wiki": "경주 양동마을"
+ },
+ {
+  "no": 66,
+  "id": "haeinsa",
+  "ko": "해인사",
+  "wiki": "해인사"
+ },
+ {
+  "no": 67,
+  "id": "hahoe",
+  "ko": "하회마을",
+  "wiki": "안동 하회마을"
+ },
+ {
+  "no": 68,
+  "id": "buseoksa",
+  "ko": "부석사",
+  "wiki": "부석사"
+ },
+ {
+  "no": 69,
+  "id": "mungyeong",
+  "ko": "문경새재",
+  "wiki": "문경 조령 관문"
+ },
+ {
+  "no": 70,
+  "id": "juwangsan",
+  "ko": "주왕산",
+  "wiki": "주왕산"
+ },
+ {
+  "no": 71,
+  "id": "yeongyang",
+  "ko": "영양 반딧불이천문대",
+  "wiki": "영양군"
+ },
+ {
+  "no": 72,
+  "id": "tongdosa",
+  "ko": "통도사",
+  "wiki": "통도사"
+ },
+ {
+  "no": 73,
+  "id": "jinju",
+  "ko": "진주성 촉석루",
+  "wiki": "진주 촉석루"
+ },
+ {
+  "no": 74,
+  "id": "tongyeong",
+  "ko": "통영 미륵산",
+  "wiki": "미륵산 (경남)"
+ },
+ {
+  "no": 75,
+  "id": "geoje",
+  "ko": "거제 바람의 언덕",
+  "wiki": "거제 바람의 언덕"
+ },
+ {
+  "no": 76,
+  "id": "hadong",
+  "ko": "하동 십리벚꽃길",
+  "wiki": "쌍계사"
+ },
+ {
+  "no": 77,
+  "id": "jirisan",
+  "ko": "지리산 천왕봉",
+  "wiki": "지리산"
+ },
+ {
+  "no": 78,
+  "id": "upo",
+  "ko": "우포늪",
+  "wiki": "우포늪"
+ },
+ {
+  "no": 79,
+  "id": "gatbawi",
+  "ko": "팔공산 갓바위",
+  "wiki": "경산 팔공산 관봉 석조여래좌상"
+ },
+ {
+  "no": 80,
+  "id": "bangudae",
+  "ko": "반구대 암각화",
+  "wiki": "울주 대곡리 반구대 암각화"
+ },
+ {
+  "no": 81,
+  "id": "gamcheon",
+  "ko": "감천문화마을",
+  "wiki": "감천문화마을"
+ },
+ {
+  "no": 82,
+  "id": "yonggungsa",
+  "ko": "해동용궁사",
+  "wiki": "해동용궁사"
+ },
+ {
+  "no": 83,
+  "id": "seongsan",
+  "ko": "성산일출봉",
+  "wiki": "성산일출봉"
+ },
+ {
+  "no": 84,
+  "id": "saryeoni",
+  "ko": "사려니숲길",
+  "wiki": "사려니숲길"
+ },
+ {
+  "no": 85,
+  "id": "manjanggul",
+  "ko": "만장굴",
+  "wiki": "만장굴"
+ },
+ {
+  "no": 86,
+  "id": "jusangjeolli",
+  "ko": "대포 주상절리",
+  "wiki": "제주 중문·대포 해안 주상절리대"
+ },
+ {
+  "no": 87,
+  "id": "udo",
+  "ko": "우도",
+  "wiki": "우도"
+ },
+ {
+  "no": 88,
+  "id": "olle",
+  "ko": "올레 7코스 외돌개",
+  "wiki": "외돌개"
+ },
+ {
+  "no": 89,
+  "id": "haenyeo",
+  "ko": "세화 해녀",
+  "wiki": "해녀박물관"
+ },
+ {
+  "no": 90,
+  "id": "bijarim",
+  "ko": "비자림",
+  "wiki": "비자림"
+ },
+ {
+  "no": 91,
+  "id": "yongmeori",
+  "ko": "용머리해안, 산방산",
+  "wiki": "용머리해안"
+ },
+ {
+  "no": 92,
+  "id": "jeongbang",
+  "ko": "정방폭포",
+  "wiki": "정방폭포"
+ },
+ {
+  "no": 93,
+  "id": "hongdo",
+  "ko": "홍도",
+  "wiki": "홍도"
+ },
+ {
+  "no": 94,
+  "id": "cheongsando",
+  "ko": "청산도",
+  "wiki": "청산도"
+ },
+ {
+  "no": 95,
+  "id": "baengnyeong",
+  "ko": "백령도 두무진",
+  "wiki": "백령도"
+ },
+ {
+  "no": 96,
+  "id": "marado",
+  "ko": "마라도",
+  "wiki": "마라도"
+ },
+ {
+  "no": 97,
+  "id": "ulleungdo",
+  "ko": "울릉도 나리분지",
+  "wiki": "나리분지"
+ },
+ {
+  "no": 98,
+  "id": "jeungdo",
+  "ko": "증도 태평염전",
+  "wiki": "증도"
+ },
+ {
+  "no": 99,
+  "id": "ttangkkeut",
+  "ko": "땅끝마을",
+  "wiki": "땅끝마을"
+ },
+ {
+  "no": 100,
+  "id": "baengnokdam",
+  "ko": "한라산 백록담",
+  "wiki": "백록담"
+ }
+]

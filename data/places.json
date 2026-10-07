@@ -1,0 +1,1758 @@
+[
+ {
+  "no": 1,
+  "id": "gyeongbokgung",
+  "ko": "경복궁",
+  "koWiki": "경복궁",
+  "lat": 37.57861111,
+  "lon": 126.97722222,
+  "hanja": "景福宮",
+  "ja": "景福宮",
+  "jaKana": "キョンボックン",
+  "zhHans": "景福宫",
+  "zhHant": "景福宮",
+  "missing": []
+ },
+ {
+  "no": 2,
+  "id": "changdeokgung",
+  "ko": "창덕궁 후원",
+  "koWiki": "창덕궁",
+  "lat": 37.57948333,
+  "lon": 126.991175,
+  "hanja": "昌德宮",
+  "ja": "昌徳宮",
+  "jaKana": "チャンドックン",
+  "zhHans": "昌德宫",
+  "zhHant": "昌德宮",
+  "missing": []
+ },
+ {
+  "no": 3,
+  "id": "jongmyo",
+  "ko": "종묘 정전",
+  "koWiki": "종묘",
+  "lat": 37.57444444,
+  "lon": 126.99416667,
+  "hanja": "宗廟",
+  "ja": "宗廟 (ソウル特別市)",
+  "jaKana": "チョンミョ",
+  "zhHans": "宗庙 (首尔特别市)",
+  "zhHant": "宗廟 (首爾特別市)",
+  "missing": []
+ },
+ {
+  "no": 4,
+  "id": "bukchon",
+  "ko": "북촌",
+  "koWiki": "북촌 한옥마을",
+  "lat": 37.58305556,
+  "lon": 126.98361111,
+  "hanja": null,
+  "ja": "北村韓屋村",
+  "jaKana": "ブッチョンハノクマウル",
+  "zhHans": "北村韩屋村",
+  "zhHant": "北村韓屋村",
+  "missing": [],
+  "wikidata": "Q490981",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 5,
+  "id": "namsan",
+  "ko": "남산",
+  "koWiki": "남산 (서울)",
+  "lat": 37.549681,
+  "lon": 126.991911,
+  "hanja": "南山",
+  "ja": "南山",
+  "jaKana": "ナムサン",
+  "zhHans": "南山 (首尔特别市)",
+  "zhHant": "南山 (首爾特別市)",
+  "missing": []
+ },
+ {
+  "no": 6,
+  "id": "cheonggyecheon",
+  "ko": "청계천",
+  "koWiki": "청계천",
+  "lat": 37.56902,
+  "lon": 126.97771,
+  "hanja": "淸溪川",
+  "ja": "清渓川",
+  "jaKana": "チョンゲチョン",
+  "zhHans": "清溪川",
+  "zhHant": "清溪川",
+  "missing": [],
+  "wikidata": "Q495437",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 7,
+  "id": "hangang",
+  "ko": "한강 반포",
+  "koWiki": "반포한강공원",
+  "lat": 37.514703,
+  "lon": 127.004921,
+  "hanja": "盤浦漢江公園",
+  "ja": "盤浦漢江公園",
+  "jaKana": null,
+  "zhHans": "盤浦漢江公園",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q12597453",
+  "fromWikidata": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 8,
+  "id": "museum",
+  "ko": "국립중앙박물관",
+  "koWiki": "국립중앙박물관",
+  "lat": 37.52393,
+  "lon": 126.980493,
+  "hanja": "國立中央博物館",
+  "ja": "国立中央博物館",
+  "jaKana": null,
+  "zhHans": "国立中央博物馆",
+  "zhHant": "國立中央博物館",
+  "missing": []
+ },
+ {
+  "no": 9,
+  "id": "seoulWall",
+  "ko": "한양도성 낙산",
+  "koWiki": "한양도성",
+  "lat": 37.5728474,
+  "lon": 127.0085027,
+  "hanja": "漢陽都城",
+  "ja": "漢陽都城",
+  "jaKana": null,
+  "zhHans": "汉阳都城",
+  "zhHant": "漢陽都城",
+  "missing": [],
+  "wikidata": "Q5472741",
+  "fromWikidata": [
+   "좌표",
+   "ja"
+  ]
+ },
+ {
+  "no": 10,
+  "id": "ddp",
+  "ko": "동대문 DDP",
+  "koWiki": "동대문 디자인 플라자",
+  "lat": 37.5669,
+  "lon": 127.0094,
+  "hanja": null,
+  "ja": "東大門デザインプラザ",
+  "jaKana": "デザインプラザ",
+  "zhHans": "东大门设计广场",
+  "zhHant": "東大門設計廣場",
+  "missing": [],
+  "wikidata": "Q5295847",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 11,
+  "id": "hwaseong",
+  "ko": "수원 화성",
+  "koWiki": "수원 화성",
+  "lat": 37.27222,
+  "lon": 127.00833,
+  "hanja": "水原 華城",
+  "ja": "水原華城",
+  "jaKana": "スウォンファソン",
+  "zhHans": "水原华城",
+  "zhHant": "水原華城",
+  "missing": []
+ },
+ {
+  "no": 12,
+  "id": "namhansanseong",
+  "ko": "남한산성",
+  "koWiki": "남한산성",
+  "lat": 37.47803,
+  "lon": 127.18419,
+  "hanja": "南漢山城",
+  "ja": "南漢山城",
+  "jaKana": "ナムハンサンソン",
+  "zhHans": "南汉山城",
+  "zhHant": "南漢山城",
+  "missing": []
+ },
+ {
+  "no": 13,
+  "id": "imjingak",
+  "ko": "임진각",
+  "koWiki": "임진각국민관광지",
+  "lat": 37.889583,
+  "lon": 126.740111,
+  "hanja": "臨津閣國民觀光地",
+  "ja": "臨津閣",
+  "jaKana": "イムジンガク",
+  "zhHans": "临津阁",
+  "zhHant": "臨津閣",
+  "missing": [],
+  "wikidata": "Q489493",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 14,
+  "id": "yongmunsa",
+  "ko": "용문사",
+  "koWiki": "용문사 (양평군)",
+  "lat": 37.55013889,
+  "lon": 127.57108333,
+  "hanja": "龍門寺",
+  "ja": "龍門寺",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q12608684",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 15,
+  "id": "dumulmeori",
+  "ko": "두물머리",
+  "koWiki": "두물머리",
+  "lat": null,
+  "lon": null,
+  "hanja": "兩水里",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": "两水头",
+  "zhHant": "兩水頭",
+  "missing": [
+   "좌표",
+   "ja"
+  ],
+  "wikidata": "Q12593676"
+ },
+ {
+  "no": 16,
+  "id": "ganghwaDolmen",
+  "ko": "강화 고인돌",
+  "koWiki": "강화 부근리 지석묘",
+  "lat": 37.77305556,
+  "lon": 126.4375,
+  "hanja": "江華 富近里 支石墓",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q22973965"
+ },
+ {
+  "no": 17,
+  "id": "jeondeungsa",
+  "ko": "전등사",
+  "koWiki": "전등사",
+  "lat": 37.63194444,
+  "lon": 126.48444444,
+  "hanja": "傳燈寺",
+  "ja": "伝燈寺",
+  "jaKana": "チョンドゥンサ",
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q11269377"
+ },
+ {
+  "no": 18,
+  "id": "incheonPort",
+  "ko": "인천 개항장",
+  "koWiki": "인천 차이나타운",
+  "lat": 37.476361111111,
+  "lon": 126.61819444444,
+  "hanja": null,
+  "ja": "仁川チャイナタウン",
+  "jaKana": "チャイナタウン",
+  "zhHans": "仁川唐人街",
+  "zhHant": "仁川唐人街",
+  "missing": [],
+  "wikidata": "Q6014440",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 19,
+  "id": "arboretum",
+  "ko": "국립수목원",
+  "koWiki": "국립수목원",
+  "lat": 37.754188,
+  "lon": 127.165276,
+  "hanja": "國立樹木園",
+  "ja": "国立樹木園",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q6431670",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 20,
+  "id": "yeongneung",
+  "ko": "영릉",
+  "koWiki": "영릉 (조선 세종)",
+  "lat": 37.30638888888889,
+  "lon": 127.60972222222222,
+  "hanja": "英陵",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": "英陵",
+  "zhHant": null,
+  "missing": [
+   "ja"
+  ],
+  "wikidata": "Q107598891",
+  "fromWikidata": [
+   "좌표",
+   "zh"
+  ]
+ },
+ {
+  "no": 21,
+  "id": "seoraksan",
+  "ko": "설악산 울산바위",
+  "koWiki": "설악산 울산바위",
+  "lat": 38.1935,
+  "lon": 128.47572222,
+  "hanja": "雪嶽山 蔚山",
+  "ja": "蔚山岩",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q56063386",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 22,
+  "id": "jeongdongjin",
+  "ko": "정동진",
+  "koWiki": "정동진역",
+  "lat": 37.6914,
+  "lon": 129.033,
+  "hanja": "正東津驛",
+  "ja": "正東津駅",
+  "jaKana": "チョンドンジン",
+  "zhHans": "正东津站",
+  "zhHant": "正東津站",
+  "missing": [],
+  "wikidata": "Q983383",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 23,
+  "id": "gyeongpo",
+  "ko": "경포호",
+  "koWiki": "경포호",
+  "lat": 37.79722222222222,
+  "lon": 128.90277777777777,
+  "hanja": "鏡浦湖",
+  "ja": "鏡浦湖",
+  "jaKana": null,
+  "zhHans": "镜浦湖",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q12583924",
+  "fromWikidata": [
+   "좌표",
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 24,
+  "id": "ojukheon",
+  "ko": "오죽헌",
+  "koWiki": "오죽헌",
+  "lat": 37.77944444,
+  "lon": 128.87805556,
+  "hanja": "江陵 烏竹軒",
+  "ja": "烏竹軒",
+  "jaKana": null,
+  "zhHans": "乌竹轩",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q12608061",
+  "fromWikidata": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 25,
+  "id": "naksansa",
+  "ko": "낙산사",
+  "koWiki": "낙산사",
+  "lat": 38.12472222,
+  "lon": 128.62805556,
+  "hanja": "洛山寺",
+  "ja": "洛山寺",
+  "jaKana": "ナクサンサ",
+  "zhHans": "洛山寺",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q562760",
+  "fromWikidata": [
+   "zh"
+  ]
+ },
+ {
+  "no": 26,
+  "id": "hantangang",
+  "ko": "한탄강 주상절리",
+  "koWiki": "한탄강",
+  "lat": 38.004722222222,
+  "lon": 127.01083333333,
+  "hanja": "漢灘江",
+  "ja": "漢灘江",
+  "jaKana": "ハンタンガン",
+  "zhHans": "汉滩江",
+  "zhHant": "漢灘江",
+  "missing": [],
+  "wikidata": "Q492822",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 27,
+  "id": "unification",
+  "ko": "고성 통일전망대",
+  "koWiki": "통일전망대",
+  "lat": 38.58407,
+  "lon": 128.373344,
+  "hanja": "統一展望臺",
+  "ja": "高城統一展望台",
+  "jaKana": "コソン",
+  "zhHans": "統一展望台",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q12621264",
+  "fromWikidata": [
+   "zh"
+  ]
+ },
+ {
+  "no": 28,
+  "id": "namiseom",
+  "ko": "남이섬",
+  "koWiki": "남이섬",
+  "lat": 37.791538888889,
+  "lon": 127.52543611111,
+  "hanja": "南怡",
+  "ja": "南怡島",
+  "jaKana": "ナミソム",
+  "zhHans": "南怡岛",
+  "zhHant": "南怡島",
+  "missing": [],
+  "wikidata": "Q487536",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 29,
+  "id": "daegwallyeong",
+  "ko": "대관령",
+  "koWiki": "대관령",
+  "lat": 37.6875,
+  "lon": 128.76055555556,
+  "hanja": "大關嶺",
+  "ja": "大関嶺",
+  "jaKana": "テグァルリョン",
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q5208208",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 30,
+  "id": "geomnyongso",
+  "ko": "검룡소",
+  "koWiki": "검룡소",
+  "lat": 37.22697222,
+  "lon": 128.92461111,
+  "hanja": "儉龍沼",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q12583425"
+ },
+ {
+  "no": 31,
+  "id": "jeongseonMarket",
+  "ko": "정선 오일장",
+  "koWiki": "정선군",
+  "lat": 37.379166666667,
+  "lon": 128.66472222222,
+  "hanja": "旌善郡",
+  "ja": "旌善郡",
+  "jaKana": "チョンソン",
+  "zhHans": "旌善郡",
+  "zhHant": "旌善郡",
+  "missing": [],
+  "wikidata": "Q50323",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 32,
+  "id": "hwanseon",
+  "ko": "환선굴",
+  "koWiki": "환선굴",
+  "lat": 37.327777777778,
+  "lon": 129.025,
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q10765372",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 33,
+  "id": "buyeo",
+  "ko": "부여 정림사지",
+  "koWiki": "부여 정림사지",
+  "lat": 36.27944444,
+  "lon": 126.91333333,
+  "hanja": "扶餘 定林寺址",
+  "ja": "定林寺址",
+  "jaKana": null,
+  "zhHans": "定林寺遗址 (韩国)",
+  "zhHant": "定林寺遺址 (韓國)",
+  "missing": []
+ },
+ {
+  "no": 34,
+  "id": "gongju",
+  "ko": "공주 공산성, 무령왕릉",
+  "koWiki": "공주 공산성",
+  "lat": 36.46333333,
+  "lon": 127.12694444,
+  "hanja": "公州 公山城",
+  "ja": "公山城",
+  "jaKana": "コンサンソン",
+  "zhHans": "公山城",
+  "zhHant": "公山城",
+  "missing": []
+ },
+ {
+  "no": 35,
+  "id": "sobaeksan",
+  "ko": "소백산 천문대",
+  "koWiki": "소백산천문대",
+  "lat": 36.934411111111,
+  "lon": 128.4576,
+  "hanja": null,
+  "ja": "小白山天文台",
+  "jaKana": "ソベクサン",
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q17995800",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 36,
+  "id": "dodam",
+  "ko": "도담삼봉",
+  "koWiki": "도담삼봉",
+  "lat": 37.00027778,
+  "lon": 128.34388889,
+  "hanja": "島潭三峰",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q277173"
+ },
+ {
+  "no": 37,
+  "id": "beopjusa",
+  "ko": "법주사",
+  "koWiki": "법주사",
+  "lat": 36.5425,
+  "lon": 127.83388889,
+  "hanja": "法住寺",
+  "ja": "法住寺 (報恩郡)",
+  "jaKana": "ポプチュサ",
+  "zhHans": "法住寺 (韩国)",
+  "zhHant": "法住寺 (韓國)",
+  "missing": []
+ },
+ {
+  "no": 38,
+  "id": "kkotji",
+  "ko": "꽃지 해변",
+  "koWiki": "꽃지해수욕장",
+  "lat": 36.497079,
+  "lon": 126.336027,
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q61091232"
+ },
+ {
+  "no": 39,
+  "id": "expo",
+  "ko": "엑스포 과학공원",
+  "koWiki": "엑스포과학공원",
+  "lat": 36.377,
+  "lon": 127.385,
+  "hanja": "科學公園",
+  "ja": "エキスポ科学公園",
+  "jaKana": "エキスポ",
+  "zhHans": "EXPO科学公园",
+  "zhHant": "EXPO科學公園",
+  "missing": []
+ },
+ {
+  "no": 40,
+  "id": "heungdeoksa",
+  "ko": "흥덕사지",
+  "koWiki": "청주 흥덕사지",
+  "lat": 36.64388889,
+  "lon": 127.47138889,
+  "hanja": "淸州 興德寺址",
+  "ja": "清州興徳寺址",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q12485627",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 41,
+  "id": "haemi",
+  "ko": "해미읍성",
+  "koWiki": "서산 해미읍성",
+  "lat": 36.71277778,
+  "lon": 126.54861111,
+  "hanja": "瑞山 海美邑城",
+  "ja": "海美邑城",
+  "jaKana": "ヘミウプソン",
+  "zhHans": "海美邑城",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q625268",
+  "fromWikidata": [
+   "zh"
+  ]
+ },
+ {
+  "no": 42,
+  "id": "daecheon",
+  "ko": "대천해수욕장",
+  "koWiki": "대천해수욕장",
+  "lat": 36.3127202,
+  "lon": 126.509697,
+  "hanja": "大川海水浴場",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q12591871",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 43,
+  "id": "oeam",
+  "ko": "외암마을",
+  "koWiki": "외암마을",
+  "lat": 36.73055556,
+  "lon": 127.01583333,
+  "hanja": "牙山 外巖",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": "外岩村",
+  "zhHant": "外巖村",
+  "missing": [
+   "ja"
+  ],
+  "wikidata": "Q16094218"
+ },
+ {
+  "no": 44,
+  "id": "sudeoksa",
+  "ko": "수덕사",
+  "koWiki": "수덕사",
+  "lat": 36.66288889,
+  "lon": 126.62261111,
+  "hanja": "修德寺",
+  "ja": "修徳寺",
+  "jaKana": "スドクサ",
+  "zhHans": "修德寺",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q491449",
+  "fromWikidata": [
+   "zh"
+  ]
+ },
+ {
+  "no": 45,
+  "id": "jeonjuHanok",
+  "ko": "전주 한옥마을, 경기전",
+  "koWiki": "전주한옥마을",
+  "lat": 35.814715,
+  "lon": 127.152636,
+  "hanja": "完山州",
+  "ja": "全州韓屋村",
+  "jaKana": null,
+  "zhHans": "全州韩屋村",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q11269655",
+  "fromWikidata": [
+   "좌표",
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 46,
+  "id": "gwanghallu",
+  "ko": "광한루",
+  "koWiki": "광한루",
+  "lat": 35.403888888888886,
+  "lon": 127.37972222222223,
+  "hanja": "廣寒樓",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": "广寒楼",
+  "zhHant": "廣寒樓",
+  "missing": [
+   "ja"
+  ],
+  "wikidata": "Q12585210",
+  "fromWikidata": [
+   "좌표",
+   "zh"
+  ]
+ },
+ {
+  "no": 47,
+  "id": "chaeseokgang",
+  "ko": "채석강",
+  "koWiki": "부안 채석강·적벽강 일원",
+  "lat": 35.62555556,
+  "lon": 126.46638889,
+  "hanja": "扶安 彩石江·赤壁江 一圓",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q28700211"
+ },
+ {
+  "no": 48,
+  "id": "gochangDolmen",
+  "ko": "고창 고인돌",
+  "koWiki": "고창 죽림리 지석묘군",
+  "lat": 35.4475,
+  "lon": 126.64611111,
+  "hanja": "高敞 竹林里 支石墓群",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q27952407"
+ },
+ {
+  "no": 49,
+  "id": "damyang",
+  "ko": "담양 메타세쿼이아길",
+  "koWiki": "담양군",
+  "lat": 35.318888888889,
+  "lon": 126.98388888889,
+  "hanja": "潭陽郡",
+  "ja": "潭陽郡",
+  "jaKana": "タミャン",
+  "zhHans": "潭阳郡",
+  "zhHant": "潭陽郡",
+  "missing": [],
+  "wikidata": "Q50240",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 50,
+  "id": "boseong",
+  "ko": "보성 녹차밭",
+  "koWiki": "대한다원",
+  "lat": 34.7150291,
+  "lon": 127.0787128,
+  "hanja": "大韓茶園",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q28671311"
+ },
+ {
+  "no": 51,
+  "id": "suncheonBay",
+  "ko": "순천만 습지",
+  "koWiki": "순천만",
+  "lat": 34.8428,
+  "lon": 127.506,
+  "hanja": "順天灣",
+  "ja": "順天湾",
+  "jaKana": null,
+  "zhHans": "顺天湾",
+  "zhHant": "順天灣",
+  "missing": [],
+  "wikidata": "Q486960",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 52,
+  "id": "seonamsa",
+  "ko": "선암사",
+  "koWiki": "선암사",
+  "lat": 34.99661,
+  "lon": 127.331089,
+  "hanja": "仙巖寺",
+  "ja": "仙巌寺",
+  "jaKana": "ソナムサ",
+  "zhHans": "仙岩寺",
+  "zhHant": "仙巖寺",
+  "missing": [],
+  "wikidata": "Q7451561",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 53,
+  "id": "yeosu",
+  "ko": "여수 오동도",
+  "koWiki": "오동도",
+  "lat": 34.74488990336877,
+  "lon": 127.76611113328042,
+  "hanja": "梧桐島",
+  "ja": "梧桐島 (全羅南道)",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q16181364",
+  "fromWikidata": [
+   "좌표",
+   "ja"
+  ]
+ },
+ {
+  "no": 54,
+  "id": "jindo",
+  "ko": "진도 바닷길",
+  "koWiki": "진도신비의바닷길축제",
+  "lat": null,
+  "lon": null,
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "좌표",
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q18685165"
+ },
+ {
+  "no": 55,
+  "id": "dasan",
+  "ko": "다산초당",
+  "koWiki": "강진 정약용 유적",
+  "lat": 34.58,
+  "lon": 126.74472222,
+  "hanja": "康津 丁若鏞 遺蹟",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q16092178"
+ },
+ {
+  "no": 56,
+  "id": "wolchulsan",
+  "ko": "월출산",
+  "koWiki": "월출산",
+  "lat": 34.767777777778,
+  "lon": 126.70444444444,
+  "hanja": "月出山",
+  "ja": "月出山",
+  "jaKana": "ウォルチュル",
+  "zhHans": "月出山",
+  "zhHant": "月出山",
+  "missing": [],
+  "wikidata": "Q482741",
+  "fromWikidata": [
+   "좌표",
+   "zh"
+  ]
+ },
+ {
+  "no": 57,
+  "id": "mudeungsan",
+  "ko": "무등산 입석대",
+  "koWiki": "무등산",
+  "lat": 35.134166666667,
+  "lon": 126.98888888889,
+  "hanja": "無等山",
+  "ja": "無等山",
+  "jaKana": null,
+  "zhHans": "无等山",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q6931712",
+  "fromWikidata": [
+   "좌표",
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 58,
+  "id": "gunsan",
+  "ko": "군산 근대거리",
+  "koWiki": "군산근대역사박물관",
+  "lat": null,
+  "lon": null,
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "좌표",
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 59,
+  "id": "naejangsan",
+  "ko": "내장산",
+  "koWiki": "내장산",
+  "lat": 35.483333333333,
+  "lon": 126.88333333333,
+  "hanja": "內藏山",
+  "ja": "内蔵山",
+  "jaKana": "ネジャン",
+  "zhHans": "内藏山",
+  "zhHant": "內藏山",
+  "missing": [],
+  "wikidata": "Q626648",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 60,
+  "id": "deogyusan",
+  "ko": "덕유산 향적봉",
+  "koWiki": "덕유산",
+  "lat": 35.860555555556,
+  "lon": 127.74638888889,
+  "hanja": "德裕山",
+  "ja": "徳裕山",
+  "jaKana": "トギュサン",
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q130821",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 61,
+  "id": "bulguksa",
+  "ko": "불국사",
+  "koWiki": "불국사",
+  "lat": 35.79027778,
+  "lon": 129.33194444,
+  "hanja": "佛國寺",
+  "ja": "仏国寺",
+  "jaKana": "プルグクサ",
+  "zhHans": "佛国寺",
+  "zhHant": "佛國寺",
+  "missing": []
+ },
+ {
+  "no": 62,
+  "id": "seokguram",
+  "ko": "석굴암",
+  "koWiki": "석굴암",
+  "lat": 35.79505556,
+  "lon": 129.34963889,
+  "hanja": "石窟庵",
+  "ja": "石窟庵",
+  "jaKana": "ソックラム",
+  "zhHans": "石窟庵",
+  "zhHant": "石窟庵",
+  "missing": []
+ },
+ {
+  "no": 63,
+  "id": "cheomseongdae",
+  "ko": "첨성대",
+  "koWiki": "첨성대",
+  "lat": 35.83472222,
+  "lon": 129.21916667,
+  "hanja": "瞻星臺",
+  "ja": "慶州瞻星台",
+  "jaKana": null,
+  "zhHans": "瞻星台",
+  "zhHant": "瞻星臺",
+  "missing": []
+ },
+ {
+  "no": 64,
+  "id": "wolji",
+  "ko": "동궁과 월지",
+  "koWiki": "동궁과 월지",
+  "lat": 35.83480556,
+  "lon": 129.22655556,
+  "hanja": "慶州 東宮",
+  "ja": "東宮と月池",
+  "jaKana": "ハングル",
+  "zhHans": "慶州東宮",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q496454",
+  "fromWikidata": [
+   "zh"
+  ]
+ },
+ {
+  "no": 65,
+  "id": "yangdong",
+  "ko": "양동마을",
+  "koWiki": "경주 양동마을",
+  "lat": 35.99972222,
+  "lon": 129.25444444,
+  "hanja": "慶州 良洞",
+  "ja": "良洞村",
+  "jaKana": "ヤンドンマウル",
+  "zhHans": "良洞村",
+  "zhHant": "良洞村",
+  "missing": []
+ },
+ {
+  "no": 66,
+  "id": "haeinsa",
+  "ko": "해인사",
+  "koWiki": "해인사",
+  "lat": 35.80111111,
+  "lon": 128.09833333,
+  "hanja": "海印寺",
+  "ja": "海印寺 (陜川郡)",
+  "jaKana": "ヘインサ",
+  "zhHans": "海印寺",
+  "zhHant": "海印寺",
+  "missing": []
+ },
+ {
+  "no": 67,
+  "id": "hahoe",
+  "ko": "하회마을",
+  "koWiki": "안동 하회마을",
+  "lat": 36.53805556,
+  "lon": 128.52055556,
+  "hanja": "安東 河回",
+  "ja": "河回村",
+  "jaKana": "ハフェマウル",
+  "zhHans": "河回村",
+  "zhHant": "河回村",
+  "missing": []
+ },
+ {
+  "no": 68,
+  "id": "buseoksa",
+  "ko": "부석사",
+  "koWiki": "부석사",
+  "lat": 36.9988527,
+  "lon": 128.6874968,
+  "hanja": "浮石寺",
+  "ja": "浮石寺 (栄州市)",
+  "jaKana": "プソクサ",
+  "zhHans": "浮石寺",
+  "zhHant": "浮石寺",
+  "missing": []
+ },
+ {
+  "no": 69,
+  "id": "mungyeong",
+  "ko": "문경새재",
+  "koWiki": "문경 조령 관문",
+  "lat": 36.76825,
+  "lon": 128.07591667,
+  "hanja": "聞慶 鳥嶺 關門",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q12616651"
+ },
+ {
+  "no": 70,
+  "id": "juwangsan",
+  "ko": "주왕산",
+  "koWiki": "주왕산",
+  "lat": 36.38922,
+  "lon": 129.162589,
+  "hanja": "周王山",
+  "ja": "周王山",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q6319107",
+  "fromWikidata": [
+   "좌표",
+   "ja"
+  ]
+ },
+ {
+  "no": 71,
+  "id": "yeongyang",
+  "ko": "영양 반딧불이천문대",
+  "koWiki": "영양군",
+  "lat": 36.664166666667,
+  "lon": 129.11861111111,
+  "hanja": "英陽郡",
+  "ja": "英陽郡",
+  "jaKana": "ヨンヤン",
+  "zhHans": "英阳郡",
+  "zhHant": "英陽郡",
+  "missing": [],
+  "wikidata": "Q50263",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 72,
+  "id": "tongdosa",
+  "ko": "통도사",
+  "koWiki": "통도사",
+  "lat": 35.48777778,
+  "lon": 129.06444444,
+  "hanja": "梁山 通度寺",
+  "ja": "通度寺",
+  "jaKana": "トンドサ",
+  "zhHans": "通度寺",
+  "zhHant": "通度寺",
+  "missing": []
+ },
+ {
+  "no": 73,
+  "id": "jinju",
+  "ko": "진주성 촉석루",
+  "koWiki": "진주 촉석루",
+  "lat": 35.18944444,
+  "lon": 128.0725,
+  "hanja": "晋州 矗石樓",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": "矗石楼",
+  "zhHant": "矗石樓",
+  "missing": [
+   "ja"
+  ],
+  "wikidata": "Q6745185"
+ },
+ {
+  "no": 74,
+  "id": "tongyeong",
+  "ko": "통영 미륵산",
+  "koWiki": "미륵산 (경남)",
+  "lat": 34.81138889,
+  "lon": 128.41638889,
+  "hanja": "彌勒山",
+  "ja": "弥勒山",
+  "jaKana": null,
+  "zhHans": "弥勒山",
+  "zhHant": null,
+  "missing": [],
+  "wikidata": "Q6873183",
+  "fromWikidata": [
+   "좌표",
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 75,
+  "id": "geoje",
+  "ko": "거제 바람의 언덕",
+  "koWiki": "거제 바람의 언덕",
+  "lat": null,
+  "lon": null,
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "좌표",
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q109458487"
+ },
+ {
+  "no": 76,
+  "id": "hadong",
+  "ko": "하동 십리벚꽃길",
+  "koWiki": "쌍계사",
+  "lat": 35.2325,
+  "lon": 127.645,
+  "hanja": "雙磎寺",
+  "ja": "双磎寺",
+  "jaKana": "サンゲサ",
+  "zhHans": "双溪寺",
+  "zhHant": "雙溪寺",
+  "missing": [],
+  "wikidata": "Q623528",
+  "fromWikidata": [
+   "zh"
+  ]
+ },
+ {
+  "no": 77,
+  "id": "jirisan",
+  "ko": "지리산 천왕봉",
+  "koWiki": "지리산",
+  "lat": 35.33694444,
+  "lon": 127.73055556,
+  "hanja": "智異山",
+  "ja": "智異山",
+  "jaKana": "チリ",
+  "zhHans": "智异山国立公园",
+  "zhHant": "智異山國立公園",
+  "missing": []
+ },
+ {
+  "no": 78,
+  "id": "upo",
+  "ko": "우포늪",
+  "koWiki": "우포늪",
+  "lat": 35.55194444,
+  "lon": 128.41444444,
+  "hanja": "牛浦",
+  "ja": "牛浦沼",
+  "jaKana": "ウポヌプ",
+  "zhHans": "牛浦沼",
+  "zhHant": "牛浦沼",
+  "missing": []
+ },
+ {
+  "no": 79,
+  "id": "gatbawi",
+  "ko": "팔공산 갓바위",
+  "koWiki": "경산 팔공산 관봉 석조여래좌상",
+  "lat": 35.98166667,
+  "lon": 128.73638889,
+  "hanja": "慶山 八公山 冠峰 石造如來坐像",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q5526956"
+ },
+ {
+  "no": 80,
+  "id": "bangudae",
+  "ko": "반구대 암각화",
+  "koWiki": "울주 대곡리 반구대 암각화",
+  "lat": 35.6040176,
+  "lon": 129.1777157,
+  "hanja": null,
+  "ja": "盤亀台岩刻画",
+  "jaKana": null,
+  "zhHans": "盘龟台岩刻画",
+  "zhHant": "盤龜台岩刻畫",
+  "missing": [],
+  "wikidata": "Q483714",
+  "fromWikidata": [
+   "좌표",
+   "ja"
+  ]
+ },
+ {
+  "no": 81,
+  "id": "gamcheon",
+  "ko": "감천문화마을",
+  "koWiki": "감천문화마을",
+  "lat": 35.0975,
+  "lon": 129.00916667,
+  "hanja": "甘川文化",
+  "ja": "甘川文化村",
+  "jaKana": "カムチョン",
+  "zhHans": "甘川文化村",
+  "zhHant": "甘川文化村",
+  "missing": [],
+  "wikidata": "Q18641306",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 82,
+  "id": "yonggungsa",
+  "ko": "해동용궁사",
+  "koWiki": "해동용궁사",
+  "lat": 35.188056,
+  "lon": 129.223056,
+  "hanja": "海東龍宮寺",
+  "ja": "海東龍宮寺",
+  "jaKana": "ヘドンヨングンサ",
+  "zhHans": "海东龙宫寺",
+  "zhHant": "海東龍宮寺",
+  "missing": []
+ },
+ {
+  "no": 83,
+  "id": "seongsan",
+  "ko": "성산일출봉",
+  "koWiki": "성산일출봉",
+  "lat": 33.45852778,
+  "lon": 126.94225,
+  "hanja": "城山日出峰",
+  "ja": "城山日出峰",
+  "jaKana": null,
+  "zhHans": "城山日出峰",
+  "zhHant": "城山日出峰",
+  "missing": [],
+  "wikidata": "Q122225",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 84,
+  "id": "saryeoni",
+  "ko": "사려니숲길",
+  "koWiki": "사려니숲길",
+  "lat": null,
+  "lon": null,
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "좌표",
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q18697665"
+ },
+ {
+  "no": 85,
+  "id": "manjanggul",
+  "ko": "만장굴",
+  "koWiki": "제주 김녕굴과 만장굴",
+  "lat": 33.52852778,
+  "lon": 126.7715,
+  "hanja": "濟州 金寧窟",
+  "ja": "万丈窟",
+  "jaKana": "マンジャンクル",
+  "zhHans": "霹雷摩芝窟",
+  "zhHant": "霹雷摩芝窟",
+  "missing": []
+ },
+ {
+  "no": 86,
+  "id": "jusangjeolli",
+  "ko": "대포 주상절리",
+  "koWiki": "제주 중문·대포 해안 주상절리대",
+  "lat": 33.24166667,
+  "lon": 126.42083333,
+  "hanja": "濟州 中文海岸 柱狀節理帶",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q2157711"
+ },
+ {
+  "no": 87,
+  "id": "udo",
+  "ko": "우도",
+  "koWiki": "우도",
+  "lat": 33.50527778,
+  "lon": 126.95583333,
+  "hanja": "牛島",
+  "ja": "牛島 (済州市)",
+  "jaKana": "ウド",
+  "zhHans": "牛岛 (济州市)",
+  "zhHant": "牛島 (濟州市)",
+  "missing": []
+ },
+ {
+  "no": 88,
+  "id": "olle",
+  "ko": "올레 7코스 외돌개",
+  "koWiki": "외돌개",
+  "lat": 33.24,
+  "lon": 126.54555556,
+  "hanja": "濟州 西歸浦",
+  "ja": "ウェドルゲ",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q24000167",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 89,
+  "id": "haenyeo",
+  "ko": "세화 해녀",
+  "koWiki": "해녀박물관",
+  "lat": 33.523523,
+  "lon": 126.863484,
+  "hanja": "海女博物館",
+  "ja": "海女博物館",
+  "jaKana": null,
+  "zhHans": "海女博物馆",
+  "zhHant": "海女博物館",
+  "missing": [],
+  "wikidata": "Q18016054",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 90,
+  "id": "bijarim",
+  "ko": "비자림",
+  "koWiki": "제주 평대리 비자나무 숲",
+  "lat": 33.485,
+  "lon": 126.81027778,
+  "hanja": "濟州 坪岱里",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": "榧子林",
+  "zhHant": null,
+  "missing": [
+   "ja"
+  ],
+  "wikidata": "Q16094611",
+  "fromWikidata": [
+   "zh"
+  ]
+ },
+ {
+  "no": 91,
+  "id": "yongmeori",
+  "ko": "용머리해안, 산방산",
+  "koWiki": "제주 사계리 용머리해안",
+  "lat": 33.23138889,
+  "lon": 126.31416667,
+  "hanja": "濟州 沙溪里 龍",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q97213100"
+ },
+ {
+  "no": 92,
+  "id": "jeongbang",
+  "ko": "정방폭포",
+  "koWiki": "정방폭포",
+  "lat": 33.24666667,
+  "lon": 126.57138889,
+  "hanja": "正房瀑布",
+  "ja": "正房瀑布",
+  "jaKana": null,
+  "zhHans": "正房瀑布",
+  "zhHant": "正房瀑布",
+  "missing": [],
+  "wikidata": "Q625993",
+  "fromWikidata": [
+   "ja"
+  ]
+ },
+ {
+  "no": 93,
+  "id": "hongdo",
+  "ko": "홍도",
+  "koWiki": "홍도",
+  "lat": 34.693055555556,
+  "lon": 125.19722222222,
+  "hanja": "紅島",
+  "ja": "紅島 (全南光州統合特別市)",
+  "jaKana": "ホンド",
+  "zhHans": "红岛 (韩国)",
+  "zhHant": "紅島 (韓國)",
+  "missing": [],
+  "wikidata": "Q490430",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 94,
+  "id": "cheongsando",
+  "ko": "청산도",
+  "koWiki": "청산도",
+  "lat": 34.18361,
+  "lon": 126.88917,
+  "hanja": "靑山島",
+  "ja": "青山島",
+  "jaKana": "チョンサン",
+  "zhHans": "青山岛",
+  "zhHant": "青山島",
+  "missing": [],
+  "wikidata": "Q18815767",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 95,
+  "id": "baengnyeong",
+  "ko": "백령도 두무진",
+  "koWiki": "백령도",
+  "lat": 37.966666666667,
+  "lon": 124.65,
+  "hanja": "白翎島",
+  "ja": "白翎島",
+  "jaKana": "ペンニョンド",
+  "zhHans": "白翎岛",
+  "zhHant": "白翎島",
+  "missing": [],
+  "wikidata": "Q485315",
+  "fromWikidata": [
+   "좌표"
+  ]
+ },
+ {
+  "no": 96,
+  "id": "marado",
+  "ko": "마라도",
+  "koWiki": "마라도",
+  "lat": 33.1172548,
+  "lon": 126.2681225,
+  "hanja": "馬羅島",
+  "ja": "馬羅島",
+  "jaKana": null,
+  "zhHans": "马罗岛",
+  "zhHant": "馬羅島",
+  "missing": []
+ },
+ {
+  "no": 97,
+  "id": "ulleungdo",
+  "ko": "울릉도 나리분지",
+  "koWiki": "나리분지",
+  "lat": null,
+  "lon": null,
+  "hanja": "羅里盆地",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "좌표",
+   "ja",
+   "zh"
+  ],
+  "wikidata": "Q16183469"
+ },
+ {
+  "no": 98,
+  "id": "jeungdo",
+  "ko": "증도 태평염전",
+  "koWiki": "증도",
+  "lat": null,
+  "lon": null,
+  "hanja": "曾島",
+  "ja": "曽島",
+  "jaKana": null,
+  "zhHans": "曾島",
+  "zhHant": null,
+  "missing": [
+   "좌표"
+  ],
+  "wikidata": "Q16189852",
+  "fromWikidata": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "no": 99,
+  "id": "ttangkkeut",
+  "ko": "땅끝마을",
+  "koWiki": "땅끝마을",
+  "lat": 34.29233,
+  "lon": 126.52486,
+  "hanja": null,
+  "ja": "タンクッ",
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ],
+  "wikidata": "Q7850455",
+  "fromWikidata": [
+   "좌표",
+   "ja"
+  ]
+ },
+ {
+  "no": 100,
+  "id": "baengnokdam",
+  "ko": "한라산 백록담",
+  "koWiki": "백록담",
+  "lat": 33.36225,
+  "lon": 126.53366667,
+  "hanja": "白鹿潭",
+  "ja": "白鹿潭",
+  "jaKana": null,
+  "zhHans": "白鹿潭",
+  "zhHant": "白鹿潭",
+  "missing": [],
+  "wikidata": "Q18657526",
+  "fromWikidata": [
+   "ja"
+  ]
+ }
+]
