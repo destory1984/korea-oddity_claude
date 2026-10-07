@@ -31,6 +31,7 @@
 | `docs/overlay-proto.html` 의 다이얼 움직임과 눈금 소리 | 한 칸 12픽셀, 미끄러지다 서기, 1,200Hz와 760Hz의 소리 | 2권의 `docs/dial-proto.html` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 유리 단추 모양, 설정의 언어 고르기, "쉬잇" 움직임의 숫자(1초에 넉 장, 3초) | 화면의 틀 | 1권의 `style.css`, `index.html`, `src/core/sprite.js`, `src/main.js` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 소라 크기(`layout`) | 화면 모양에 따라 소라의 키를 정하는 셈. 세로로 긴 손전화에서 화면 높이의 20.8%, 넓은 화면에서 34.6% | 1권의 `src/core/pose.js`(heroScaleFor), `src/render/spriteHero.js`(CARD_HEIGHT, CARD_AT) | 2026.10.7 | MIT |
+| `docs/overlay-proto.html` 의 설정 창 톤 | 남색 유리 판(#0d1a3af2), 흐린 뒷배경, 금빛 작은 제목, 고른 단추의 금빛 테와 글자, 금빛 테의 닫는 단추, 갈래가 바뀌어도 같은 창 크기. 색과 치수 | 1권의 `style.css` (dialog, #settings, #settingsTabs, #closeSettings, #newsList) | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 설정 갈래와 Changes 쪽 | 갈래 단추, 날짜를 그날의 첫 줄에만 적는 줄 목록, "만들기 시작한 날"과 "오늘로 며칠째" | 1권의 `index.html`, `style.css`, `src/ui/settings.js`(renderNews), `src/core/changes.js`(startedLine, dayLabel) | 2026.10.7 | MIT |
 | `translation-test/round2/style-ref.json`, `docs/번역-규칙.md` 의 본보기와 굳은 낱말, 시험판의 "맞았다. 꼼꼼히 읽었구나." 같은 말 | 일본어, 중국어 번역문 | 1권의 `src/i18n/ja.json`, `zh.json` | 2026.10.7 | MIT |
 
