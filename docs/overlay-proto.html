@@ -90,7 +90,12 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 /* 한국어만 낱말 사이에서 줄을 바꾼다. 일본어와 중국어는 띄어쓰기가 없어 그렇게 하면 줄이 화면 밖으로 나간다. */
 :lang(ko) #newsList li,:lang(ko) #newsStarted{word-break:keep-all}
 #newsList time{color:var(--gold);font-size:12px;font-variant-numeric:tabular-nums;line-height:1.8}
-#hint{left:50%;transform:translateX(-50%);padding:6px 12px;font-size:12px;white-space:nowrap;transition:opacity .4s;pointer-events:none}
+/* 안내 줄: 지금 할 일 한 줄. 1권의 첫 안내(#guide)처럼 몇째인지와 할 일을 적고, 누를 것이 있으면 단추를 붙인다. */
+#hint{left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;max-width:calc(100% - 20px);padding:6px 12px;font-size:12px;white-space:nowrap;transition:opacity .4s;pointer-events:none}
+#hint i{font-style:normal;color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums}
+#hint.step{border-color:var(--gold);padding:5px 6px 5px 12px;font-size:13px}
+#hint button{pointer-events:auto;min-height:30px;padding:4px 12px;border:1px solid var(--gold);border-radius:10px;background:#0d1a3acc;color:var(--gold);font:inherit;font-weight:600}
+#hint button:active{background:#1c2f6ae6}
 #memo{left:14px;max-width:70%;background:var(--paper);color:var(--ink);padding:6px 10px 5px;transform:rotate(-1.5deg);
   box-shadow:1px 2px 0 rgba(59,42,26,.4);pointer-events:none}
 /* 손글씨 글꼴: 한국어는 나눔손글씨 펜, 일본어는 Yomogi, 중국어는 Ma Shan Zheng(모두 구글 글꼴, OFL). 메모는 고른 말 하나로만 적는다. */
@@ -177,7 +182,7 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #card button.right{background:var(--gold);border-color:var(--gold)}
 #card button.wrong{opacity:.45;text-decoration:line-through}
 #card #closeCard{margin-top:14px;width:100%;background:var(--ink);color:var(--paper)}
-#again{left:50%;transform:translateX(-50%);padding:9px 16px;color:var(--white);font:inherit;font-size:13px;display:none}
+#chips #again{display:none}   /* 찍은 뒤에만 보인다. 다음에 할 일이 아니라 되돌리는 단추라 작은 단추들 끝에 둔다 */
 </style>
 <!-- 글씨는 1권, 2권과 같은 세 벌이다: 화면은 Pretendard, 할머니는 나눔손글씨 펜, 소라는 개구. 파일을 함께 싣는다. -->
 <link rel="stylesheet" href="assets/fonts/pretendard/pretendardvariable-dynamic-subset.css">
@@ -205,10 +210,9 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
     <button id="bgmButton"></button>
     <button id="settingsButton"></button>
   </nav>
-  <div id="chips"><button id="storyButton" class="glass"></button><button id="routeButton" class="glass"></button><button id="mineButton" class="glass"></button></div>
+  <div id="chips"><button id="storyButton" class="glass"></button><button id="routeButton" class="glass"></button><button id="mineButton" class="glass"></button><button id="again" class="glass"></button></div>
   <div id="toast" class="glass"></div>
   <div id="post"><div><canvas id="pl"></canvas><canvas id="pr"></canvas><canvas id="pm"></canvas></div><p><span id="pd0"></span><span id="pd"></span><span id="pdm"></span></p></div>
-  <button id="again" class="glass"></button>
   <div id="flash"></div>
   <div id="journal"><div class="book">
     <header><h1 id="journalTitle"></h1><small id="journalCount"></small><button id="closeJournal" aria-label="닫기">✕</button></header>
@@ -275,7 +279,7 @@ const TEXT = {
     mineThanks: '정말 다녀왔구나. 고맙다.', camHint: '할머니의 사진과 풍경을 포개어 찍어 보렴', camGhostOn: '사진 겹치기', camGhostOff: '사진 끄기', camClose: '닫기', camNo: '이 브라우저에서는 카메라를 열 수 없습니다. 사진첩에서 골라 주세요.', visited: '다녀온 곳', hush: '쉬잇~',
     journalTitle: '할머니의 수첩 3권', tabMap: '지도', tabList: '칸', went: '갔다', saw: '봤다', missed: '못 봤다', go: '가기', here: '지금 이 자리입니다.',
     noArt: '이 칸은 아직 그림이 없습니다.', pick: '점을 누르면 그 칸이 보입니다.', rough: '자리는 어림입니다.',
-    story: '이야기', route: '가는 길', quizHead: '맞혀 보렴.', right: '맞았다. 꼼꼼히 읽었구나.', wrong: '답은 "{}". 다음에 또 맞혀 보렴.', check: '가기 전에 확인하렴.', routeLocked: '사진을 포개 찍으면 가는 길이 붙습니다.',
+    story: '이야기', route: '가는 길', quizHead: '맞혀 보렴.', right: '맞았다. 꼼꼼히 읽었구나.', wrong: '답은 "{}". 다음에 또 맞혀 보렴.', check: '가기 전에 확인하렴.', routeLocked: '사진을 포개 찍으면 가는 길이 붙습니다.', guide2: '이야기를 읽어 보렴', guide3: '가는 길도 보아 두렴', guide4: '다음 장으로 넘어가렴', guide5: '수첩을 펴서 다른 칸도 보렴', journal: '수첩',
     regions: { '서울·경기·인천': '서울·경기·인천', '강원': '강원', '충청': '충청', '전라': '전라', '경상': '경상', '제주': '제주', '섬과 끝': '섬과 끝' } },
   ja: { started: '作りはじめた日: {y}年{m}月{d}日', days: '八道めぐり、今日で{n}日目', markGood: 'いい季節', markToday: '今日', hint: '画面を引いて、写真とその場所を重ねてごらん', good: 'いい季節へ', today: '今日へ', again: 'もう一度さがす',
     sunset: '日の入り', month: '月', sound: '効果音', music: '音楽', settings: '設定', close: '閉じる', soundTerm: '音', on: 'オン', off: 'オフ',
@@ -283,7 +287,7 @@ const TEXT = {
     mineThanks: 'ほんとうに行ってきたんだね。ありがとう。', camHint: 'おばあちゃんの写真と景色を重ねて撮ってごらん', camGhostOn: '写真を重ねる', camGhostOff: '写真を消す', camClose: '閉じる', camNo: 'このブラウザではカメラを開けません。アルバムから選んでください。', visited: '行った場所', hush: 'しーっ',
     journalTitle: 'おばあちゃんの手帳 3巻', tabMap: '地図', tabList: 'マス', went: '行った', saw: '見た', missed: '見られなかった', go: '行く', here: '今いる場所です。',
     noArt: 'このマスはまだ絵がありません。', pick: '点を押すとそのマスが見えます。', rough: '場所はおおよそです。',
-    story: '物語', route: '行き方', quizHead: '当ててごらん。', right: '正解だよ。ていねいに読んだね。', wrong: '答えは「{}」。次にまた当ててごらん。', check: '行く前に確かめてごらん。', routeLocked: '写真を重ねて撮ると、行き方がつきます。',
+    story: '物語', route: '行き方', quizHead: '当ててごらん。', right: '正解だよ。ていねいに読んだね。', wrong: '答えは「{}」。次にまた当ててごらん。', check: '行く前に確かめてごらん。', routeLocked: '写真を重ねて撮ると、行き方がつきます。', guide2: '物語を読んでごらん', guide3: '行き方も見ておいで', guide4: '次のページへ進んでごらん', guide5: '手帳をひらいて、ほかのマスも見てごらん', journal: '手帳',
     regions: { '서울·경기·인천': 'ソウル・京畿・仁川', '강원': '江原', '충청': '忠清', '전라': '全羅', '경상': '慶尚', '제주': '済州', '섬과 끝': '島と果て' } },
   zh: { started: '开始制作的日子：{y}年{m}月{d}日', days: '八道游览，今天是第{n}天', markGood: '好时节', markToday: '今天', hint: '拖动画面，把照片和那个地方叠在一起吧', good: '去好时节', today: '回到今天', again: '再找一次',
     sunset: '日落', month: '月', sound: '音效', music: '背景音乐', settings: '设置', close: '关闭', soundTerm: '声音', on: '开', off: '关',
@@ -291,7 +295,7 @@ const TEXT = {
     mineThanks: '真的去过啦。谢谢你呀。', camHint: '把奶奶的照片和风景叠在一起拍吧', camGhostOn: '叠上照片', camGhostOff: '关掉照片', camClose: '关闭', camNo: '这个浏览器打不开相机。请从相册里选。', visited: '去过的地方', hush: '嘘～',
     journalTitle: '奶奶的笔记本 第3本', tabMap: '地图', tabList: '格', went: '去过', saw: '看过', missed: '没看到', go: '前往', here: '现在就在这里。',
     noArt: '这一格还没有图。', pick: '点一下圆点，就能看到那一格。', rough: '位置是大概的。',
-    story: '故事', route: '怎么去', quizHead: '猜猜看吧。', right: '答对啦。读得真仔细呀。', wrong: '答案是“{}”。下次再来猜猜吧。', check: '去之前先确认一下吧。', routeLocked: '把照片叠好拍下来，就会附上去的路。',
+    story: '故事', route: '怎么去', quizHead: '猜猜看吧。', right: '答对啦。读得真仔细呀。', wrong: '答案是“{}”。下次再来猜猜吧。', check: '去之前先确认一下吧。', routeLocked: '把照片叠好拍下来，就会附上去的路。', guide2: '读读故事吧', guide3: '也看看怎么去吧', guide4: '翻到下一页吧', guide5: '打开笔记本，看看别的格子吧', journal: '笔记本',
     regions: { '서울·경기·인천': '首尔·京畿·仁川', '강원': '江原', '충청': '忠清', '전라': '全罗', '경상': '庆尚', '제주': '济州', '섬과 끝': '岛屿与尽头' } },
   en: { started: 'Making began: {m}/{d}/{y}', days: 'Day {n} of roaming the eight provinces', markGood: 'Best time', markToday: 'Today', hint: 'Drag the view and lay the photo over the place', good: 'To the best time', today: 'To today', again: 'Find it again',
     sunset: 'Sunset', month: '', months: 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '), sound: 'Sound', music: 'Music', settings: 'Settings', close: 'Close', soundTerm: 'Sound', on: 'on', off: 'off',
@@ -299,14 +303,15 @@ const TEXT = {
     mineThanks: 'So you really went. Thank you.', camHint: "Lay Grandma's photo over the view and shoot", camGhostOn: 'Show the photo', camGhostOff: 'Hide the photo', camClose: 'Close', camNo: 'This browser cannot open the camera. Please pick from the album.', visited: 'Visited', hush: 'Shh~',
     journalTitle: "Grandma's Notes, volume 3", tabMap: 'Map', tabList: 'Squares', went: 'Went', saw: 'Saw', missed: 'Missed', go: 'Go', here: 'You are here now.',
     noArt: 'This square has no picture yet.', pick: 'Press a dot to see that square.', rough: 'The position is rough.',
-    story: 'Story', route: 'Directions', quizHead: 'Have a guess.', right: 'Right. You read it with care.', wrong: 'The answer is "{}". Have another guess next time.', check: 'Check before you go.', routeLocked: 'Lay the photo over the view and take it, and the directions are added.',
+    story: 'Story', route: 'Directions', quizHead: 'Have a guess.', right: 'Right. You read it with care.', wrong: 'The answer is "{}". Have another guess next time.', check: 'Check before you go.', routeLocked: 'Lay the photo over the view and take it, and the directions are added.', guide2: 'Now read the story', guide3: 'Have a look at the directions too', guide4: 'Turn to the next page', guide5: 'Open the notebook and see the other squares', journal: 'Notebook',
     regions: { '서울·경기·인천': 'Seoul, Gyeonggi, Incheon', '강원': 'Gangwon', '충청': 'Chungcheong', '전라': 'Jeolla', '경상': 'Gyeongsang', '제주': 'Jeju', '섬과 끝': 'Islands and ends' } },
 };
 // 설정의 Help 쪽(도움말)과 About 쪽. 갈래의 짜임은 1권의 설정에서 가져왔고 글은 여기서 썼다. 일본어, 중국어, 영어는 임시 번역이다.
 const HELP = {
   ko: { lead: '할머니의 옛 사진을 들고 그 자리를 찾아가, 사진과 오늘의 풍경을 포개어 찍는 놀이입니다.', items: [
     ['사진 포개기', '화면 위쪽을 끌면 풍경이 움직입니다. 반투명한 할머니의 사진과 풍경이 겹치는 자리에 가까이 가면 저절로 맞춰져 찍히고, 엽서가 됩니다.'],
-    ['다시 찾기', '찍은 뒤에 처음부터 다시 해 보려면 "다시 찾기"를 누릅니다.'],
+    ['안내 줄', '사진 틀 위에 지금 할 일이 한 줄로 뜹니다. 사진 포개기, 이야기, 가는 길, 다음 칸의 차례입니다.'],
+    ['다시 찾기', '찍은 뒤에 처음부터 다시 해 보려면 오른쪽 작은 단추들 끝의 "다시 찾기"를 누릅니다.'],
     ['계절 다이얼', '아래쪽 다이얼을 좌우로 굴리면 날짜가 바뀝니다. 한 칸이 5일이고 한 바퀴가 한 해입니다. 철에 따라 풍경의 색과 해 지는 시각이 바뀝니다.'],
     ['좋은 때와 오늘', '다이얼에 별과 딱지로 표시됩니다. 딱지가 다이얼 끝에 걸려 있으면 눌러서 그날로 갑니다.'],
     ['이야기와 가는 길', '이야기에는 그 자리의 이야기 세 문장과 문제 하나가 있습니다. 가는 길은 사진을 포개 찍은 뒤에 열립니다.'],
@@ -315,7 +320,8 @@ const HELP = {
     ['소리', '위쪽의 스피커 단추는 효과음, 음표 단추는 배경 음악을 켜고 끕니다.'] ] },
   ja: { lead: 'おばあちゃんの昔の写真を持ってその場所をたずね、写真と今日の景色を重ねて撮る遊びです。', items: [
     ['写真を重ねる', '画面の上のほうを引くと景色が動きます。半透明のおばあちゃんの写真と景色が重なる場所に近づくと、ひとりでに合わさって撮れ、はがきになります。'],
-    ['もう一度さがす', '撮ったあとではじめからやり直すには「もう一度さがす」を押します。'],
+    ['案内の行', '写真の枠の上に、今することが一行で出ます。写真を重ねる、物語、行き方、次のマスの順です。'],
+    ['もう一度さがす', '撮ったあとではじめからやり直すには、右の小さなボタンの最後の「もう一度さがす」を押します。'],
     ['季節のダイヤル', '下のダイヤルを左右に回すと日付が変わります。一目盛りが5日、一周が一年です。季節によって景色の色と日の入りの時刻が変わります。'],
     ['いい季節と今日', 'ダイヤルに星と札で示されます。札がダイヤルの端にかかっていたら、押すとその日へ行きます。'],
     ['物語と行き方', '物語にはその場所の話が三つの文と問題一つで入っています。行き方は写真を重ねて撮ったあとに開きます。'],
@@ -324,7 +330,8 @@ const HELP = {
     ['音', '上のスピーカーのボタンは効果音、音符のボタンは音楽をオン・オフします。'] ] },
   zh: { lead: '带着奶奶的老照片去找那个地方，把照片和今天的风景叠在一起拍下来的游戏。', items: [
     ['叠照片', '拖动画面上方，风景就会移动。靠近半透明的奶奶照片和风景重合的位置，就会自动对齐并拍下来，变成明信片。'],
-    ['再找一次', '拍完以后想从头再来，就按“再找一次”。'],
+    ['引导条', '照片框上方会用一行字告诉你现在该做什么。顺序是叠照片、故事、怎么去、下一格。'],
+    ['再找一次', '拍完以后想从头再来，就按右边小按钮最后的“再找一次”。'],
     ['季节拨盘', '左右转动下方的拨盘，日期就会改变。一格是5天，一圈是一年。风景的颜色和日落的时间会随季节变化。'],
     ['好时节和今天', '在拨盘上用星星和标签标出。标签挂在拨盘边上时，按一下就去那一天。'],
     ['故事和怎么去', '故事里有那个地方的三句话和一道题。把照片叠好拍下来以后，“怎么去”才会打开。'],
@@ -333,7 +340,8 @@ const HELP = {
     ['声音', '上方的喇叭按钮开关音效，音符按钮开关背景音乐。'] ] },
   en: { lead: "A game of taking Grandma's old photos to the places they show, and laying each photo over today's view to take it again.", items: [
     ['Laying the photo', "Drag the upper part of the screen and the view moves. Come close to where Grandma's see-through photo and the view line up, and it snaps into place, is taken, and becomes a postcard."],
-    ['Find it again', 'To start over after taking it, press "Find it again".'],
+    ['The guide line', 'Above the photo frame one line tells you what to do now: lay the photo, the story, the directions, the next square, in that order.'],
+    ['Find it again', 'To start over after taking it, press "Find it again" at the end of the small buttons on the right.'],
     ['The season dial', 'Roll the dial at the bottom left or right to change the date. One tick is 5 days and one turn is a year. The colours of the view and the time of sunset change with the season.'],
     ['Best time and today', "They are marked on the dial with a star and a tag. When a tag sits at the dial's edge, press it to go to that day."],
     ['Story and directions', 'The story holds three sentences about the place and one question. The directions open once you have laid the photo over the view and taken it.'],
@@ -432,11 +440,31 @@ function renderHelp() {
   $('introSora').lastElementChild.textContent = intro.sora; $('introGo').textContent = intro.go;
   $('testReset').textContent = intro.reset; $('testReset').title = intro.resetTip; $('testAll').textContent = intro.all; $('testAll').title = intro.allTip;
 }
+// 안내 줄: 이 칸에서 지금 할 일. 찍기(1) → 이야기(2) → 가는 길(3) → 다음 칸(4). 문제를 풀어야 2가, 가는 길을 열어야 3이 넘어간다.
+// 읽은 것과 본 것은 이번에 연 동안만 기억한다.
+const readStory = new Set(), seenRoute = new Set();
+function showGuide() {
+  const el = $('hint'), count = document.createElement('i');
+  let step = 1, text = t('hint'), label = null, act = null;
+  if (shot && !readStory.has(HERE)) { step = 2; text = t('guide2'); label = t('story'); act = () => openCard('story'); }
+  else if (shot && !seenRoute.has(HERE)) { step = 3; text = t('guide3'); label = t('route'); act = () => openCard('route'); }
+  else if (shot) {
+    step = 4;
+    const next = Object.keys(SCENES).find(id => id !== HERE && !filled.has(id));
+    if (next) { text = t('guide4'); label = SQ_TEXT[next][lang].name; act = () => go(next); }
+    else { text = t('guide5'); label = t('journal'); act = () => $('journalButton').click(); }
+  }
+  count.textContent = step + '/4';
+  el.replaceChildren(count, text);
+  if (label) { const b = document.createElement('button'); b.textContent = label; b.onclick = act; el.append(b); }
+  el.classList.toggle('step', step > 1);
+  if (shot) el.style.opacity = 1;
+}
 function setLang(next) {
   lang = next;
   try { localStorage.setItem(LANG_KEY, lang); } catch { /* 저장하지 못해도 이번에는 바뀐다 */ }
   document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : lang;
-  $('name').textContent = q('name'); $('hint').textContent = t('hint'); $('again').textContent = t('again');
+  $('name').textContent = q('name'); showGuide(); $('again').textContent = t('again');
   $('memo').firstElementChild.textContent = q('memo');
   if (hushAt >= 0) $('bubble').textContent = t('hush'); else if (shot) $('bubble').textContent = q('bubble');
   $('settingsTitle').textContent = t('settings'); $('closeSettings').textContent = t('close');
@@ -623,9 +651,8 @@ function layout() {
   frame = { x: (W - fw) / 2, y: H * 0.205, w: fw, h: fh };
   drawScene(photo.getContext('2d'), TARGET, fadedPal(S.photoSeason), seasonOnly(S.photoSeason), true, sunSpot(GOOD));
   $('memo').style.top = frame.y + fh + 16 + 'px';
-  $('hint').style.top = frame.y - 40 + 'px';
+  $('hint').style.top = frame.y - 50 + 'px';
   $('post').style.top = frame.y - 6 + 'px';
-  $('again').style.top = frame.y + fh + 84 + 'px';
   $('chips').style.top = frame.y + fh + 14 + 'px';
   // 소라의 크기는 우주 한량(1권)과 같다. 세로로 긴 손전화(390×844)에서 화면 높이의 20.8%, 넓은 화면에서 34.6%까지.
   // 1권의 src/core/pose.js(heroScaleFor)와 src/render/spriteHero.js(높이 2.4의 카드를 6 앞에, 시야 60도)를 옮긴 셈이다.
@@ -633,7 +660,9 @@ function layout() {
   // 낮은 화면에서는 두 줄짜리 메모를 가리지 않을 만큼만 키운다.
   const soraH = Math.round(Math.min(H * (2.4 * (0.78 + 0.52 * wide) / 1.3) / (12 * Math.tan(Math.PI / 6)), H - 118 - (frame.y + fh + 74))), soraW = Math.round(soraH * 192 / 256);
   $('sora').style.width = soraW + 'px';
-  $('bubble').style.left = 10 + soraW - 6 + 'px'; $('bubble').style.maxWidth = W - soraW - 14 + 'px'; $('bubble').style.bottom = 118 + Math.round(soraH * 0.64) + 'px';
+  $('bubble').style.left = 10 + soraW - 6 + 'px'; 
+  const bubbleBottom = 118 + Math.round(soraH * 0.64), chipsBottom = frame.y + fh + 14 + 4 * 36;   // 작은 단추 넷이 말풍선 높이까지 내려오면 그만큼 비켜 준다
+  $('bubble').style.maxWidth = W - soraW - 14 - (H - bubbleBottom - 60 < chipsBottom ? 92 : 0) + 'px'; $('bubble').style.bottom = 118 + Math.round(soraH * 0.64) + 'px';
   if (shot) fillPost();
 }
 
@@ -723,13 +752,13 @@ function capture() {
   shotDay = dv; fillPost();
   $('pd0').textContent = S.photoDate; $('pd').textContent = dateText(d);
   $('post').style.display = 'block'; $('again').style.display = 'block';
-  hushAt = -1; $('sora').src = 'mock/sora.png'; $('bubble').textContent = q('bubble'); $('bubble').style.opacity = 1; fill(HERE);
+  hushAt = -1; $('sora').src = 'mock/sora.png'; $('bubble').textContent = q('bubble'); $('bubble').style.opacity = 1; fill(HERE); showGuide();
   if (location.hash === '#shot') return;   // 그림 파일로 찍을 때는 번쩍임을 뺀다
   const f = $('flash'); f.style.transition = 'none'; f.style.opacity = 0.9;
   requestAnimationFrame(() => { f.style.transition = 'opacity .5s'; f.style.opacity = 0; });
   shutter();
 }
-function unshoot() { shot = false; touched = false; cv.x = cv.y = 0; $('post').style.display = $('again').style.display = 'none'; $('bubble').style.opacity = 0; $('hint').style.opacity = 1; }
+function unshoot() { shot = false; touched = false; cv.x = cv.y = 0; $('post').style.display = $('again').style.display = 'none'; $('bubble').style.opacity = 0; $('hint').style.opacity = 1; showGuide(); }
 $('again').onclick = () => {
   unshoot();
   const a = Math.random() * 6.2832; cam.x = clamp(TARGET.x + Math.cos(a) * 150, -170, 170); cam.y = Math.sin(a) > 0 ? 40 : -40;
@@ -1034,9 +1063,11 @@ function openCard(kind) {
       $('cardBody').querySelectorAll('.pick button').forEach(x => x.classList.toggle('right', Number(x.dataset.c) === answer));
       if (!ok) b.classList.add('wrong');
       $('quizSay').textContent = ok ? t('right') : t('wrong').replace('{}', q('choices')[answer]);
+      readStory.add(HERE); showGuide();
     }; });
   } else {
     $('cardBody').innerHTML = `<ol>${q('routes').map(line => `<li>${line}</li>`).join('')}</ol><p class="hand">${t('check')}</p>`;
+    seenRoute.add(HERE); showGuide();
   }
   $('card').classList.add('on');
 }
