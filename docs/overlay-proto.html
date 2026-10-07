@@ -61,6 +61,10 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
   box-shadow:0 10px 30px rgba(0,0,0,.5);display:none}
 #post div{display:flex;gap:6px}
 #post canvas{display:block;border:1px solid #cbb98c;border-radius:6px}
+#post #pm,#post #pdm{display:none}
+#post.three #pm{display:block}
+#post.three #pdm{display:inline}
+#post.three p{font-size:16px}
 #post p{margin:6px 2px 0;display:flex;justify-content:space-between;font-family:"Nanum Pen Script","Gowun Batang",cursive;font-size:20px;line-height:1.1}
 /* 수첩: 단추를 누르면 열린다. 지도와 칸 두 갈래. 종이와 제본은 2권의 화면 어림에서 가져왔다. */
 #journal{inset:0;background:rgba(5,3,48,.62);display:none}
@@ -84,11 +88,34 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #journalList h2{margin:12px 0 2px;font-size:13px;border-bottom:1px solid var(--ink)}
 #journalList div{display:grid;grid-template-columns:26px 1fr auto;gap:0 6px;padding:5px 0;border-bottom:1px dashed #b9a777;font-size:13px;align-items:baseline}
 #journalList div.done{background:rgba(246,185,81,.25)}
+#journalList b.real::after{content:" ★";color:#b5803b}
+#mapCard button+button{margin-left:6px;background:none;color:var(--ink)}
 #journalList i{font-style:normal;font-size:11px;opacity:.7;font-variant-numeric:tabular-nums}
 #journalList em{font-style:normal;font-size:11px;opacity:.75}
 #journalList small{grid-column:2/4;font-size:11px;opacity:.7}
 /* 이야기 카드와 가는 길: 접혀 있고 눌러야 펼쳐진다(기획서 4절). */
 #chips{right:14px;display:grid;gap:6px;justify-items:end}
+/* 내 사진: 관광객이 그 자리에서 정말 찍은 사진. 이 기기에만 남는다. */
+#mine{inset:0;background:rgba(5,3,48,.62);display:none;place-items:center}
+#mine.on{display:grid}
+#mine>div{width:88%;background:var(--paper);color:var(--ink);border-radius:6px;padding:16px 16px 14px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-family:"Gowun Batang","Malgun Gothic",serif}
+#mine h1{margin:0 0 8px;font-size:18px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+#mine img{display:none;width:100%;border:1px solid #cbb98c;border-radius:6px;margin-bottom:8px}
+#mine img.on{display:block}
+#mine p{margin:6px 0;font-size:13px;line-height:1.55}
+#mine .hand{font-family:"Nanum Pen Script","Gowun Batang",cursive;font-size:21px;line-height:1.2;min-height:1.2em}
+#mine .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#mine button,#mine label{border:1px solid var(--ink);border-radius:8px;background:none;color:var(--ink);font:inherit;font-size:14px;padding:8px 14px;cursor:pointer}
+#mine label input{display:none}
+#mine #closeMine{margin-top:12px;width:100%;background:var(--ink);color:var(--paper)}
+#cam{inset:0;background:#000;display:none}
+#cam.on{display:block}
+#cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#camGhost{position:absolute;left:50%;transform:translateX(-50%);border:3px solid var(--white);border-radius:12px;box-shadow:0 0 0 2000px rgba(5,3,48,.45);pointer-events:none}
+#camHint{position:absolute;left:50%;top:14px;transform:translateX(-50%);padding:6px 12px;font-size:12px;white-space:nowrap}
+#camBar{position:absolute;left:0;right:0;bottom:22px;display:flex;justify-content:center;align-items:center;gap:22px}
+#camBar button{color:var(--white);font:inherit;font-size:13px;padding:9px 14px}
+#camBar #camShoot{width:68px;height:68px;border-radius:50%;background:var(--white);border:4px solid var(--gold);padding:0}
 #chips button{padding:7px 12px;color:var(--white);font:inherit;font-size:12px}
 #card{inset:0;background:rgba(5,3,48,.62);display:none;place-items:center}
 #card.on{display:grid}
@@ -131,9 +158,9 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
     <button id="bgmButton"></button>
     <button id="settingsButton"></button>
   </nav>
-  <div id="chips"><button id="storyButton" class="glass"></button><button id="routeButton" class="glass"></button></div>
+  <div id="chips"><button id="storyButton" class="glass"></button><button id="routeButton" class="glass"></button><button id="mineButton" class="glass"></button></div>
   <div id="toast" class="glass"></div>
-  <div id="post"><div><canvas id="pl"></canvas><canvas id="pr"></canvas></div><p><span id="pd0"></span><span id="pd"></span></p></div>
+  <div id="post"><div><canvas id="pl"></canvas><canvas id="pr"></canvas><canvas id="pm"></canvas></div><p><span id="pd0"></span><span id="pd"></span><span id="pdm"></span></p></div>
   <button id="again" class="glass"></button>
   <div id="flash"></div>
   <div id="journal"><div class="book">
@@ -142,6 +169,20 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
     <section data-tab="map"><canvas id="mapCanvas"></canvas><p id="mapCard"></p></section>
     <section data-tab="list" id="journalList"></section>
   </div></div>
+  <div id="mine"><div>
+    <h1 id="mineTitle"></h1>
+    <img id="mineShow" alt="">
+    <p class="hand" id="mineSay"></p>
+    <p id="mineNote"></p>
+    <div class="row"><button id="mineCam"></button><label><span id="mineFileText"></span><input id="mineFile" type="file" accept="image/*"></label><button id="mineDrop"></button></div>
+    <button id="closeMine"></button>
+  </div></div>
+  <div id="cam">
+    <video id="camVideo" playsinline muted></video>
+    <canvas id="camGhost"></canvas>
+    <div id="camHint" class="glass"></div>
+    <div id="camBar"><button id="camToggle" class="glass"></button><button id="camShoot" aria-label="찍기"></button><button id="camClose" class="glass"></button></div>
+  </div>
   <div id="card"><div><h1 id="cardTitle"></h1><div id="cardBody"></div><button id="closeCard"></button></div></div>
   <div id="settings"><div>
     <h1 id="settingsTitle"></h1>
@@ -171,21 +212,24 @@ const LANG_KEY = 'koreaoddity.lang.v1';
 const TEXT = {
   ko: { markGood: '좋은 때', markToday: '오늘', hint: '화면을 끌어 사진과 그 자리를 포개 보렴', good: '좋은 때로', today: '오늘로', again: '다시 찾기',
     sunset: '해 짐', month: '월', sound: '효과음', music: '배경 음악', settings: '설정', close: '닫기', soundTerm: '소리', on: '켜짐', off: '꺼짐',
-    soundNote: '배경 음악은 우주 한량의 열한 곡입니다. 위쪽의 스피커 단추와 음표 단추로도 켜고 끕니다.', noJournal: '수첩은 아직 없습니다.', hush: '쉬잇~',
+    soundNote: '배경 음악은 우주 한량의 열한 곡입니다. 위쪽의 스피커 단추와 음표 단추로도 켜고 끕니다.', noJournal: '수첩은 아직 없습니다.', mine: '내 사진', mineTitle: '내가 찍은 사진', mineCam: '그 자리에서 찍기', mineFile: '사진첩에서 고르기', mineDrop: '지우기', mineNote: '정말 다녀왔다면 그 자리에서 찍은 사진을 붙여 보렴. 사진은 이 기기에만 남는다.',
+    mineThanks: '정말 다녀왔구나. 고맙다.', camHint: '할머니의 사진과 풍경을 포개어 찍어 보렴', camGhostOn: '사진 겹치기', camGhostOff: '사진 끄기', camClose: '닫기', camNo: '이 브라우저에서는 카메라를 열 수 없습니다. 사진첩에서 골라 주세요.', visited: '다녀온 곳', hush: '쉬잇~',
     journalTitle: '할머니의 수첩 3권', tabMap: '지도', tabList: '칸', went: '갔다', saw: '봤다', missed: '못 봤다', go: '가기', here: '지금 이 자리입니다.',
     noArt: '이 칸은 아직 그림이 없습니다.', pick: '점을 누르면 그 칸이 보입니다.', rough: '자리는 어림입니다.',
     story: '이야기', route: '가는 길', quizHead: '맞혀 보렴.', right: '맞았다. 꼼꼼히 읽었구나.', wrong: '답은 "{}". 다음에 또 맞혀 보렴.', check: '가기 전에 확인하렴.', routeLocked: '사진을 포개 찍으면 가는 길이 붙습니다.',
     regions: { '서울·경기·인천': '서울·경기·인천', '강원': '강원', '충청': '충청', '전라': '전라', '경상': '경상', '제주': '제주', '섬과 끝': '섬과 끝' } },
   ja: { markGood: 'いい季節', markToday: '今日', hint: '画面を引いて、写真とその場所を重ねてごらん', good: 'いい季節へ', today: '今日へ', again: 'もう一度さがす',
     sunset: '日の入り', month: '月', sound: '効果音', music: '音楽', settings: '設定', close: '閉じる', soundTerm: '音', on: 'オン', off: 'オフ',
-    soundNote: '音楽は「Space Oddity」の十一曲です。上のスピーカーと音符のボタンでもオン・オフできます。', noJournal: '手帳はまだありません。', hush: 'しーっ',
+    soundNote: '音楽は「Space Oddity」の十一曲です。上のスピーカーと音符のボタンでもオン・オフできます。', noJournal: '手帳はまだありません。', mine: 'わたしの写真', mineTitle: 'わたしが撮った写真', mineCam: 'その場所で撮る', mineFile: 'アルバムから選ぶ', mineDrop: '消す', mineNote: 'ほんとうに行ってきたなら、その場所で撮った写真を貼ってごらん。写真はこの端末にだけ残る。',
+    mineThanks: 'ほんとうに行ってきたんだね。ありがとう。', camHint: 'おばあちゃんの写真と景色を重ねて撮ってごらん', camGhostOn: '写真を重ねる', camGhostOff: '写真を消す', camClose: '閉じる', camNo: 'このブラウザではカメラを開けません。アルバムから選んでください。', visited: '行った場所', hush: 'しーっ',
     journalTitle: 'おばあちゃんの手帳 3巻', tabMap: '地図', tabList: 'マス', went: '行った', saw: '見た', missed: '見られなかった', go: '行く', here: '今いる場所です。',
     noArt: 'このマスはまだ絵がありません。', pick: '点を押すとそのマスが見えます。', rough: '場所はおおよそです。',
     story: '物語', route: '行き方', quizHead: '当ててごらん。', right: '正解だよ。ていねいに読んだね。', wrong: '答えは「{}」。次にまた当ててごらん。', check: '行く前に確かめてごらん。', routeLocked: '写真を重ねて撮ると、行き方がつきます。',
     regions: { '서울·경기·인천': 'ソウル・京畿・仁川', '강원': '江原', '충청': '忠清', '전라': '全羅', '경상': '慶尚', '제주': '済州', '섬과 끝': '島と果て' } },
   zh: { markGood: '好时节', markToday: '今天', hint: '拖动画面，把照片和那个地方叠在一起吧', good: '去好时节', today: '回到今天', again: '再找一次',
     sunset: '日落', month: '月', sound: '音效', music: '背景音乐', settings: '设置', close: '关闭', soundTerm: '声音', on: '开', off: '关',
-    soundNote: '背景音乐是《Space Oddity》的十一首曲子。也可以用上方的喇叭按钮和音符按钮开关。', noJournal: '笔记本还没有。', hush: '嘘～',
+    soundNote: '背景音乐是《Space Oddity》的十一首曲子。也可以用上方的喇叭按钮和音符按钮开关。', noJournal: '笔记本还没有。', mine: '我的照片', mineTitle: '我拍的照片', mineCam: '在那个地方拍', mineFile: '从相册里选', mineDrop: '删除', mineNote: '要是真的去过，就把在那儿拍的照片贴上来吧。照片只留在这台设备里。',
+    mineThanks: '真的去过啦。谢谢你呀。', camHint: '把奶奶的照片和风景叠在一起拍吧', camGhostOn: '叠上照片', camGhostOff: '关掉照片', camClose: '关闭', camNo: '这个浏览器打不开相机。请从相册里选。', visited: '去过的地方', hush: '嘘～',
     journalTitle: '奶奶的笔记本 第3本', tabMap: '地图', tabList: '格', went: '去过', saw: '看过', missed: '没看到', go: '前往', here: '现在就在这里。',
     noArt: '这一格还没有图。', pick: '点一下圆点，就能看到那一格。', rough: '位置是大概的。',
     story: '故事', route: '怎么去', quizHead: '猜猜看吧。', right: '答对啦。读得真仔细呀。', wrong: '答案是“{}”。下次再来猜猜吧。', check: '去之前先确认一下吧。', routeLocked: '把照片叠好拍下来，就会附上去的路。',
@@ -240,6 +284,9 @@ function setLang(next) {
   $('soundButton').setAttribute('aria-label', t('sound')); $('bgmButton').setAttribute('aria-label', t('music')); $('settingsButton').setAttribute('aria-label', t('settings'));
   document.querySelectorAll('#langRow button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   $('storyButton').textContent = t('story'); $('routeButton').textContent = t('route'); $('closeCard').textContent = t('close');
+  $('mineButton').textContent = t('mine'); $('mineCam').textContent = t('mineCam'); $('mineFileText').textContent = t('mineFile'); $('mineDrop').textContent = t('mineDrop');
+  $('mineNote').textContent = t('mineNote'); $('closeMine').textContent = t('close'); $('camHint').textContent = t('camHint'); $('camClose').textContent = t('camClose');
+  if ($('mine').classList.contains('on')) openMine(mineFor);
   if ($('card').classList.contains('on')) openCard(cardKind);
   showJournal();
 }
@@ -419,7 +466,6 @@ function layout() {
   $('post').style.top = frame.y - 6 + 'px';
   $('again').style.top = frame.y + fh + 84 + 'px';
   $('chips').style.top = frame.y + fh + 14 + 'px';
-  for (const id of ['pl', 'pr']) { const c = $(id); c.width = fw * 0.5 * dpr; c.height = fh * 0.5 * dpr; c.style.width = fw * 0.5 + 'px'; c.style.height = fh * 0.5 + 'px'; }
   if (shot) fillPost();
 }
 
@@ -485,9 +531,24 @@ let shotDay = TODAY;   // 찍은 날. 화면 크기가 바뀌면 이 날의 색�
 function fillPost() {
   const s = seasonAt(shotDay), dpr = window.devicePixelRatio || 1;
   drawScene(snap.getContext('2d'), TARGET, s.pal, s.w, false, sunSpot(shotDay));
+  // 내 사진이 있으면 석 장이 나란하다: 할머니의 바랜 사진, 소라의 오늘, 내가 그 자리에서 찍은 것.
+  const my = mine.get(HERE), n = my ? 3 : 2, pw = my ? (W - 60) / 3 : frame.w * 0.5, phh = pw * frame.h / frame.w;
+  $('post').classList.toggle('three', Boolean(my));
+  for (const id of ['pl', 'pr', 'pm']) { const c = $(id); c.width = pw * dpr; c.height = phh * dpr; c.style.width = pw + 'px'; c.style.height = phh + 'px'; }
   for (const [id, src] of [['pl', photo], ['pr', snap]]) {
     const c = $(id); c.getContext('2d').drawImage(src, frame.x * dpr, frame.y * dpr, frame.w * dpr, frame.h * dpr, 0, 0, c.width, c.height);
   }
+  if (my) {
+    $('pdm').textContent = my.at;
+    const im = new Image();
+    im.onload = () => { const c = $('pm'); cover(c.getContext('2d'), im, im.naturalWidth, im.naturalHeight, c.width, c.height); };
+    im.src = my.url;
+  }
+}
+// 그림을 틀에 꽉 차게, 넘치는 쪽을 잘라 그린다
+function cover(c, src, sw, sh, dw, dh) {
+  const k = Math.max(dw / sw, dh / sh), cw = dw / k, ch = dh / k;
+  c.drawImage(src, (sw - cw) / 2, (sh - ch) / 2, cw, ch, 0, 0, dw, dh);
 }
 function capture() {
   shot = true; cam.x = TARGET.x; cam.y = TARGET.y; cv.x = cv.y = 0;
@@ -814,6 +875,100 @@ $('routeButton').onclick = () => { if (filled.has(HERE)) openCard('route'); else
 $('closeCard').onclick = () => $('card').classList.remove('on');
 $('card').onclick = e => { if (e.target === $('card')) $('card').classList.remove('on'); };
 
+// ── 내 사진 ─────────────────────────────────────────────────────────
+// 3권은 게임을 끄고 정말 가 볼 수 있는 권이다. "가는 길"이 화면 밖으로 나가는 문이라면, 이것은 다녀와서 들어오는 문이다
+// (사용자, 2026.10.7: "관광객들이 자신이 실제로 찍은 사진과 게임의 사진을 비교하는 맛도 필요할 것 같은데").
+// 세 가지다. 엽서에 내 사진이 셋째 장으로 붙고, 수첩에 "다녀온 곳"이 따로 세어지고, 그 자리에서는 카메라 화면에 할머니의
+// 사진을 겹쳐 놓고 포개어 찍는다. 사진은 이 기기의 IndexedDB 에만 둔다. 서버로 보내지 않는다. 위치는 확인하지 않는다.
+const mine = new Map();   // 칸 id → { url: 줄여서 담은 JPEG(data URL), at: 붙인 날 }
+let mineFor = HERE, photoDb = null;
+function openDb() {
+  return new Promise(resolve => {
+    try {
+      const req = indexedDB.open('koreaoddity', 1);
+      req.onupgradeneeded = () => req.result.createObjectStore('photos');
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => resolve(null);
+    } catch { resolve(null); }   // 저장소를 못 쓰면 이번에 켠 동안만 남는다
+  });
+}
+openDb().then(db => {
+  photoDb = db; if (!db) return;
+  const cursor = db.transaction('photos').objectStore('photos').openCursor();
+  cursor.onsuccess = () => { const at = cursor.result; if (at) { mine.set(at.key, at.value); at.continue(); } else { showJournal(); if (shot) fillPost(); } };
+});
+function keepMine(id, value) {
+  if (value) mine.set(id, value); else mine.delete(id);
+  if (photoDb) { const store = photoDb.transaction('photos', 'readwrite').objectStore('photos'); if (value) store.put(value, id); else store.delete(id); }
+  showJournal(); if (shot && id === HERE) fillPost();
+}
+// 사진을 가로 960픽셀 안으로 줄여 JPEG 으로 담는다. 한 장에 100KB 남짓이다.
+function shrink(src, sw, sh, ratio) {
+  const c = document.createElement('canvas');
+  if (ratio) { c.width = 960; c.height = Math.round(960 / ratio); cover(c.getContext('2d'), src, sw, sh, c.width, c.height); }
+  else { const k = Math.min(1, 960 / Math.max(sw, sh)); c.width = Math.round(sw * k); c.height = Math.round(sh * k); c.getContext('2d').drawImage(src, 0, 0, c.width, c.height); }
+  return c.toDataURL('image/jpeg', 0.82);
+}
+const todayText = () => { const now = new Date(); return `${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()}`; };
+function openMine(id, thanks = false) {
+  mineFor = id;
+  const sq = squares.find(x => x.id === id), my = mine.get(id);
+  $('mineTitle').textContent = `${sq ? nameOf(sq) : q('name')} · ${t('mineTitle')}`;
+  $('mineShow').classList.toggle('on', Boolean(my)); if (my) $('mineShow').src = my.url;
+  $('mineSay').textContent = thanks ? t('mineThanks') : '';
+  $('mineDrop').style.display = my ? '' : 'none';
+  $('mine').classList.add('on');
+}
+$('mineButton').onclick = () => openMine(HERE);
+$('closeMine').onclick = () => $('mine').classList.remove('on');
+$('mine').onclick = e => { if (e.target === $('mine')) $('mine').classList.remove('on'); };
+$('mineDrop').onclick = () => { keepMine(mineFor, null); openMine(mineFor); };
+$('mineFile').onchange = e => {
+  const file = e.target.files[0]; e.target.value = '';
+  if (!file) return;
+  const im = new Image();
+  im.onload = () => { keepMine(mineFor, { url: shrink(im, im.naturalWidth, im.naturalHeight), at: todayText() }); URL.revokeObjectURL(im.src); openMine(mineFor, true); };
+  im.src = URL.createObjectURL(file);
+};
+
+// 그 자리에서 찍기: 카메라 화면 위에 할머니의 사진을 반투명으로 겹쳐 놓는다. 게임에서 하던 포개기를 현실에서 한다.
+// 할머니의 사진은 지금 서 있는 칸의 것만 있다. 다른 칸의 사진을 찍을 때는 겹치는 것 없이 찍는다.
+let camStream = null, ghostOn = true;
+function camLayout() {
+  const g = $('camGhost'), w = W * 0.86, h = w * frame.h / frame.w, dpr = window.devicePixelRatio || 1;
+  g.style.width = w + 'px'; g.style.height = h + 'px'; g.style.top = (H - h) / 2 - 30 + 'px';
+  g.width = w * dpr; g.height = h * dpr;
+  const c = g.getContext('2d'); c.clearRect(0, 0, g.width, g.height);
+  const has = ghostOn && mineFor === HERE;
+  if (has) { c.globalAlpha = 0.5; c.drawImage(photo, frame.x * dpr, frame.y * dpr, frame.w * dpr, frame.h * dpr, 0, 0, g.width, g.height); c.globalAlpha = 1; }
+  $('camToggle').textContent = ghostOn ? t('camGhostOff') : t('camGhostOn');
+  $('camToggle').style.visibility = mineFor === HERE ? 'visible' : 'hidden';
+  $('camHint').style.visibility = has ? 'visible' : 'hidden';
+}
+function closeCam() {
+  if (camStream) for (const track of camStream.getTracks()) track.stop();
+  camStream = null; $('camVideo').srcObject = null; $('cam').classList.remove('on');
+}
+$('mineCam').onclick = async () => {
+  if (!navigator.mediaDevices?.getUserMedia) { toast(t('camNo')); return; }
+  try { camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 } }, audio: false }); }
+  catch { toast(t('camNo')); return; }
+  $('camVideo').srcObject = camStream; $('camVideo').play();
+  $('mine').classList.remove('on'); $('cam').classList.add('on'); camLayout();
+};
+$('camToggle').onclick = () => { ghostOn = !ghostOn; camLayout(); };
+$('camClose').onclick = () => { closeCam(); openMine(mineFor); };
+$('camShoot').onclick = () => {
+  const v = $('camVideo'); if (!v.videoWidth) return;
+  // 화면에 보이던 틀 안의 그림만 담는다. 영상은 화면에 꽉 차게(cover) 놓여 있으므로 틀이 영상의 어디인지 셈한다.
+  const k = Math.max(W / v.videoWidth, H / v.videoHeight), box = $('camGhost').getBoundingClientRect(), stage = ph.getBoundingClientRect();
+  const sx = (v.videoWidth - W / k) / 2 + (box.left - stage.left) / k, sy = (v.videoHeight - H / k) / 2 + (box.top - stage.top) / k;
+  const c = document.createElement('canvas'); c.width = 960; c.height = Math.round(960 * box.height / box.width);
+  c.getContext('2d').drawImage(v, sx, sy, box.width / k, box.height / k, 0, 0, c.width, c.height);
+  keepMine(mineFor, { url: c.toDataURL('image/jpeg', 0.82), at: todayText() });
+  shutter(); closeCam(); openMine(mineFor, true);
+};
+
 // ── 수첩 ────────────────────────────────────────────────────────────
 // 칸 100개(assets/squares.js). 시험판에 그림이 있는 칸은 63번 첨성대와 68번 부석사 둘이다. 채운 칸은 기억한다.
 const FILLED_KEY = 'koreaoddity.filled.v1';
@@ -826,13 +981,13 @@ const nameOf = sq => lang === 'ja' ? sq.ja ?? sq.ko : lang === 'zh' ? sq.zh ?? s
 let picked = null, journalTab = 'map';
 
 function showJournal() {
-  $('journalTitle').textContent = t('journalTitle'); $('journalCount').textContent = `${filled.size}/100`;
+  $('journalTitle').textContent = t('journalTitle'); $('journalCount').textContent = `${filled.size}/100` + (mine.size ? ` · ${t('visited')} ${mine.size}` : '');
   document.querySelectorAll('#journalTabs button').forEach(b => { b.textContent = t(b.dataset.tab === 'map' ? 'tabMap' : 'tabList'); b.classList.toggle('on', b.dataset.tab === journalTab); });
   document.querySelectorAll('#journal section').forEach(el => el.classList.toggle('on', el.dataset.tab === journalTab));
   let html = '', region = null;
   for (const sq of squares) {
     if (sq.region !== region) { region = sq.region; html += `<h2>${t('regions')[region]}</h2>`; }
-    html += `<div data-id="${sq.id}" class="${filled.has(sq.id) ? 'done' : ''}"><i>${sq.no}</i><b>${nameOf(sq)}</b><em>${t(sq.grandma)}</em><small>${lang === 'ko' ? sq.where + ' · ' + sq.what : ''}</small></div>`;
+    html += `<div data-id="${sq.id}" class="${filled.has(sq.id) ? 'done' : ''}"><i>${sq.no}</i><b class="${mine.has(sq.id) ? 'real' : ''}">${nameOf(sq)}</b><em>${t(sq.grandma)}</em><small>${lang === 'ko' ? sq.where + ' · ' + sq.what : ''}</small></div>`;
   }
   $('journalList').innerHTML = html;
   showCard();
@@ -842,7 +997,8 @@ function showCard() {
   const sq = squares.find(x => x.id === picked);
   if (!sq) { $('mapCard').textContent = t('pick'); return; }
   const sub = [lang === 'ko' ? sq.where : '', t(sq.grandma)].filter(Boolean).join(' · ');
-  $('mapCard').innerHTML = `<b>${sq.no} ${nameOf(sq)}</b><br>${sub}${lang === 'ko' ? '<br>' + sq.what + ' · ' + sq.best : ''}${sq.rough ? '<br><small>' + t('rough') + '</small>' : ''}<br><button id="goSquare">${t('go')}</button>`;
+  $('mapCard').innerHTML = `<b>${sq.no} ${nameOf(sq)}</b><br>${sub}${lang === 'ko' ? '<br>' + sq.what + ' · ' + sq.best : ''}${sq.rough ? '<br><small>' + t('rough') + '</small>' : ''}<br><button id="goSquare">${t('go')}</button><button id="mineSquare">${t('mine')}${mine.has(sq.id) ? ' ★' : ''}</button>`;
+  $('mineSquare').onclick = () => openMine(sq.id);
   $('goSquare').onclick = () => { if (sq.id === HERE) { $('journal').classList.remove('on'); toast(t('here')); } else if (SCENES[sq.id]) go(sq.id); else toast(t('noArt')); };
 }
 // 지도: 땅은 Natural Earth 의 바닷가 선(assets/coast.js)이고, 그 위에 칸 100개의 점을 찍는다.
@@ -873,6 +1029,9 @@ function drawMap() {
     g.fillStyle = filled.has(sq.id) ? '#f6b951' : REGION_COLOR[sq.region]; g.globalAlpha = filled.has(sq.id) ? 1 : 0.8; g.fill(); g.globalAlpha = 1;
     if (filled.has(sq.id)) { g.strokeStyle = '#3b2a1a'; g.lineWidth = 1.5; g.stroke(); }
     else if (SCENES[sq.id]) { g.fillStyle = '#fbf8f9'; g.beginPath(); g.arc(x, y, 1.8, 0, 6.2832); g.fill(); }   // 그림이 있는 칸은 가운데가 희다
+  }
+  for (const { sq, x, y } of mapDots) if (mine.has(sq.id)) {   // 정말 다녀온 곳: 금빛 테를 한 겹 더
+    g.strokeStyle = '#b5803b'; g.lineWidth = 2; g.beginPath(); g.arc(x, y, 9, 0, 6.2832); g.stroke();
   }
   const p = mapDots.find(d => d.sq.id === picked);
   if (p) { g.strokeStyle = '#3b2a1a'; g.lineWidth = 2; g.beginPath(); g.arc(p.x, p.y, 10, 0, 6.2832); g.stroke(); }
@@ -909,6 +1068,7 @@ if (location.hash === '#shot') { cam.x = TARGET.x; cam.y = TARGET.y; touched = t
 if (location.hash === '#settings') $('settings').classList.add('on');
 if (location.hash === '#story') openCard('story');
 if (location.hash === '#route') openCard('route');
+if (location.hash === '#mine') openMine(HERE);
 if (location.hash === '#journal' || location.hash === '#list') { picked = HERE; journalTab = location.hash === '#list' ? 'list' : 'map'; $('journal').classList.add('on'); showJournal(); }
 if (location.hash === '#hush') { muted = true; showSound(); hush(); hushHold = true; }   // 넷째 그림에서 멈춘다
 requestAnimationFrame(loop);
