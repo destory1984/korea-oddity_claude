@@ -1,0 +1,510 @@
+[
+ {
+  "ko": "한국",
+  "koWiki": "대한민국",
+  "hanja": "大韓民國",
+  "ja": "大韓民国",
+  "jaKana": null,
+  "zhHans": "大韩民国",
+  "zhHant": "大韓民國",
+  "missing": []
+ },
+ {
+  "ko": "서울",
+  "koWiki": "서울특별시",
+  "hanja": "特別市",
+  "ja": "ソウル特別市",
+  "jaKana": "ソウル",
+  "zhHans": "首尔特别市",
+  "zhHant": "首爾特別市",
+  "missing": []
+ },
+ {
+  "ko": "신라",
+  "koWiki": "신라",
+  "hanja": "新羅",
+  "ja": "新羅",
+  "jaKana": "シルラ",
+  "zhHans": "新罗",
+  "zhHant": "新羅",
+  "missing": []
+ },
+ {
+  "ko": "고려",
+  "koWiki": "고려",
+  "hanja": "高麗",
+  "ja": "高麗",
+  "jaKana": "コリョ",
+  "zhHans": "高丽",
+  "zhHant": "高麗",
+  "missing": []
+ },
+ {
+  "ko": "조선",
+  "koWiki": "조선",
+  "hanja": "朝鮮",
+  "ja": "李氏朝鮮",
+  "jaKana": null,
+  "zhHans": "朝鲜王朝",
+  "zhHant": "朝鮮王朝",
+  "missing": []
+ },
+ {
+  "ko": "한강",
+  "koWiki": "한강",
+  "hanja": "漢江",
+  "ja": "漢江",
+  "jaKana": "ハンガン",
+  "zhHans": "汉江 (朝鲜半岛)",
+  "zhHant": "漢江 (朝鮮半島)",
+  "missing": []
+ },
+ {
+  "ko": "서해",
+  "koWiki": "황해",
+  "hanja": "黃海",
+  "ja": "黄海",
+  "jaKana": "ホワンハイ",
+  "zhHans": "黄海",
+  "zhHant": "黃海",
+  "missing": []
+ },
+ {
+  "ko": "낙동강",
+  "koWiki": "낙동강",
+  "hanja": "洛東江",
+  "ja": "洛東江",
+  "jaKana": "ナクトンガン",
+  "zhHans": "洛东江",
+  "zhHant": "洛東江",
+  "missing": []
+ },
+ {
+  "ko": "소백산",
+  "koWiki": "소백산",
+  "hanja": "小白山",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "ko": "인천공항",
+  "koWiki": "인천국제공항",
+  "hanja": "仁川國際空港",
+  "ja": "仁川国際空港",
+  "jaKana": null,
+  "zhHans": "仁川国际机场",
+  "zhHant": "仁川國際機場",
+  "missing": []
+ },
+ {
+  "ko": "김해공항",
+  "koWiki": "김해국제공항",
+  "hanja": "金海國際空港",
+  "ja": "金海国際空港",
+  "jaKana": "キメ",
+  "zhHans": "金海国际机场",
+  "zhHant": "金海國際機場",
+  "missing": []
+ },
+ {
+  "ko": "제주공항",
+  "koWiki": "제주국제공항",
+  "hanja": "濟州國際空港",
+  "ja": "済州国際空港",
+  "jaKana": "チェジュ",
+  "zhHans": "济州国际机场",
+  "zhHant": "濟州國際機場",
+  "missing": []
+ },
+ {
+  "ko": "부산항",
+  "koWiki": "부산항",
+  "hanja": "釜山港",
+  "ja": "釜山港",
+  "jaKana": "プサン",
+  "zhHans": "釜山港",
+  "zhHant": "釜山港",
+  "missing": []
+ },
+ {
+  "ko": "공항철도",
+  "koWiki": "인천국제공항철도",
+  "hanja": "仁川國際空港鐵道",
+  "ja": "仁川国際空港鉄道",
+  "jaKana": "インチョン",
+  "zhHans": "仁川国际机场铁道",
+  "zhHant": "仁川國際機場鐵道",
+  "missing": []
+ },
+ {
+  "ko": "서울역",
+  "koWiki": "서울역",
+  "hanja": "驛",
+  "ja": "ソウル駅",
+  "jaKana": "ソウル",
+  "zhHans": "首尔站",
+  "zhHant": "首爾站",
+  "missing": []
+ },
+ {
+  "ko": "부산",
+  "koWiki": "부산광역시",
+  "hanja": "釜山廣域市",
+  "ja": "釜山広域市",
+  "jaKana": "プサン",
+  "zhHans": "釜山广域市",
+  "zhHant": "釜山廣域市",
+  "missing": []
+ },
+ {
+  "ko": "대구",
+  "koWiki": "대구광역시",
+  "hanja": "大邱廣域市",
+  "ja": "大邱広域市",
+  "jaKana": "テグ",
+  "zhHans": "大邱广域市",
+  "zhHant": "大邱廣域市",
+  "missing": []
+ },
+ {
+  "ko": "경주",
+  "koWiki": "경주시",
+  "hanja": "慶州市",
+  "ja": "慶州市",
+  "jaKana": "キョンジュ",
+  "zhHans": "庆州市",
+  "zhHant": "慶州市",
+  "missing": []
+ },
+ {
+  "ko": "첨성대",
+  "koWiki": "첨성대",
+  "hanja": "瞻星臺",
+  "ja": "慶州瞻星台",
+  "jaKana": null,
+  "zhHans": "瞻星台",
+  "zhHant": "瞻星臺",
+  "missing": []
+ },
+ {
+  "ko": "선덕여왕",
+  "koWiki": "선덕여왕",
+  "hanja": "善德女王",
+  "ja": "善徳女王",
+  "jaKana": null,
+  "zhHans": "善德女王",
+  "zhHant": "善德女王",
+  "missing": []
+ },
+ {
+  "ko": "경복궁",
+  "koWiki": "경복궁",
+  "hanja": "景福宮",
+  "ja": "景福宮",
+  "jaKana": "キョンボックン",
+  "zhHans": "景福宫",
+  "zhHant": "景福宮",
+  "missing": []
+ },
+ {
+  "ko": "근정전",
+  "koWiki": "근정전",
+  "hanja": "勤政殿",
+  "ja": "勤政殿",
+  "jaKana": "クンチョンジョン",
+  "zhHans": "勤政殿",
+  "zhHant": "勤政殿",
+  "missing": []
+ },
+ {
+  "ko": "진도",
+  "koWiki": "진도군",
+  "hanja": "珍島郡",
+  "ja": "珍島郡",
+  "jaKana": "チンド",
+  "zhHans": "珍岛郡",
+  "zhHant": "珍島郡",
+  "missing": []
+ },
+ {
+  "ko": "진도 바닷길",
+  "koWiki": "진도 신비의 바닷길",
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ko"
+  ]
+ },
+ {
+  "ko": "목포역",
+  "koWiki": "목포역",
+  "hanja": "木浦驛",
+  "ja": "木浦駅",
+  "jaKana": "モクポ",
+  "zhHans": "木浦站",
+  "zhHant": "木浦站",
+  "missing": []
+ },
+ {
+  "ko": "해인사",
+  "koWiki": "해인사",
+  "hanja": "海印寺",
+  "ja": "海印寺 (陜川郡)",
+  "jaKana": "ヘインサ",
+  "zhHans": "海印寺",
+  "zhHant": "海印寺",
+  "missing": []
+ },
+ {
+  "ko": "장경판전",
+  "koWiki": "합천 해인사 장경판전",
+  "hanja": "陜川 海印寺 藏經板殿",
+  "ja": "海印寺大蔵経板殿",
+  "jaKana": "ヘインサ・テヂャンギョンパンヂョン",
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "zh"
+  ]
+ },
+ {
+  "ko": "팔만대장경",
+  "koWiki": "합천 해인사 대장경판",
+  "hanja": "陜川 海印寺 大藏經板",
+  "ja": "高麗八万大蔵経",
+  "jaKana": null,
+  "zhHans": "高丽大藏经",
+  "zhHant": "高麗大藏經",
+  "missing": []
+ },
+ {
+  "ko": "제주",
+  "koWiki": "제주특별자치도",
+  "hanja": "濟州特別自治道",
+  "ja": "済州特別自治道",
+  "jaKana": "チェジュ",
+  "zhHans": "济州特别自治道",
+  "zhHant": "濟州特別自治道",
+  "missing": []
+ },
+ {
+  "ko": "한라산",
+  "koWiki": "한라산",
+  "hanja": "岳",
+  "ja": "漢拏山",
+  "jaKana": "ハルラサン",
+  "zhHans": "汉拏山",
+  "zhHant": "漢拏山",
+  "missing": []
+ },
+ {
+  "ko": "백록담",
+  "koWiki": "백록담",
+  "hanja": "白鹿潭",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": "白鹿潭",
+  "zhHant": "白鹿潭",
+  "missing": [
+   "ja"
+  ]
+ },
+ {
+  "ko": "성판악",
+  "koWiki": "성판악",
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ko"
+  ]
+ },
+ {
+  "ko": "강릉",
+  "koWiki": "강릉시",
+  "hanja": "江陵市",
+  "ja": "江陵市",
+  "jaKana": "カンヌン",
+  "zhHans": "江陵市",
+  "zhHant": "江陵市",
+  "missing": []
+ },
+ {
+  "ko": "정동진",
+  "koWiki": "정동진",
+  "hanja": "正東津",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "ko": "정동진역",
+  "koWiki": "정동진역",
+  "hanja": "正東津驛",
+  "ja": "正東津駅",
+  "jaKana": "チョンドンジン",
+  "zhHans": "正东津站",
+  "zhHant": "正東津站",
+  "missing": []
+ },
+ {
+  "ko": "태백",
+  "koWiki": "태백시",
+  "hanja": "太白市",
+  "ja": "太白市",
+  "jaKana": "テベク",
+  "zhHans": "太白市",
+  "zhHant": "太白市",
+  "missing": []
+ },
+ {
+  "ko": "검룡소",
+  "koWiki": "검룡소",
+  "hanja": "儉龍沼",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "ko": "태안",
+  "koWiki": "태안군",
+  "hanja": "泰安郡",
+  "ja": "泰安郡",
+  "jaKana": "テアン",
+  "zhHans": "泰安郡",
+  "zhHant": "泰安郡",
+  "missing": []
+ },
+ {
+  "ko": "꽃지 해변",
+  "koWiki": "꽃지해수욕장",
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "ko": "안동",
+  "koWiki": "안동시",
+  "hanja": "安東市",
+  "ja": "安東市",
+  "jaKana": "アンドン",
+  "zhHans": "安东市",
+  "zhHant": "安東市",
+  "missing": []
+ },
+ {
+  "ko": "안동역",
+  "koWiki": "안동역",
+  "hanja": "安東驛",
+  "ja": "安東駅 (慶尚北道)",
+  "jaKana": "アンドン",
+  "zhHans": "安东站 (庆尚北道)",
+  "zhHant": "安東站 (慶尚北道)",
+  "missing": []
+ },
+ {
+  "ko": "하회마을",
+  "koWiki": "안동 하회마을",
+  "hanja": "安東 河回",
+  "ja": "河回村",
+  "jaKana": "ハフェマウル",
+  "zhHans": "河回村",
+  "zhHant": "河回村",
+  "missing": []
+ },
+ {
+  "ko": "부용대",
+  "koWiki": "부용대",
+  "hanja": null,
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ko"
+  ]
+ },
+ {
+  "ko": "영주",
+  "koWiki": "영주시",
+  "hanja": "榮州市",
+  "ja": "栄州市",
+  "jaKana": "ヨンジュ",
+  "zhHans": "荣州市",
+  "zhHant": "榮州市",
+  "missing": []
+ },
+ {
+  "ko": "영주역",
+  "koWiki": "영주역",
+  "hanja": "榮州驛",
+  "ja": "栄州駅",
+  "jaKana": "ヨンジュ",
+  "zhHans": "荣州站",
+  "zhHant": "榮州站",
+  "missing": []
+ },
+ {
+  "ko": "부석사",
+  "koWiki": "부석사",
+  "hanja": "浮石寺",
+  "ja": "浮石寺 (栄州市)",
+  "jaKana": "プソクサ",
+  "zhHans": "浮石寺",
+  "zhHant": "浮石寺",
+  "missing": []
+ },
+ {
+  "ko": "무량수전",
+  "koWiki": "영주 부석사 무량수전",
+  "hanja": "榮州 浮石寺 無量壽殿",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ]
+ },
+ {
+  "ko": "의상",
+  "koWiki": "의상",
+  "hanja": "衣裳",
+  "ja": null,
+  "jaKana": null,
+  "zhHans": null,
+  "zhHant": null,
+  "missing": [
+   "ja",
+   "zh"
+  ]
+ }
+]
