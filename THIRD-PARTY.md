@@ -24,6 +24,7 @@
 | `docs/assets/ui/icon-*.svg` 18개 | 단추 아이콘 | 1권의 `public/assets/ui/` | 2026.10.7 | 1권에서 직접 그린 것. MIT |
 | `docs/assets/music.js` | 배경 음악 열한 곡을 짜는 코드와 울리는 코드 | 1권의 `src/core/music.js` 전부와 `src/ui/sound.js` 의 tone, padNote, playBar, music, setMusic (`tools/copy-music.mjs`) | 2026.10.7 | 1권에서 직접 만든 것. MIT |
 | `tools/art-order.sh`, `tools/key-sky.py` | 그림을 주문하는 스크립트와 자홍색 바탕을 지우는 스크립트 | 2권의 `tools/` | 2026.10.7 | MIT |
+| `docs/overlay-proto.html` 의 다이얼 생김새(`drawDial`) | 밤하늘 유리, 금빛 테, 북두칠성과 별가루, 반짝임, 표시와 딱지, 바늘. 색과 치수와 그리는 차례 | 2권의 `game/src/ui/dialView.js` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 다이얼 움직임과 눈금 소리 | 한 칸 12픽셀, 미끄러지다 서기, 1,200Hz와 760Hz의 소리 | 2권의 `docs/dial-proto.html` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 유리 단추 모양, 설정의 언어 고르기, "쉬잇" 움직임의 숫자(1초에 넉 장, 3초) | 화면의 틀 | 1권의 `style.css`, `index.html`, `src/core/sprite.js`, `src/main.js` | 2026.10.7 | MIT |
 | `translation-test/round2/style-ref.json`, `docs/번역-규칙.md` 의 본보기와 굳은 낱말, 시험판의 "맞았다. 꼼꼼히 읽었구나." 같은 말 | 일본어, 중국어 번역문 | 1권의 `src/i18n/ja.json`, `zh.json` | 2026.10.7 | MIT |
