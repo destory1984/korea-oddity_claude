@@ -4,6 +4,10 @@ const CHANGES_STARTED = "2026-10-07";
 const CHANGES = [
  {
   "day": "2026-10-07",
+  "text": "영어가 생겼습니다. 설정에서 한국어, English, 日本語, 中文 넷 가운데 고릅니다. 설정에는 Help(도움말)와 About 쪽도 생겨 갈래가 넷이 되었습니다."
+ },
+ {
+  "day": "2026-10-07",
   "text": "설정 창이 우주 한량과 같은 톤이 되었습니다. 남색 유리 판에 금빛 작은 제목, 고른 것은 금빛 테로 보입니다."
  },
  {
@@ -101,6 +105,7 @@ const CHANGES = [
 ];
 const CHANGE_WORDS = {
  "ja": {
+  "영어가 생겼습니다. 설정에서 한국어, English, 日本語, 中文 넷 가운데 고릅니다. 설정에는 Help(도움말)와 About 쪽도 생겨 갈래가 넷이 되었습니다.": "英語ができました。設定で한국어、English、日本語、中文の四つから選びます。設定にはHelp（ヘルプ）とAboutのページもでき、ページは四つになりました。",
   "설정 창이 우주 한량과 같은 톤이 되었습니다. 남색 유리 판에 금빛 작은 제목, 고른 것은 금빛 테로 보입니다.": "設定の画面がSpace Oddityと同じ色合いになりました。紺色のガラスの板に金色の小見出し、選んだものは金色の枠で見えます。",
   "다이얼을 돌릴 때 나는 눈금 소리를 절반으로 줄였습니다.": "ダイヤルを回すときの目盛りの音を半分に小さくしました。",
   "소라가 커졌습니다. 우주 한량에서와 같은 크기로, 손전화에서 화면 높이의 5분의 1쯤입니다. 너비로는 84픽셀에서 127픽셀이 되었습니다.": "ソラが大きくなりました。Space Oddityと同じ大きさで、スマホでは画面の高さの5分の1くらいです。幅は84ピクセルから127ピクセルになりました。",
@@ -127,6 +132,7 @@ const CHANGE_WORDS = {
   "기획서 「할머니의 수첩 3권」을 썼습니다. 자리 칸 100곳, 길 아홉, 쪽지 넷.": "企画書「おばあちゃんの手帳 3巻」を書きました。場所のマス100か所、道九つ、メモ四つ。"
  },
  "zh": {
+  "영어가 생겼습니다. 설정에서 한국어, English, 日本語, 中文 넷 가운데 고릅니다. 설정에는 Help(도움말)와 About 쪽도 생겨 갈래가 넷이 되었습니다.": "新增了英语。在设置里从한국어、English、日本語、中文四种里选择。设置里还新增了Help（帮助）和About页面，一共有四个页面。",
   "설정 창이 우주 한량과 같은 톤이 되었습니다. 남색 유리 판에 금빛 작은 제목, 고른 것은 금빛 테로 보입니다.": "设置窗口换成了和Space Oddity一样的色调。深蓝色的玻璃面板，金色的小标题，选中的项目用金色边框表示。",
   "다이얼을 돌릴 때 나는 눈금 소리를 절반으로 줄였습니다.": "转动拨盘时的刻度声减小了一半。",
   "소라가 커졌습니다. 우주 한량에서와 같은 크기로, 손전화에서 화면 높이의 5분의 1쯤입니다. 너비로는 84픽셀에서 127픽셀이 되었습니다.": "索拉变大了。和Space Oddity里一样大，在手机上大约是屏幕高度的五分之一。宽度从84像素变成了127像素。",
@@ -151,5 +157,32 @@ const CHANGE_WORDS = {
   "사진 포개기 시험판을 만들었습니다. 부석사에서 산 다섯 겹을 할머니 사진과 포개면 찍히고, 다이얼을 돌리면 네 계절의 색이 바뀝니다.": "做了照片叠拍的试用版。把在浮石寺买的五层和奶奶的照片叠在一起就能拍下来，转动转盘，四季的颜色就会变。",
   "일본어 번역을 시험했습니다. 101줄 가운데 문장은 99줄이 맞았고, 이름은 10줄이 틀렸습니다. 이름은 손으로 만든 이름표를 쓰기로 했습니다.": "测试了日语翻译。101行中句子有99行是对的，名字有10行是错的。名字决定使用手工制作的名牌。",
   "기획서 「할머니의 수첩 3권」을 썼습니다. 자리 칸 100곳, 길 아홉, 쪽지 넷.": "写了策划书《奶奶的笔记本 第3卷》。位置格100处，路九条，纸条四张。"
+ },
+ "en": {
+  "영어가 생겼습니다. 설정에서 한국어, English, 日本語, 中文 넷 가운데 고릅니다. 설정에는 Help(도움말)와 About 쪽도 생겨 갈래가 넷이 되었습니다.": "English is in. Choose among 한국어, English, 日本語 and 中文 in the settings. The settings also gained Help and About pages, four pages in all.",
+  "설정 창이 우주 한량과 같은 톤이 되었습니다. 남색 유리 판에 금빛 작은 제목, 고른 것은 금빛 테로 보입니다.": "The settings panel now has the same tone as Space Oddity: a navy glass sheet, small gold headings, and a gold outline on whatever is chosen.",
+  "다이얼을 돌릴 때 나는 눈금 소리를 절반으로 줄였습니다.": "The tick you hear when turning the dial is now half as loud.",
+  "소라가 커졌습니다. 우주 한량에서와 같은 크기로, 손전화에서 화면 높이의 5분의 1쯤입니다. 너비로는 84픽셀에서 127픽셀이 되었습니다.": "Sora is bigger. She is the size she has in Space Oddity, about a fifth of the screen's height on a phone. She went from 84 to 127 pixels wide.",
+  "배경 음악을 새로 지었습니다. 우주 한량의 열한 곡을 내리고 스무 곡을 올렸습니다. 돌담길, 대숲, 산사, 숨비소리처럼 팔도의 풍경에서 이름을 땄고, 여덟 곡은 우리 민요의 다섯 음으로 지었습니다.": "The background music is newly written. The eleven tunes from Space Oddity came down and twenty went up. They are named after sights of the eight provinces, such as a stone-wall lane, a bamboo grove, a mountain temple and a diver's whistle, and eight of them use the five notes of Korean folk song.",
+  "설정에 바뀐 것들 쪽이 생겼습니다. 날마다 무엇이 바뀌었는지 한 줄씩 볼 수 있습니다.": "The settings have a Changes page. It shows, a line a day, what has changed.",
+  "정말 다녀온 사람은 내 사진을 붙일 수 있습니다. 그 자리에서 카메라에 할머니의 사진을 겹쳐 놓고 찍으면, 엽서가 석 장이 되고 수첩에 다녀온 곳이 세어집니다.": "If you have really been there, you can add your own photo. Lay Grandma's photo over the camera on the spot and shoot: the postcard grows to three pictures and the notebook counts the place as visited.",
+  "철이 바뀌면 풀밭과 나무와 먼 산의 색이 바뀝니다. 겨울에는 눈이 덮이고 가을에는 나무가 붉습니다. 돌탑과 기와는 그대로입니다.": "When the season turns, the grass, the trees and the far hills change colour. Snow lies in winter and the trees go red in autumn. The stone tower and the roof tiles stay as they are.",
+  "다이얼이 시간 한량의 것과 같아졌습니다. 두꺼운 밤하늘 유리 속에 북두칠성이 함께 돌고, 굴리면 유리가 반짝입니다. 좋은 때와 오늘에는 별과 딱지가 붙습니다.": "The dial is now the one from Time Oddity. The Big Dipper turns inside thick night-sky glass, and the glass glints as you roll it. The best time and today each carry a star and a tag.",
+  "땅 그림을 주문해 받았습니다. 첨성대와 고분, 무량수전과 소백산이 종이를 오려 겹친 그림 일곱 장으로 왔습니다.": "The pictures of the land were ordered and have arrived. Cheomseongdae and the burial mounds, Muryangsujeon and Sobaeksan came as seven layers of cut paper.",
+  "둘째 칸 첨성대가 생겼습니다. 1971년 수학여행 사진 속에는 아이들이 탑 앞에 줄지어 있고, 오늘 풍경에는 없습니다. 수첩에서 \"가기\"를 누르면 칸을 옮겨 갑니다.": "A second square, Cheomseongdae, is in. In the 1971 school-trip photo children stand in a row before the tower; in today's view they are gone. Press \"Go\" in the notebook to move to another square.",
+  "수첩의 지도에 땅이 그려집니다. 제주도와 울릉도, 바다 건너 쓰시마와 규슈도 보입니다.": "The notebook's map now draws the land. You can see Jeju and Ulleungdo, and Tsushima and Kyushu across the sea.",
+  "할머니의 메모도 고른 말 하나로만 적습니다.": "Grandma's notes, too, are written in the one language you chose.",
+  "지명을 고른 말 하나로만 적습니다. 한국어면 부석사, 일본어와 중국어면 浮石寺입니다. 한자와 한글을 나란히 적던 것을 뺐습니다.": "Place names are written in the one language you chose: 부석사 in Korean, 浮石寺 in Japanese and Chinese. Hanja and Hangul are no longer shown side by side.",
+  "해가 계산한 자리에 뜹니다. 다이얼을 돌리면 해 지는 시각이 바뀝니다. 부석사는 10월 7일에 18:00, 동지에 17:12입니다.": "The sun rises where the sums put it. Turn the dial and the time of sunset changes. At Buseoksa it is 18:00 on 7 October and 17:12 at the winter solstice.",
+  "부석사 칸에 이야기 카드, 문제, 가는 길이 붙었습니다. 가는 길은 사진을 포개 찍은 뒤에 열립니다.": "The Buseoksa square has a story card, a question and directions. The directions open once you have laid the photo over the view and taken it.",
+  "수첩을 열 수 있습니다. 지도에 칸 100개가 점으로 찍혀 있고, 점을 누르면 그 칸의 이름이 세 나라 말로 보입니다.": "The notebook opens. Its map has 100 squares as dots; press a dot to see that square's name in three languages.",
+  "시험판에 우주 한량의 단추와 설정을 붙였습니다. 말 셋(한국어, 일본어, 중국어)을 고르고, 효과음과 배경 음악 열한 곡을 따로 켜고 끕니다. 끄면 소라가 \"쉬잇\" 합니다.": "The prototype has Space Oddity's buttons and settings. Choose from three languages (Korean, Japanese, Chinese) and switch the sound effects and the eleven background tunes on and off separately. Switch them off and Sora says \"Shh~\".",
+  "다이얼을 남색 유리에 금빛 눈금과 별자리 무늬로 바꿨습니다.": "The dial is now navy glass with gold ticks and a pattern of constellations.",
+  "이름표로 이름을 채워 열 칸을 다시 번역했습니다. 이름이 틀린 줄이 10줄에서 0줄이 되었고, 흠 없는 칸이 3칸에서 8칸이 되었습니다.": "The ten squares were translated again with names filled in from the name table. Lines with a wrong name went from 10 to 0, and squares with no flaw from 3 to 8.",
+  "열 칸에 나오는 이름 48개의 이름표를 만들었습니다. 한라산은 漢拏山, 정동진은 正東津입니다. 앞선 시험에서 기계가 漢拿山, 正東進으로 틀렸던 이름입니다.": "A name table of the 48 names in the ten squares is made. Hallasan is 漢拏山 and Jeongdongjin is 正東津; in the earlier test the machine got them wrong as 漢拿山 and 正東進.",
+  "번역에서도 소라의 반말과 할머니의 말씨를 살리기로 했습니다. 1권의 번역을 본으로 45줄을 옮겨 보니, 일본어는 할머니의 말 22줄 가운데 18줄이 어른의 말로 읽혔습니다.": "The translations, too, will keep Sora's casual speech and Grandma's way of talking. With volume 1's translation as the model, 45 lines were carried over; in Japanese, 18 of Grandma's 22 lines read as an elder speaking.",
+  "사진 포개기 시험판을 만들었습니다. 부석사에서 산 다섯 겹을 할머니 사진과 포개면 찍히고, 다이얼을 돌리면 네 계절의 색이 바뀝니다.": "A prototype for laying photos over the view is made. At Buseoksa, line up five ridges with Grandma's photo and it is taken; turn the dial and the colours of the four seasons change.",
+  "일본어 번역을 시험했습니다. 101줄 가운데 문장은 99줄이 맞았고, 이름은 10줄이 틀렸습니다. 이름은 손으로 만든 이름표를 쓰기로 했습니다.": "The Japanese translation was tested. Of 101 lines, 99 sentences were right and 10 had a wrong name. Names will come from a hand-made name table.",
+  "기획서 「할머니의 수첩 3권」을 썼습니다. 자리 칸 100곳, 길 아홉, 쪽지 넷.": "The plan \"Grandma's Notes, volume 3\" is written: 100 squares, nine roads, four slips of paper."
  }
 };

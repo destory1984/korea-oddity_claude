@@ -7,7 +7,8 @@
   "jaKana": null,
   "zhHans": "大韩民国",
   "zhHant": "大韓民國",
-  "missing": []
+  "missing": [],
+  "en": "South Korea"
  },
  {
   "ko": "서울",
@@ -17,7 +18,8 @@
   "jaKana": "ソウル",
   "zhHans": "首尔特别市",
   "zhHant": "首爾特別市",
-  "missing": []
+  "missing": [],
+  "en": "Seoul"
  },
  {
   "ko": "신라",
@@ -27,7 +29,8 @@
   "jaKana": "シルラ",
   "zhHans": "新罗",
   "zhHant": "新羅",
-  "missing": []
+  "missing": [],
+  "en": "Silla"
  },
  {
   "ko": "고려",
@@ -37,7 +40,8 @@
   "jaKana": "コリョ",
   "zhHans": "高丽",
   "zhHant": "高麗",
-  "missing": []
+  "missing": [],
+  "en": "Goryeo"
  },
  {
   "ko": "조선",
@@ -47,7 +51,8 @@
   "jaKana": null,
   "zhHans": "朝鲜王朝",
   "zhHant": "朝鮮王朝",
-  "missing": []
+  "missing": [],
+  "en": "Joseon"
  },
  {
   "ko": "한강",
@@ -57,7 +62,8 @@
   "jaKana": "ハンガン",
   "zhHans": "汉江 (朝鲜半岛)",
   "zhHant": "漢江 (朝鮮半島)",
-  "missing": []
+  "missing": [],
+  "en": "Han River (Korea)"
  },
  {
   "ko": "서해",
@@ -67,7 +73,8 @@
   "jaKana": "ホワンハイ",
   "zhHans": "黄海",
   "zhHant": "黃海",
-  "missing": []
+  "missing": [],
+  "en": "Yellow Sea"
  },
  {
   "ko": "낙동강",
@@ -77,7 +84,8 @@
   "jaKana": "ナクトンガン",
   "zhHans": "洛东江",
   "zhHant": "洛東江",
-  "missing": []
+  "missing": [],
+  "en": "Nakdong River"
  },
  {
   "ko": "소백산",
@@ -90,7 +98,8 @@
   "missing": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Sobaeksan"
  },
  {
   "ko": "인천공항",
@@ -100,7 +109,8 @@
   "jaKana": null,
   "zhHans": "仁川国际机场",
   "zhHant": "仁川國際機場",
-  "missing": []
+  "missing": [],
+  "en": "Incheon International Airport"
  },
  {
   "ko": "김해공항",
@@ -110,7 +120,8 @@
   "jaKana": "キメ",
   "zhHans": "金海国际机场",
   "zhHant": "金海國際機場",
-  "missing": []
+  "missing": [],
+  "en": "Gimhae International Airport"
  },
  {
   "ko": "제주공항",
@@ -120,7 +131,8 @@
   "jaKana": "チェジュ",
   "zhHans": "济州国际机场",
   "zhHant": "濟州國際機場",
-  "missing": []
+  "missing": [],
+  "en": "Jeju International Airport"
  },
  {
   "ko": "부산항",
@@ -130,7 +142,8 @@
   "jaKana": "プサン",
   "zhHans": "釜山港",
   "zhHant": "釜山港",
-  "missing": []
+  "missing": [],
+  "en": "Port of Busan"
  },
  {
   "ko": "공항철도",
@@ -140,7 +153,8 @@
   "jaKana": "インチョン",
   "zhHans": "仁川国际机场铁道",
   "zhHant": "仁川國際機場鐵道",
-  "missing": []
+  "missing": [],
+  "en": "AREX"
  },
  {
   "ko": "서울역",
@@ -150,7 +164,8 @@
   "jaKana": "ソウル",
   "zhHans": "首尔站",
   "zhHant": "首爾站",
-  "missing": []
+  "missing": [],
+  "en": "Seoul Station"
  },
  {
   "ko": "부산",
@@ -160,7 +175,8 @@
   "jaKana": "プサン",
   "zhHans": "釜山广域市",
   "zhHant": "釜山廣域市",
-  "missing": []
+  "missing": [],
+  "en": "Busan"
  },
  {
   "ko": "대구",
@@ -170,7 +186,8 @@
   "jaKana": "テグ",
   "zhHans": "大邱广域市",
   "zhHant": "大邱廣域市",
-  "missing": []
+  "missing": [],
+  "en": "Daegu"
  },
  {
   "ko": "경주",
@@ -180,7 +197,8 @@
   "jaKana": "キョンジュ",
   "zhHans": "庆州市",
   "zhHant": "慶州市",
-  "missing": []
+  "missing": [],
+  "en": "Gyeongju"
  },
  {
   "ko": "첨성대",
@@ -190,7 +208,8 @@
   "jaKana": null,
   "zhHans": "瞻星台",
   "zhHant": "瞻星臺",
-  "missing": []
+  "missing": [],
+  "en": "Cheomseongdae"
  },
  {
   "ko": "선덕여왕",
@@ -200,7 +219,8 @@
   "jaKana": null,
   "zhHans": "善德女王",
   "zhHant": "善德女王",
-  "missing": []
+  "missing": [],
+  "en": "Queen Seondeok of Silla"
  },
  {
   "ko": "경복궁",
@@ -210,7 +230,8 @@
   "jaKana": "キョンボックン",
   "zhHans": "景福宫",
   "zhHant": "景福宮",
-  "missing": []
+  "missing": [],
+  "en": "Gyeongbokgung"
  },
  {
   "ko": "근정전",
@@ -220,7 +241,8 @@
   "jaKana": "クンチョンジョン",
   "zhHans": "勤政殿",
   "zhHant": "勤政殿",
-  "missing": []
+  "missing": [],
+  "en": "Geunjeongjeon"
  },
  {
   "ko": "진도",
@@ -230,7 +252,8 @@
   "jaKana": "チンド",
   "zhHans": "珍岛郡",
   "zhHant": "珍島郡",
-  "missing": []
+  "missing": [],
+  "en": "Jindo County"
  },
  {
   "ko": "진도 바닷길",
@@ -242,7 +265,8 @@
   "zhHant": null,
   "missing": [
    "ko"
-  ]
+  ],
+  "en": null
  },
  {
   "ko": "목포역",
@@ -252,7 +276,8 @@
   "jaKana": "モクポ",
   "zhHans": "木浦站",
   "zhHant": "木浦站",
-  "missing": []
+  "missing": [],
+  "en": "Mokpo station"
  },
  {
   "ko": "해인사",
@@ -262,7 +287,8 @@
   "jaKana": "ヘインサ",
   "zhHans": "海印寺",
   "zhHant": "海印寺",
-  "missing": []
+  "missing": [],
+  "en": "Haeinsa"
  },
  {
   "ko": "장경판전",
@@ -274,7 +300,8 @@
   "zhHant": null,
   "missing": [
    "zh"
-  ]
+  ],
+  "en": "Janggyeong Panjeon of Haeinsa"
  },
  {
   "ko": "팔만대장경",
@@ -284,7 +311,8 @@
   "jaKana": null,
   "zhHans": "高丽大藏经",
   "zhHant": "高麗大藏經",
-  "missing": []
+  "missing": [],
+  "en": "Tripitaka Koreana"
  },
  {
   "ko": "제주",
@@ -294,7 +322,8 @@
   "jaKana": "チェジュ",
   "zhHans": "济州特别自治道",
   "zhHant": "濟州特別自治道",
-  "missing": []
+  "missing": [],
+  "en": "Jeju Province"
  },
  {
   "ko": "한라산",
@@ -304,7 +333,8 @@
   "jaKana": "ハルラサン",
   "zhHans": "汉拏山",
   "zhHant": "漢拏山",
-  "missing": []
+  "missing": [],
+  "en": "Hallasan"
  },
  {
   "ko": "백록담",
@@ -316,7 +346,8 @@
   "zhHant": "白鹿潭",
   "missing": [
    "ja"
-  ]
+  ],
+  "en": null
  },
  {
   "ko": "성판악",
@@ -328,7 +359,8 @@
   "zhHant": null,
   "missing": [
    "ko"
-  ]
+  ],
+  "en": null
  },
  {
   "ko": "강릉",
@@ -338,7 +370,8 @@
   "jaKana": "カンヌン",
   "zhHans": "江陵市",
   "zhHant": "江陵市",
-  "missing": []
+  "missing": [],
+  "en": "Gangneung"
  },
  {
   "ko": "정동진",
@@ -351,7 +384,8 @@
   "missing": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Jeongdongjin"
  },
  {
   "ko": "정동진역",
@@ -361,7 +395,8 @@
   "jaKana": "チョンドンジン",
   "zhHans": "正东津站",
   "zhHant": "正東津站",
-  "missing": []
+  "missing": [],
+  "en": "Jeongdongjin station"
  },
  {
   "ko": "태백",
@@ -371,7 +406,8 @@
   "jaKana": "テベク",
   "zhHans": "太白市",
   "zhHant": "太白市",
-  "missing": []
+  "missing": [],
+  "en": "Taebaek"
  },
  {
   "ko": "검룡소",
@@ -384,7 +420,8 @@
   "missing": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Geomnyongso"
  },
  {
   "ko": "태안",
@@ -394,7 +431,8 @@
   "jaKana": "テアン",
   "zhHans": "泰安郡",
   "zhHant": "泰安郡",
-  "missing": []
+  "missing": [],
+  "en": "Taean County"
  },
  {
   "ko": "꽃지 해변",
@@ -407,7 +445,8 @@
   "missing": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "ko": "안동",
@@ -417,7 +456,8 @@
   "jaKana": "アンドン",
   "zhHans": "安东市",
   "zhHant": "安東市",
-  "missing": []
+  "missing": [],
+  "en": "Andong"
  },
  {
   "ko": "안동역",
@@ -427,7 +467,8 @@
   "jaKana": "アンドン",
   "zhHans": "安东站 (庆尚北道)",
   "zhHant": "安東站 (慶尚北道)",
-  "missing": []
+  "missing": [],
+  "en": "Andong station"
  },
  {
   "ko": "하회마을",
@@ -437,7 +478,8 @@
   "jaKana": "ハフェマウル",
   "zhHans": "河回村",
   "zhHant": "河回村",
-  "missing": []
+  "missing": [],
+  "en": "Hahoe Folk Village"
  },
  {
   "ko": "부용대",
@@ -449,7 +491,8 @@
   "zhHant": null,
   "missing": [
    "ko"
-  ]
+  ],
+  "en": null
  },
  {
   "ko": "영주",
@@ -459,7 +502,8 @@
   "jaKana": "ヨンジュ",
   "zhHans": "荣州市",
   "zhHant": "榮州市",
-  "missing": []
+  "missing": [],
+  "en": "Yeongju"
  },
  {
   "ko": "영주역",
@@ -469,7 +513,8 @@
   "jaKana": "ヨンジュ",
   "zhHans": "荣州站",
   "zhHant": "榮州站",
-  "missing": []
+  "missing": [],
+  "en": "Yeongju station"
  },
  {
   "ko": "부석사",
@@ -479,7 +524,8 @@
   "jaKana": "プソクサ",
   "zhHans": "浮石寺",
   "zhHant": "浮石寺",
-  "missing": []
+  "missing": [],
+  "en": "Buseoksa"
  },
  {
   "ko": "무량수전",
@@ -492,7 +538,8 @@
   "missing": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "ko": "의상",
@@ -505,6 +552,7 @@
   "missing": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": null
  }
 ]

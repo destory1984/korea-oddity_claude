@@ -1,5 +1,5 @@
 // 시험판이 읽을 칸 자료를 만든다: data/squares.json(기획서의 100칸) + data/places.json(위키백과와 위키데이터에서 긁은
-// 좌표와 이름) + data/places-manual.json(손으로 적은 어림 좌표) → docs/assets/squares.js
+// 좌표와 이름) + data/places-manual.json(손으로 적은 어림 좌표와 영어 이름) → docs/assets/squares.js
 // 쓰는 법: node tools/make-square-data.mjs
 // 시험판은 파일로도 열려야 해서 JSON 이 아니라 보통 스크립트(전역 SQUARES)로 쓴다.
 import { readFileSync, writeFileSync } from "node:fs";
@@ -24,12 +24,14 @@ const out = squares.map((s) => {
     // rough: 좌표가 어림이다(손으로 적었거나, 그 자리가 아니라 시와 군의 좌표다)
     rough: Boolean(hand) || manual.areaOnly.includes(s.id),
     ja: clean(p.ja), jaKana: p.jaKana ?? null, zh: clean(p.zhHans),
+    // 영어 이름: 손으로 적은 것(data/places-manual.json 의 en)이 먼저고, 없으면 영어 위키백과 문서의 제목이다.
+    en: manual.en?.[s.id] ?? clean(p.en),
   };
 });
 
 writeFileSync(new URL("docs/assets/squares.js", root),
   "// 자리 칸 100곳. tools/make-square-data.mjs 가 만든 파일이다. 손으로 고치지 않는다.\n" +
-  "// 좌표와 일본어, 중국어 이름은 위키백과와 위키데이터에서 긁은 바탕이다. 공식 자료와 맞추지 않았다.\n" +
+  "// 좌표와 일본어, 중국어, 영어 이름은 위키백과와 위키데이터에서 긁은 바탕이다. 영어 이름 30개는 손으로 적은 어림이다. 공식 자료와 맞추지 않았다.\n" +
   "const SQUARES = " + JSON.stringify(out, null, 1) + ";\n");
 const n = (f) => out.filter(f).length;
-console.log(`칸 ${out.length}개. 일본어 이름 ${n((s) => s.ja)}개, 중국어 이름 ${n((s) => s.zh)}개, 어림 좌표 ${n((s) => s.rough)}개.`);
+console.log(`칸 ${out.length}개. 일본어 이름 ${n((s) => s.ja)}개, 중국어 이름 ${n((s) => s.zh)}개, 영어 이름 ${n((s) => s.en)}개, 어림 좌표 ${n((s) => s.rough)}개.`);

@@ -1,5 +1,5 @@
 // 자리 칸 100곳. tools/make-square-data.mjs 가 만든 파일이다. 손으로 고치지 않는다.
-// 좌표와 일본어, 중국어 이름은 위키백과와 위키데이터에서 긁은 바탕이다. 공식 자료와 맞추지 않았다.
+// 좌표와 일본어, 중국어, 영어 이름은 위키백과와 위키데이터에서 긁은 바탕이다. 영어 이름 30개는 손으로 적은 어림이다. 공식 자료와 맞추지 않았다.
 const SQUARES = [
  {
   "no": 1,
@@ -15,7 +15,8 @@ const SQUARES = [
   "rough": false,
   "ja": "景福宮",
   "jaKana": "キョンボックン",
-  "zh": "景福宫"
+  "zh": "景福宫",
+  "en": "Gyeongbokgung"
  },
  {
   "no": 2,
@@ -31,7 +32,8 @@ const SQUARES = [
   "rough": false,
   "ja": "昌徳宮",
   "jaKana": "チャンドックン",
-  "zh": "昌德宫"
+  "zh": "昌德宫",
+  "en": "Changdeokgung"
  },
  {
   "no": 3,
@@ -47,7 +49,8 @@ const SQUARES = [
   "rough": false,
   "ja": "宗廟",
   "jaKana": "チョンミョ",
-  "zh": "宗庙"
+  "zh": "宗庙",
+  "en": "Jongmyo"
  },
  {
   "no": 4,
@@ -63,7 +66,8 @@ const SQUARES = [
   "rough": false,
   "ja": "北村韓屋村",
   "jaKana": "ブッチョンハノクマウル",
-  "zh": "北村韩屋村"
+  "zh": "北村韩屋村",
+  "en": "Bukchon Hanok Village"
  },
  {
   "no": 5,
@@ -79,7 +83,8 @@ const SQUARES = [
   "rough": false,
   "ja": "南山",
   "jaKana": "ナムサン",
-  "zh": "南山"
+  "zh": "南山",
+  "en": "Namsan"
  },
  {
   "no": 6,
@@ -95,7 +100,8 @@ const SQUARES = [
   "rough": false,
   "ja": "清渓川",
   "jaKana": "チョンゲチョン",
-  "zh": "清溪川"
+  "zh": "清溪川",
+  "en": "Cheonggyecheon"
  },
  {
   "no": 7,
@@ -111,7 +117,8 @@ const SQUARES = [
   "rough": false,
   "ja": "盤浦漢江公園",
   "jaKana": null,
-  "zh": "盤浦漢江公園"
+  "zh": "盤浦漢江公園",
+  "en": "Banpo Hangang Park"
  },
  {
   "no": 8,
@@ -127,7 +134,8 @@ const SQUARES = [
   "rough": false,
   "ja": "国立中央博物館",
   "jaKana": null,
-  "zh": "国立中央博物馆"
+  "zh": "国立中央博物馆",
+  "en": "National Museum of Korea"
  },
  {
   "no": 9,
@@ -143,7 +151,8 @@ const SQUARES = [
   "rough": false,
   "ja": "漢陽都城",
   "jaKana": null,
-  "zh": "汉阳都城"
+  "zh": "汉阳都城",
+  "en": "Seoul City Wall"
  },
  {
   "no": 10,
@@ -159,7 +168,8 @@ const SQUARES = [
   "rough": false,
   "ja": "東大門デザインプラザ",
   "jaKana": "デザインプラザ",
-  "zh": "东大门设计广场"
+  "zh": "东大门设计广场",
+  "en": "Dongdaemun Design Plaza"
  },
  {
   "no": 11,
@@ -175,7 +185,8 @@ const SQUARES = [
   "rough": false,
   "ja": "水原華城",
   "jaKana": "スウォンファソン",
-  "zh": "水原华城"
+  "zh": "水原华城",
+  "en": "Hwaseong Fortress"
  },
  {
   "no": 12,
@@ -191,7 +202,8 @@ const SQUARES = [
   "rough": false,
   "ja": "南漢山城",
   "jaKana": "ナムハンサンソン",
-  "zh": "南汉山城"
+  "zh": "南汉山城",
+  "en": "Namhansanseong"
  },
  {
   "no": 13,
@@ -207,7 +219,8 @@ const SQUARES = [
   "rough": false,
   "ja": "臨津閣",
   "jaKana": "イムジンガク",
-  "zh": "临津阁"
+  "zh": "临津阁",
+  "en": "Imjingak"
  },
  {
   "no": 14,
@@ -223,7 +236,8 @@ const SQUARES = [
   "rough": false,
   "ja": "龍門寺",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Yongmunsa"
  },
  {
   "no": 15,
@@ -239,7 +253,8 @@ const SQUARES = [
   "rough": true,
   "ja": null,
   "jaKana": null,
-  "zh": "两水头"
+  "zh": "两水头",
+  "en": "Dumulmeori"
  },
  {
   "no": 16,
@@ -255,7 +270,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Ganghwa Dolmens"
  },
  {
   "no": 17,
@@ -271,7 +287,8 @@ const SQUARES = [
   "rough": false,
   "ja": "伝燈寺",
   "jaKana": "チョンドゥンサ",
-  "zh": null
+  "zh": null,
+  "en": "Jeondeungsa"
  },
  {
   "no": 18,
@@ -287,7 +304,8 @@ const SQUARES = [
   "rough": false,
   "ja": "仁川チャイナタウン",
   "jaKana": "チャイナタウン",
-  "zh": "仁川唐人街"
+  "zh": "仁川唐人街",
+  "en": "Incheon Open Port Area"
  },
  {
   "no": 19,
@@ -303,7 +321,8 @@ const SQUARES = [
   "rough": false,
   "ja": "国立樹木園",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Korea National Arboretum"
  },
  {
   "no": 20,
@@ -319,7 +338,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": "英陵"
+  "zh": "英陵",
+  "en": "Yeongneung"
  },
  {
   "no": 21,
@@ -335,7 +355,8 @@ const SQUARES = [
   "rough": false,
   "ja": "蔚山岩",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Ulsanbawi"
  },
  {
   "no": 22,
@@ -351,7 +372,8 @@ const SQUARES = [
   "rough": false,
   "ja": "正東津駅",
   "jaKana": "チョンドンジン",
-  "zh": "正东津站"
+  "zh": "正东津站",
+  "en": "Jeongdongjin"
  },
  {
   "no": 23,
@@ -367,7 +389,8 @@ const SQUARES = [
   "rough": false,
   "ja": "鏡浦湖",
   "jaKana": null,
-  "zh": "镜浦湖"
+  "zh": "镜浦湖",
+  "en": "Gyeongpo Lake"
  },
  {
   "no": 24,
@@ -383,7 +406,8 @@ const SQUARES = [
   "rough": false,
   "ja": "烏竹軒",
   "jaKana": null,
-  "zh": "乌竹轩"
+  "zh": "乌竹轩",
+  "en": "Ojukheon"
  },
  {
   "no": 25,
@@ -399,7 +423,8 @@ const SQUARES = [
   "rough": false,
   "ja": "洛山寺",
   "jaKana": "ナクサンサ",
-  "zh": "洛山寺"
+  "zh": "洛山寺",
+  "en": "Naksansa"
  },
  {
   "no": 26,
@@ -415,7 +440,8 @@ const SQUARES = [
   "rough": false,
   "ja": "漢灘江",
   "jaKana": "ハンタンガン",
-  "zh": "汉滩江"
+  "zh": "汉滩江",
+  "en": "Hantan River"
  },
  {
   "no": 27,
@@ -431,7 +457,8 @@ const SQUARES = [
   "rough": false,
   "ja": "高城統一展望台",
   "jaKana": "コソン",
-  "zh": "統一展望台"
+  "zh": "統一展望台",
+  "en": "Goseong Unification Observatory"
  },
  {
   "no": 28,
@@ -447,7 +474,8 @@ const SQUARES = [
   "rough": false,
   "ja": "南怡島",
   "jaKana": "ナミソム",
-  "zh": "南怡岛"
+  "zh": "南怡岛",
+  "en": "Namiseom"
  },
  {
   "no": 29,
@@ -463,7 +491,8 @@ const SQUARES = [
   "rough": false,
   "ja": "大関嶺",
   "jaKana": "テグァルリョン",
-  "zh": null
+  "zh": null,
+  "en": "Daegwallyeong"
  },
  {
   "no": 30,
@@ -479,7 +508,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Geomnyongso"
  },
  {
   "no": 31,
@@ -495,7 +525,8 @@ const SQUARES = [
   "rough": true,
   "ja": "旌善郡",
   "jaKana": "チョンソン",
-  "zh": "旌善郡"
+  "zh": "旌善郡",
+  "en": "Jeongseon Five-day Market"
  },
  {
   "no": 32,
@@ -511,7 +542,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Hwanseon Cave"
  },
  {
   "no": 33,
@@ -527,7 +559,8 @@ const SQUARES = [
   "rough": false,
   "ja": "定林寺址",
   "jaKana": null,
-  "zh": "定林寺遗址"
+  "zh": "定林寺遗址",
+  "en": "Jeongnimsa"
  },
  {
   "no": 34,
@@ -543,7 +576,8 @@ const SQUARES = [
   "rough": false,
   "ja": "公山城",
   "jaKana": "コンサンソン",
-  "zh": "公山城"
+  "zh": "公山城",
+  "en": "Gongsanseong"
  },
  {
   "no": 35,
@@ -559,7 +593,8 @@ const SQUARES = [
   "rough": false,
   "ja": "小白山天文台",
   "jaKana": "ソベクサン",
-  "zh": null
+  "zh": null,
+  "en": "Sobaeksan Observatory"
  },
  {
   "no": 36,
@@ -575,7 +610,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Dodamsambong"
  },
  {
   "no": 37,
@@ -591,7 +627,8 @@ const SQUARES = [
   "rough": false,
   "ja": "法住寺",
   "jaKana": "ポプチュサ",
-  "zh": "法住寺"
+  "zh": "法住寺",
+  "en": "Beopjusa"
  },
  {
   "no": 38,
@@ -607,7 +644,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Kkotji Beach"
  },
  {
   "no": 39,
@@ -623,7 +661,8 @@ const SQUARES = [
   "rough": false,
   "ja": "エキスポ科学公園",
   "jaKana": "エキスポ",
-  "zh": "EXPO科学公园"
+  "zh": "EXPO科学公园",
+  "en": "Expo Science Park"
  },
  {
   "no": 40,
@@ -639,7 +678,8 @@ const SQUARES = [
   "rough": false,
   "ja": "清州興徳寺址",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Heungdeoksa"
  },
  {
   "no": 41,
@@ -655,7 +695,8 @@ const SQUARES = [
   "rough": false,
   "ja": "海美邑城",
   "jaKana": "ヘミウプソン",
-  "zh": "海美邑城"
+  "zh": "海美邑城",
+  "en": "Haemieupseong"
  },
  {
   "no": 42,
@@ -671,7 +712,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Daecheon Beach"
  },
  {
   "no": 43,
@@ -687,7 +729,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": "外岩村"
+  "zh": "外岩村",
+  "en": "Oeam"
  },
  {
   "no": 44,
@@ -703,7 +746,8 @@ const SQUARES = [
   "rough": false,
   "ja": "修徳寺",
   "jaKana": "スドクサ",
-  "zh": "修德寺"
+  "zh": "修德寺",
+  "en": "Sudeoksa"
  },
  {
   "no": 45,
@@ -719,7 +763,8 @@ const SQUARES = [
   "rough": false,
   "ja": "全州韓屋村",
   "jaKana": null,
-  "zh": "全州韩屋村"
+  "zh": "全州韩屋村",
+  "en": "Jeonju Hanok Village"
  },
  {
   "no": 46,
@@ -735,7 +780,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": "广寒楼"
+  "zh": "广寒楼",
+  "en": "Gwanghallu"
  },
  {
   "no": 47,
@@ -751,7 +797,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Chaeseokgang"
  },
  {
   "no": 48,
@@ -767,7 +814,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Gochang Dolmens"
  },
  {
   "no": 49,
@@ -783,7 +831,8 @@ const SQUARES = [
   "rough": true,
   "ja": "潭陽郡",
   "jaKana": "タミャン",
-  "zh": "潭阳郡"
+  "zh": "潭阳郡",
+  "en": "Damyang Metasequoia Road"
  },
  {
   "no": 50,
@@ -799,7 +848,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Boseong Green Tea Fields"
  },
  {
   "no": 51,
@@ -815,7 +865,8 @@ const SQUARES = [
   "rough": false,
   "ja": "順天湾",
   "jaKana": null,
-  "zh": "顺天湾"
+  "zh": "顺天湾",
+  "en": "Suncheon Bay"
  },
  {
   "no": 52,
@@ -831,7 +882,8 @@ const SQUARES = [
   "rough": false,
   "ja": "仙巌寺",
   "jaKana": "ソナムサ",
-  "zh": "仙岩寺"
+  "zh": "仙岩寺",
+  "en": "Seonamsa"
  },
  {
   "no": 53,
@@ -847,7 +899,8 @@ const SQUARES = [
   "rough": false,
   "ja": "梧桐島",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Odongdo"
  },
  {
   "no": 54,
@@ -863,7 +916,8 @@ const SQUARES = [
   "rough": true,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Jindo Sea Road"
  },
  {
   "no": 55,
@@ -879,7 +933,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Dasan Chodang"
  },
  {
   "no": 56,
@@ -895,7 +950,8 @@ const SQUARES = [
   "rough": false,
   "ja": "月出山",
   "jaKana": "ウォルチュル",
-  "zh": "月出山"
+  "zh": "月出山",
+  "en": "Wolchulsan"
  },
  {
   "no": 57,
@@ -911,7 +967,8 @@ const SQUARES = [
   "rough": false,
   "ja": "無等山",
   "jaKana": null,
-  "zh": "无等山"
+  "zh": "无等山",
+  "en": "Mudeungsan"
  },
  {
   "no": 58,
@@ -927,7 +984,8 @@ const SQUARES = [
   "rough": true,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Gunsan Modern History Street"
  },
  {
   "no": 59,
@@ -943,7 +1001,8 @@ const SQUARES = [
   "rough": false,
   "ja": "内蔵山",
   "jaKana": "ネジャン",
-  "zh": "内藏山"
+  "zh": "内藏山",
+  "en": "Naejangsan"
  },
  {
   "no": 60,
@@ -959,7 +1018,8 @@ const SQUARES = [
   "rough": false,
   "ja": "徳裕山",
   "jaKana": "トギュサン",
-  "zh": null
+  "zh": null,
+  "en": "Deogyusan"
  },
  {
   "no": 61,
@@ -975,7 +1035,8 @@ const SQUARES = [
   "rough": false,
   "ja": "仏国寺",
   "jaKana": "プルグクサ",
-  "zh": "佛国寺"
+  "zh": "佛国寺",
+  "en": "Bulguksa"
  },
  {
   "no": 62,
@@ -991,7 +1052,8 @@ const SQUARES = [
   "rough": false,
   "ja": "石窟庵",
   "jaKana": "ソックラム",
-  "zh": "石窟庵"
+  "zh": "石窟庵",
+  "en": "Seokguram"
  },
  {
   "no": 63,
@@ -1007,7 +1069,8 @@ const SQUARES = [
   "rough": false,
   "ja": "慶州瞻星台",
   "jaKana": null,
-  "zh": "瞻星台"
+  "zh": "瞻星台",
+  "en": "Cheomseongdae"
  },
  {
   "no": 64,
@@ -1023,7 +1086,8 @@ const SQUARES = [
   "rough": false,
   "ja": "東宮と月池",
   "jaKana": "ハングル",
-  "zh": "慶州東宮"
+  "zh": "慶州東宮",
+  "en": "Donggung Palace and Wolji Pond"
  },
  {
   "no": 65,
@@ -1039,7 +1103,8 @@ const SQUARES = [
   "rough": false,
   "ja": "良洞村",
   "jaKana": "ヤンドンマウル",
-  "zh": "良洞村"
+  "zh": "良洞村",
+  "en": "Yangdong Folk Village"
  },
  {
   "no": 66,
@@ -1055,7 +1120,8 @@ const SQUARES = [
   "rough": false,
   "ja": "海印寺",
   "jaKana": "ヘインサ",
-  "zh": "海印寺"
+  "zh": "海印寺",
+  "en": "Haeinsa"
  },
  {
   "no": 67,
@@ -1071,7 +1137,8 @@ const SQUARES = [
   "rough": false,
   "ja": "河回村",
   "jaKana": "ハフェマウル",
-  "zh": "河回村"
+  "zh": "河回村",
+  "en": "Hahoe Folk Village"
  },
  {
   "no": 68,
@@ -1087,7 +1154,8 @@ const SQUARES = [
   "rough": false,
   "ja": "浮石寺",
   "jaKana": "プソクサ",
-  "zh": "浮石寺"
+  "zh": "浮石寺",
+  "en": "Buseoksa"
  },
  {
   "no": 69,
@@ -1103,7 +1171,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Mungyeong Saejae"
  },
  {
   "no": 70,
@@ -1119,7 +1188,8 @@ const SQUARES = [
   "rough": false,
   "ja": "周王山",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Juwangsan"
  },
  {
   "no": 71,
@@ -1135,7 +1205,8 @@ const SQUARES = [
   "rough": true,
   "ja": "英陽郡",
   "jaKana": "ヨンヤン",
-  "zh": "英阳郡"
+  "zh": "英阳郡",
+  "en": "Yeongyang Firefly Observatory"
  },
  {
   "no": 72,
@@ -1151,7 +1222,8 @@ const SQUARES = [
   "rough": false,
   "ja": "通度寺",
   "jaKana": "トンドサ",
-  "zh": "通度寺"
+  "zh": "通度寺",
+  "en": "Tongdosa"
  },
  {
   "no": 73,
@@ -1167,7 +1239,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": "矗石楼"
+  "zh": "矗石楼",
+  "en": "Jinjuseong and Chokseongnu"
  },
  {
   "no": 74,
@@ -1183,7 +1256,8 @@ const SQUARES = [
   "rough": false,
   "ja": "弥勒山",
   "jaKana": null,
-  "zh": "弥勒山"
+  "zh": "弥勒山",
+  "en": "Mireuksan"
  },
  {
   "no": 75,
@@ -1199,7 +1273,8 @@ const SQUARES = [
   "rough": true,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Windy Hill, Geoje"
  },
  {
   "no": 76,
@@ -1215,7 +1290,8 @@ const SQUARES = [
   "rough": false,
   "ja": "双磎寺",
   "jaKana": "サンゲサ",
-  "zh": "双溪寺"
+  "zh": "双溪寺",
+  "en": "Hadong Simni Cherry Blossom Road"
  },
  {
   "no": 77,
@@ -1231,7 +1307,8 @@ const SQUARES = [
   "rough": false,
   "ja": "智異山",
   "jaKana": "チリ",
-  "zh": "智异山国立公园"
+  "zh": "智异山国立公园",
+  "en": "Jirisan"
  },
  {
   "no": 78,
@@ -1247,7 +1324,8 @@ const SQUARES = [
   "rough": false,
   "ja": "牛浦沼",
   "jaKana": "ウポヌプ",
-  "zh": "牛浦沼"
+  "zh": "牛浦沼",
+  "en": "Upo Wetland"
  },
  {
   "no": 79,
@@ -1263,7 +1341,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Gatbawi"
  },
  {
   "no": 80,
@@ -1279,7 +1358,8 @@ const SQUARES = [
   "rough": false,
   "ja": "盤亀台岩刻画",
   "jaKana": null,
-  "zh": "盘龟台岩刻画"
+  "zh": "盘龟台岩刻画",
+  "en": "Bangudae Petroglyphs"
  },
  {
   "no": 81,
@@ -1295,7 +1375,8 @@ const SQUARES = [
   "rough": false,
   "ja": "甘川文化村",
   "jaKana": "カムチョン",
-  "zh": "甘川文化村"
+  "zh": "甘川文化村",
+  "en": "Gamcheon Culture Village"
  },
  {
   "no": 82,
@@ -1311,7 +1392,8 @@ const SQUARES = [
   "rough": false,
   "ja": "海東龍宮寺",
   "jaKana": "ヘドンヨングンサ",
-  "zh": "海东龙宫寺"
+  "zh": "海东龙宫寺",
+  "en": "Haedong Yonggungsa"
  },
  {
   "no": 83,
@@ -1327,7 +1409,8 @@ const SQUARES = [
   "rough": false,
   "ja": "城山日出峰",
   "jaKana": null,
-  "zh": "城山日出峰"
+  "zh": "城山日出峰",
+  "en": "Seongsan Ilchulbong"
  },
  {
   "no": 84,
@@ -1343,7 +1426,8 @@ const SQUARES = [
   "rough": true,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Saryeoni Forest Path"
  },
  {
   "no": 85,
@@ -1359,7 +1443,8 @@ const SQUARES = [
   "rough": false,
   "ja": "万丈窟",
   "jaKana": "マンジャンクル",
-  "zh": "霹雷摩芝窟"
+  "zh": "霹雷摩芝窟",
+  "en": "Manjanggul"
  },
  {
   "no": 86,
@@ -1375,7 +1460,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Daepo Jusangjeolli Cliff"
  },
  {
   "no": 87,
@@ -1391,7 +1477,8 @@ const SQUARES = [
   "rough": false,
   "ja": "牛島",
   "jaKana": "ウド",
-  "zh": "牛岛"
+  "zh": "牛岛",
+  "en": "Udo"
  },
  {
   "no": 88,
@@ -1407,7 +1494,8 @@ const SQUARES = [
   "rough": false,
   "ja": "ウェドルゲ",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Oedolgae"
  },
  {
   "no": 89,
@@ -1423,7 +1511,8 @@ const SQUARES = [
   "rough": false,
   "ja": "海女博物館",
   "jaKana": null,
-  "zh": "海女博物馆"
+  "zh": "海女博物馆",
+  "en": "Sehwa Haenyeo"
  },
  {
   "no": 90,
@@ -1439,7 +1528,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": "榧子林"
+  "zh": "榧子林",
+  "en": "Bijarim"
  },
  {
   "no": 91,
@@ -1455,7 +1545,8 @@ const SQUARES = [
   "rough": false,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Yongmeori Coast and Sanbangsan"
  },
  {
   "no": 92,
@@ -1471,7 +1562,8 @@ const SQUARES = [
   "rough": false,
   "ja": "正房瀑布",
   "jaKana": null,
-  "zh": "正房瀑布"
+  "zh": "正房瀑布",
+  "en": "Jeongbang Waterfall"
  },
  {
   "no": 93,
@@ -1487,7 +1579,8 @@ const SQUARES = [
   "rough": false,
   "ja": "紅島",
   "jaKana": "ホンド",
-  "zh": "红岛"
+  "zh": "红岛",
+  "en": "Hongdo"
  },
  {
   "no": 94,
@@ -1503,7 +1596,8 @@ const SQUARES = [
   "rough": false,
   "ja": "青山島",
   "jaKana": "チョンサン",
-  "zh": "青山岛"
+  "zh": "青山岛",
+  "en": "Cheongsando"
  },
  {
   "no": 95,
@@ -1519,7 +1613,8 @@ const SQUARES = [
   "rough": false,
   "ja": "白翎島",
   "jaKana": "ペンニョンド",
-  "zh": "白翎岛"
+  "zh": "白翎岛",
+  "en": "Baengnyeongdo"
  },
  {
   "no": 96,
@@ -1535,7 +1630,8 @@ const SQUARES = [
   "rough": false,
   "ja": "馬羅島",
   "jaKana": null,
-  "zh": "马罗岛"
+  "zh": "马罗岛",
+  "en": "Marado"
  },
  {
   "no": 97,
@@ -1551,7 +1647,8 @@ const SQUARES = [
   "rough": true,
   "ja": null,
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Nari Basin, Ulleungdo"
  },
  {
   "no": 98,
@@ -1567,7 +1664,8 @@ const SQUARES = [
   "rough": true,
   "ja": "曽島",
   "jaKana": null,
-  "zh": "曾島"
+  "zh": "曾島",
+  "en": "Taepyeong Salt Farm, Jeungdo"
  },
  {
   "no": 99,
@@ -1583,7 +1681,8 @@ const SQUARES = [
   "rough": false,
   "ja": "タンクッ",
   "jaKana": null,
-  "zh": null
+  "zh": null,
+  "en": "Ttangkkeut"
  },
  {
   "no": 100,
@@ -1599,6 +1698,7 @@ const SQUARES = [
   "rough": false,
   "ja": "白鹿潭",
   "jaKana": null,
-  "zh": "白鹿潭"
+  "zh": "白鹿潭",
+  "en": "Baengnokdam, Hallasan"
  }
 ];

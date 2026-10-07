@@ -1,4 +1,4 @@
-// 설정의 "Changes" 쪽이 읽을 자료를 만든다: docs/바뀐-것들.md 의 표 + data/changes-i18n.json(일본어, 중국어) → docs/assets/changes.js
+// 설정의 "Changes" 쪽이 읽을 자료를 만든다: docs/바뀐-것들.md 의 표 + data/changes-i18n.json(일본어, 중국어, 영어) → docs/assets/changes.js
 // 쓰는 법: node tools/make-changes.mjs
 // 줄은 docs/바뀐-것들.md 에서만 고친다. 1권의 src/core/changes.js 와 같은 쓰임이다(한국어 줄이 열쇠이고, 다른 말은 그 줄의 번역이다).
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -14,9 +14,9 @@ for (let i = 1; i < changes.length; i++) if (changes[i].day > changes[i - 1].day
 
 const i18nPath = new URL("data/changes-i18n.json", root);
 const i18n = existsSync(i18nPath) ? JSON.parse(readFileSync(i18nPath, "utf8")) : {};
-const words = { ja: {}, zh: {} };
+const words = { ja: {}, zh: {}, en: {} };
 const missing = [];
-for (const { text } of changes) for (const lang of ["ja", "zh"]) {
+for (const { text } of changes) for (const lang of ["ja", "zh", "en"]) {
   if (i18n[text]?.[lang]) words[lang][text] = i18n[text][lang]; else missing.push(`${lang}: ${text.slice(0, 30)}`);
 }
 

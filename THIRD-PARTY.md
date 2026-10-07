@@ -7,7 +7,7 @@
 | 이 저장소의 파일 | 무엇 | 어디서 | 가져온 날 | 조건 |
 |---|---|---|---|---|
 | `docs/assets/coast.js` | 한반도 둘레의 육지 모양. 원본 10MB에서 동경 120 → 135, 북위 30 → 42만 잘라 성기게 만들었다(`tools/make-coast.mjs`). 원본은 저장소에 없다 | Natural Earth, 1:10m Physical Vectors, Land. https://www.naturalearthdata.com/ . 받은 곳: https://github.com/nvkelso/natural-earth-vector 의 `geojson/ne_10m_land.geojson` (판 5.2.0-pre) | 2026.10.7 | 저작권 없음(public domain). 출처 표시는 하지 않아도 된다. 적을 때는 "Made with Natural Earth." |
-| `data/names.json`, `data/places.json`, `docs/assets/squares.js` 의 좌표와 일본어, 중국어, 한자 이름. `docs/이름표.md` 의 "위키" 줄 | 문서 제목, 언어 사이 연결, 첫머리의 한자와 읽기, 좌표 | 한국어, 일본어, 중국어 위키백과의 API (`tools/make-names.mjs`). 읽은 문서 제목은 `data/names-wanted.json`, `data/squares-wiki-titles.json` 에 있다 | 2026.10.7 | 위키백과의 글은 CC BY-SA 4.0. 여기서 쓴 것은 이름과 좌표라는 사실이지만, 출처로 위키백과를 적는다 |
+| `data/names.json`, `data/places.json`, `docs/assets/squares.js` 의 좌표와 일본어, 중국어, 영어, 한자 이름(영어는 `tools/add-en-names.mjs` 로 2026.10.7에 더했다. 손으로 적은 30칸은 해당하지 않는다). `docs/이름표.md` 의 "위키" 줄 | 문서 제목, 언어 사이 연결, 첫머리의 한자와 읽기, 좌표 | 한국어, 일본어, 중국어 위키백과의 API (`tools/make-names.mjs`). 읽은 문서 제목은 `data/names-wanted.json`, `data/squares-wiki-titles.json` 에 있다 | 2026.10.7 | 위키백과의 글은 CC BY-SA 4.0. 여기서 쓴 것은 이름과 좌표라는 사실이지만, 출처로 위키백과를 적는다 |
 | `data/places.json` 의 `fromWikidata` 가 붙은 값 | 좌표(P625), 일본어와 중국어 이름표 | 위키데이터 API. 항목 번호는 줄마다 `wikidata` 에 있다 | 2026.10.7 | CC0 (저작권 없음) |
 | `docs/assets/sun.js` 의 계산식 | 해의 적위, 균시차, 뜨고 지는 시각, 높이와 방위 | 미국 해양대기청(NOAA) Global Monitoring Laboratory 의 Solar Calculator 계산식(Jean Meeus, Astronomical Algorithms 에 바탕). https://gml.noaa.gov/grad/solcalc/calcdetails.html . 식을 기억에서 옮겨 적었고 코드는 새로 썼다 | 2026.10.7 | 미국 정부 저작물, 저작권 없음. 식은 저작권의 대상이 아니다 |
 | `docs/assets/scenes/*.webp` 7장, `docs/art/order1-sheet.jpg` | 두 칸의 겹 그림. 주문한 문장은 `docs/art-order-1.md` 에 있다 | 챗GPT의 그림 그리기(OpenAI). Codex CLI 0.160.0으로 넣었다(`tools/art-order.sh`). 사용자의 ChatGPT 계정으로 로그인한 것이다 | 2026.10.7 | OpenAI의 이용 약관에 따라 만든 사람(사용자)이 쓴다. 공개 전에 약관의 그 대목을 다시 확인한다. AI로 만든 그림임을 밝힌다 |
@@ -32,6 +32,7 @@
 | `docs/overlay-proto.html` 의 유리 단추 모양, 설정의 언어 고르기, "쉬잇" 움직임의 숫자(1초에 넉 장, 3초) | 화면의 틀 | 1권의 `style.css`, `index.html`, `src/core/sprite.js`, `src/main.js` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 소라 크기(`layout`) | 화면 모양에 따라 소라의 키를 정하는 셈. 세로로 긴 손전화에서 화면 높이의 20.8%, 넓은 화면에서 34.6% | 1권의 `src/core/pose.js`(heroScaleFor), `src/render/spriteHero.js`(CARD_HEIGHT, CARD_AT) | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 설정 창 톤 | 남색 유리 판(#0d1a3af2), 흐린 뒷배경, 금빛 작은 제목, 고른 단추의 금빛 테와 글자, 금빛 테의 닫는 단추, 갈래가 바뀌어도 같은 창 크기. 색과 치수 | 1권의 `style.css` (dialog, #settings, #settingsTabs, #closeSettings, #newsList) | 2026.10.7 | MIT |
+| `docs/overlay-proto.html` 의 설정 Help 쪽과 About 쪽 | 갈래 넷의 차례(Options, Help, Changes, About), 작은 제목과 풀이를 나란히 적는 꼴, About 의 항목 이름(만든 사람, 개인정보)과 "모으지 않습니다"로 시작하는 문장의 틀. 글은 여기서 썼다 | 1권의 `index.html`, `src/i18n/en.json` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 설정 갈래와 Changes 쪽 | 갈래 단추, 날짜를 그날의 첫 줄에만 적는 줄 목록, "만들기 시작한 날"과 "오늘로 며칠째" | 1권의 `index.html`, `style.css`, `src/ui/settings.js`(renderNews), `src/core/changes.js`(startedLine, dayLabel) | 2026.10.7 | MIT |
 | `translation-test/round2/style-ref.json`, `docs/번역-규칙.md` 의 본보기와 굳은 낱말, 시험판의 "맞았다. 꼼꼼히 읽었구나." 같은 말 | 일본어, 중국어 번역문 | 1권의 `src/i18n/ja.json`, `zh.json` | 2026.10.7 | MIT |
 

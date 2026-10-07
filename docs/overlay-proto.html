@@ -18,6 +18,9 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #date b{display:block;font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
 #date{max-width:46%}
 #date span{display:block;font-size:13px;line-height:1.3}
+/* 영어는 절기와 지명이 길어 단추 줄 밑으로 내려 화면 너비를 다 쓴다. */
+:lang(en) #date{max-width:calc(100% - 32px)}
+:lang(en) #date span{margin-top:10px}
 #name{top:112px;left:16px;font-size:12px;padding:4px 10px;pointer-events:none}
 /* 위쪽 단추 줄과 설정 창: 우주 한량(1권)의 유리 단추와 아이콘(assets/ui/icon-*.svg)을 그대로 옮겼다. */
 #nav{top:14px;right:14px;display:flex;gap:9px}
@@ -51,11 +54,16 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #settings #closeSettings{margin-top:auto;width:100%;min-height:44px;border-color:var(--gold);color:var(--gold);font-weight:600;background:#0d1a3a}
 /* 설정의 갈래: Options 와 Changes. 1권의 설정에서 가져온 꼴이다. */
 #settings>div{height:min(640px,calc(min(100dvh,860px) * .9));display:flex;flex-direction:column}   /* 어느 갈래를 열어도 창의 크기가 같다(1권) */
-#settingsTabs{display:flex;gap:8px;margin:0 0 14px}
-#settings #settingsTabs button{flex:1 1 0;min-height:38px;padding:6px 10px;font-size:13px}
+#settingsTabs{display:flex;gap:6px;margin:0 0 14px}
+#settings #settingsTabs button{flex:1 1 0;min-width:0;min-height:38px;padding:6px 2px;font-size:12px}
 #settings #settingsTabs button[aria-selected="true"]{border-color:var(--gold);color:var(--gold);font-weight:600}
-#settings section{overflow-y:auto;min-height:0;margin-bottom:12px;scrollbar-width:thin;scrollbar-color:#9fb4ff66 #0000}
+#settings section{overflow-y:auto;min-height:0;margin-bottom:12px;padding-right:8px;scrollbar-width:thin;scrollbar-color:#9fb4ff66 #0000}
 #settings section[hidden]{display:none}
+#settings p{margin:0 0 12px;font-size:13px;line-height:1.7;color:#c3cdea}
+:lang(ko) #settings dd,:lang(ko) #settings p{word-break:keep-all}
+#aboutTitle{margin:6px 0 16px;text-align:center}
+#aboutTitle b{display:block;font-size:24px;font-weight:600;color:var(--gold);line-height:1.3}
+#aboutTitle span{font-size:12px;color:#c3cdea}
 #newsStarted{white-space:pre-line;margin:0 0 10px;font-size:12px;color:#c3cdea}
 #newsList{margin:0;padding:0;list-style:none}
 #newsList li{display:grid;grid-template-columns:38px 1fr;gap:0 6px;padding:7px 0;border-bottom:1px solid #9fb4ff22;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
@@ -205,12 +213,14 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
   <div id="card"><div><h1 id="cardTitle"></h1><div id="cardBody"></div><button id="closeCard"></button></div></div>
   <div id="settings"><div>
     <h1 id="settingsTitle"></h1>
-    <div id="settingsTabs" role="tablist"><button role="tab" data-tab="options">Options</button><button role="tab" data-tab="news">Changes</button></div>
+    <div id="settingsTabs" role="tablist"><button role="tab" data-tab="options">Options</button><button role="tab" data-tab="help">Help</button><button role="tab" data-tab="news">Changes</button><button role="tab" data-tab="about">About</button></div>
     <section data-tab="news" hidden><p id="newsStarted"></p><ul id="newsList"></ul></section>
     <section data-tab="options"><dl>
-      <dt>언어 · Language</dt><dd id="langRow"><button data-lang="ko" lang="ko">한국어</button><button data-lang="ja" lang="ja">日本語</button><button data-lang="zh" lang="zh-Hans">中文</button></dd>
+      <dt>언어 · Language</dt><dd id="langRow"><button data-lang="ko" lang="ko">한국어</button><button data-lang="en" lang="en">English</button><button data-lang="ja" lang="ja">日本語</button><button data-lang="zh" lang="zh-Hans">中文</button></dd>
       <dt id="soundTerm"></dt><dd><button id="soundSwitch"></button><button id="musicSwitch"></button></dd><dd id="soundNote"></dd>
     </dl></section>
+    <section data-tab="help" hidden><p id="helpLead"></p><dl id="helpList"></dl></section>
+    <section data-tab="about" hidden><div id="aboutTitle"><b></b><span></span></div><dl id="aboutList"></dl></section>
     <button id="closeSettings"></button>
   </div></div>
 </div>
@@ -256,6 +266,75 @@ const TEXT = {
     noArt: '这一格还没有图。', pick: '点一下圆点，就能看到那一格。', rough: '位置是大概的。',
     story: '故事', route: '怎么去', quizHead: '猜猜看吧。', right: '答对啦。读得真仔细呀。', wrong: '答案是“{}”。下次再来猜猜吧。', check: '去之前先确认一下吧。', routeLocked: '把照片叠好拍下来，就会附上去的路。',
     regions: { '서울·경기·인천': '首尔·京畿·仁川', '강원': '江原', '충청': '忠清', '전라': '全罗', '경상': '庆尚', '제주': '济州', '섬과 끝': '岛屿与尽头' } },
+  en: { started: 'Making began: {m}/{d}/{y}', days: 'Day {n} of roaming the eight provinces', markGood: 'Best time', markToday: 'Today', hint: 'Drag the view and lay the photo over the place', good: 'To the best time', today: 'To today', again: 'Find it again',
+    sunset: 'Sunset', month: '', months: 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '), sound: 'Sound', music: 'Music', settings: 'Settings', close: 'Close', soundTerm: 'Sound', on: 'on', off: 'off',
+    soundNote: 'Twenty tunes play in turn. The speaker and note buttons at the top switch them too.', noJournal: 'There is no notebook yet.', mine: 'My photo', mineTitle: 'The photo I took', mineCam: 'Shoot on the spot', mineFile: 'Pick from the album', mineDrop: 'Remove', mineNote: 'If you have really been there, add the photo you took on the spot. It stays on this device only.',
+    mineThanks: 'So you really went. Thank you.', camHint: "Lay Grandma's photo over the view and shoot", camGhostOn: 'Show the photo', camGhostOff: 'Hide the photo', camClose: 'Close', camNo: 'This browser cannot open the camera. Please pick from the album.', visited: 'Visited', hush: 'Shh~',
+    journalTitle: "Grandma's Notes, volume 3", tabMap: 'Map', tabList: 'Squares', went: 'Went', saw: 'Saw', missed: 'Missed', go: 'Go', here: 'You are here now.',
+    noArt: 'This square has no picture yet.', pick: 'Press a dot to see that square.', rough: 'The position is rough.',
+    story: 'Story', route: 'Directions', quizHead: 'Have a guess.', right: 'Right. You read it with care.', wrong: 'The answer is "{}". Have another guess next time.', check: 'Check before you go.', routeLocked: 'Lay the photo over the view and take it, and the directions are added.',
+    regions: { '서울·경기·인천': 'Seoul, Gyeonggi, Incheon', '강원': 'Gangwon', '충청': 'Chungcheong', '전라': 'Jeolla', '경상': 'Gyeongsang', '제주': 'Jeju', '섬과 끝': 'Islands and ends' } },
+};
+// 설정의 Help 쪽(도움말)과 About 쪽. 갈래의 짜임은 1권의 설정에서 가져왔고 글은 여기서 썼다. 일본어, 중국어, 영어는 임시 번역이다.
+const HELP = {
+  ko: { lead: '할머니의 옛 사진을 들고 그 자리를 찾아가, 사진과 오늘의 풍경을 포개어 찍는 놀이입니다.', items: [
+    ['사진 포개기', '화면 위쪽을 끌면 풍경이 움직입니다. 반투명한 할머니의 사진과 풍경이 겹치는 자리에 가까이 가면 저절로 맞춰져 찍히고, 엽서가 됩니다.'],
+    ['다시 찾기', '찍은 뒤에 처음부터 다시 해 보려면 "다시 찾기"를 누릅니다.'],
+    ['계절 다이얼', '아래쪽 다이얼을 좌우로 굴리면 날짜가 바뀝니다. 한 칸이 5일이고 한 바퀴가 한 해입니다. 철에 따라 풍경의 색과 해 지는 시각이 바뀝니다.'],
+    ['좋은 때와 오늘', '다이얼에 별과 딱지로 표시됩니다. 딱지가 다이얼 끝에 걸려 있으면 눌러서 그날로 갑니다.'],
+    ['이야기와 가는 길', '이야기에는 그 자리의 이야기 세 문장과 문제 하나가 있습니다. 가는 길은 사진을 포개 찍은 뒤에 열립니다.'],
+    ['내 사진', '정말 다녀왔다면 그 자리에서 카메라에 할머니의 사진을 겹쳐 놓고 찍거나, 사진첩에서 골라 붙입니다. 엽서의 셋째 장이 됩니다.'],
+    ['수첩', '위쪽의 수첩 단추로 엽니다. 지도와 칸 목록에서 100칸을 보고 "가기"로 다른 칸으로 옮깁니다. 지금은 첨성대와 부석사 두 칸에 그림이 있습니다.'],
+    ['소리', '위쪽의 스피커 단추는 효과음, 음표 단추는 배경 음악을 켜고 끕니다.'] ] },
+  ja: { lead: 'おばあちゃんの昔の写真を持ってその場所をたずね、写真と今日の景色を重ねて撮る遊びです。', items: [
+    ['写真を重ねる', '画面の上のほうを引くと景色が動きます。半透明のおばあちゃんの写真と景色が重なる場所に近づくと、ひとりでに合わさって撮れ、はがきになります。'],
+    ['もう一度さがす', '撮ったあとではじめからやり直すには「もう一度さがす」を押します。'],
+    ['季節のダイヤル', '下のダイヤルを左右に回すと日付が変わります。一目盛りが5日、一周が一年です。季節によって景色の色と日の入りの時刻が変わります。'],
+    ['いい季節と今日', 'ダイヤルに星と札で示されます。札がダイヤルの端にかかっていたら、押すとその日へ行きます。'],
+    ['物語と行き方', '物語にはその場所の話が三つの文と問題一つで入っています。行き方は写真を重ねて撮ったあとに開きます。'],
+    ['わたしの写真', 'ほんとうに行ってきたなら、その場所でカメラにおばあちゃんの写真を重ねて撮るか、アルバムから選んで貼ります。はがきの3枚目になります。'],
+    ['手帳', '上の手帳のボタンで開きます。地図とマスの一覧で100マスを見て、「行く」でほかのマスへ移ります。今は瞻星台と浮石寺の二マスに絵があります。'],
+    ['音', '上のスピーカーのボタンは効果音、音符のボタンは音楽をオン・オフします。'] ] },
+  zh: { lead: '带着奶奶的老照片去找那个地方，把照片和今天的风景叠在一起拍下来的游戏。', items: [
+    ['叠照片', '拖动画面上方，风景就会移动。靠近半透明的奶奶照片和风景重合的位置，就会自动对齐并拍下来，变成明信片。'],
+    ['再找一次', '拍完以后想从头再来，就按“再找一次”。'],
+    ['季节拨盘', '左右转动下方的拨盘，日期就会改变。一格是5天，一圈是一年。风景的颜色和日落的时间会随季节变化。'],
+    ['好时节和今天', '在拨盘上用星星和标签标出。标签挂在拨盘边上时，按一下就去那一天。'],
+    ['故事和怎么去', '故事里有那个地方的三句话和一道题。把照片叠好拍下来以后，“怎么去”才会打开。'],
+    ['我的照片', '要是真的去过，就在那个地方把奶奶的照片叠在相机上拍，或者从相册里选一张贴上。它会成为明信片的第三张。'],
+    ['笔记本', '用上方的笔记本按钮打开。在地图和格子列表里看100格，按“前往”去别的格子。现在瞻星台和浮石寺两格有图。'],
+    ['声音', '上方的喇叭按钮开关音效，音符按钮开关背景音乐。'] ] },
+  en: { lead: "A game of taking Grandma's old photos to the places they show, and laying each photo over today's view to take it again.", items: [
+    ['Laying the photo', "Drag the upper part of the screen and the view moves. Come close to where Grandma's see-through photo and the view line up, and it snaps into place, is taken, and becomes a postcard."],
+    ['Find it again', 'To start over after taking it, press "Find it again".'],
+    ['The season dial', 'Roll the dial at the bottom left or right to change the date. One tick is 5 days and one turn is a year. The colours of the view and the time of sunset change with the season.'],
+    ['Best time and today', "They are marked on the dial with a star and a tag. When a tag sits at the dial's edge, press it to go to that day."],
+    ['Story and directions', 'The story holds three sentences about the place and one question. The directions open once you have laid the photo over the view and taken it.'],
+    ['My photo', "If you have really been there, lay Grandma's photo over the camera on the spot and shoot, or pick a photo from your album. It becomes the third picture of the postcard."],
+    ['Notebook', 'Open it with the notebook button at the top. See the 100 squares on the map and in the list, and press "Go" to move to another. For now two squares, Cheomseongdae and Buseoksa, have pictures.'],
+    ['Sound', 'At the top, the speaker button switches the sound effects and the note button the music.'] ] },
+};
+const ABOUT = {
+  ko: { title: '팔도 한량', sub: '할머니의 수첩 3권', items: [
+    ['만든 사람', '우주한량, 우주토끼'],
+    ['시험판', '아직 게임이 아니라 손맛을 보는 시험판입니다. 칸 100개 가운데 2개에 그림이 있습니다.'],
+    ['개인정보', '모으지 않습니다. 채운 칸과 내 사진은 이 기기에만 남고 서버로 보내지 않습니다. 일본어와 중국어 손글씨 글꼴만 구글 글꼴 서버에서 받습니다.'],
+    ['가져온 것', '화면의 틀과 소라는 우주 한량(1권), 다이얼은 시간 한량(2권)의 것입니다. 땅 모양은 Natural Earth, 해의 자리는 NOAA의 식, 이름과 좌표는 위키백과와 위키데이터가 바탕입니다. 풍경 그림은 OpenAI의 그림 그리기로 주문했습니다. 글꼴은 Pretendard, 개구, 나눔손글씨 펜입니다.'] ] },
+  ja: { title: 'Korea Oddity', sub: 'おばあちゃんの手帳 3巻', items: [
+    ['作った人', '우주한량, 우주토끼'],
+    ['テスト版', 'まだゲームではなく、手ざわりを確かめるテスト版です。100マスのうち2マスに絵があります。'],
+    ['個人情報', '集めません。埋めたマスとわたしの写真はこの端末にだけ残り、サーバーへは送りません。日本語と中国語の手書きフォントだけはGoogle Fontsのサーバーから受け取ります。'],
+    ['もらってきたもの', '画面の枠組みとソラはSpace Oddity（1巻）、ダイヤルはTime Oddity（2巻）のものです。陸の形はNatural Earth、太陽の位置はNOAAの式、名前と座標はウィキペディアとウィキデータがもとです。景色の絵はOpenAIの画像生成に注文しました。フォントはPretendard、Gaegu、Nanum Pen Scriptです。'] ] },
+  zh: { title: 'Korea Oddity', sub: '奶奶的笔记本 第3本', items: [
+    ['制作者', '우주한량, 우주토끼'],
+    ['试用版', '这还不是游戏，是用来试手感的试用版。100格里有2格有图。'],
+    ['个人信息', '不收集。填好的格子和我的照片只留在这台设备里，不会发送到服务器。只有日语和中文的手写字体从Google Fonts的服务器获取。'],
+    ['借用的东西', '画面的框架和索拉来自Space Oddity（第1本），拨盘来自Time Oddity（第2本）。陆地的形状来自Natural Earth，太阳的位置用NOAA的公式，名称和坐标以维基百科和维基数据为底。风景图是向OpenAI的图像生成订做的。字体是Pretendard、Gaegu、Nanum Pen Script。'] ] },
+  en: { title: 'Korea Oddity', sub: "Grandma's Notes, volume 3", items: [
+    ['Made by', '우주한량, 우주토끼'],
+    ['Prototype', 'This is not the game yet but a prototype for trying the feel. Two of the 100 squares have pictures.'],
+    ['Privacy', 'None is collected. The squares you fill and your own photos stay on this device and are never sent to a server. Only the Japanese and Chinese handwriting fonts are fetched from the Google Fonts server.'],
+    ['Borrowed', "The frame of the screen and Sora come from Space Oddity (volume 1), the dial from Time Oddity (volume 2). The shape of the land is from Natural Earth, the sun's position from NOAA's formulas, and names and coordinates are based on Wikipedia and Wikidata. The pictures of the views were ordered from OpenAI's image generation. The fonts are Pretendard, Gaegu and Nanum Pen Script."] ] },
 };
 // 칸마다 다른 글. 카드, 문제, 가는 길은 번역 시험 3차(filled-A.json)에서, 소라와 메모의 말은 1차와 2차에서 가져왔다.
 // 첨성대의 중국어 메모만 임시 번역이다. choices 는 문제의 보기이고 answer 는 그 가운데 맞는 것의 차례다.
@@ -271,6 +350,9 @@ const SQ_TEXT = {
     zh: { name: '瞻星台', where: '庆州，庆尚北道', memo: '1971.5.12. 修学旅行。拍了集体照。', bubble: '哪个孩子是奶奶？都一个样。',
       card: ['瞻星台是新罗的善德女王时期建造的石塔。', '高度约为9米。', '相传人们曾在这座塔上观测星星。'], quiz: '哪个国家建造了瞻星台？', choices: ['高丽', '新罗', '朝鲜王朝'],
       routes: ['从金海国际机场或釜山港入境。', '从釜山到庆州乘坐列车或公共汽车。', '瞻星台夜晚也可以看到。'] },
+    en: { name: 'Cheomseongdae', where: 'Gyeongju, North Gyeongsang', memo: '12 May 1971. School trip. We took a group photo.', bubble: 'Which kid is Grandma? They all look the same.',
+      card: ['Cheomseongdae is a stone tower built in the reign of Queen Seondeok of Silla.', 'It is about 9 metres tall.', 'It is said that people watched the stars from this tower.'], quiz: 'Which kingdom built Cheomseongdae?', choices: ['Goryeo', 'Silla', 'Joseon'],
+      routes: ['Enter the country at Gimhae International Airport or the Port of Busan.', 'Take a train or a bus from Busan to Gyeongju.', 'Cheomseongdae can be seen at night as well.'] },
   },
   buseoksa: {
     answer: 1,
@@ -283,6 +365,9 @@ const SQ_TEXT = {
     zh: { name: '浮石寺', where: '荣州，庆尚北道', memo: '1985.11. 傍晚。看见山层层叠叠。', bubble: '重合啦！山还是老样子呢。',
       card: ['浮石寺是新罗的义湘于676年建造的寺庙。', '无量寿殿是韩国现存最古老的木结构建筑之一。', '站在无量寿殿前，可以看到小白山的山脊线。'], quiz: '义湘是在哪一年建造了浮石寺？', choices: ['576', '676', '776'],
       routes: ['从仁川国际机场入境。', '乘列车到荣州站，再乘公共汽车到浮石寺。', '日落时的景色很有名。'] },
+    en: { name: 'Buseoksa', where: 'Yeongju, North Gyeongsang', memo: 'November 1985. Evening. The hills lay fold on fold.', bubble: "They line up! The hills haven't changed.",
+      card: ['Buseoksa is a temple that Uisang of Silla founded in 676.', 'Muryangsujeon is one of the oldest wooden buildings in Korea.', 'Stand before Muryangsujeon and you can see the ridges of Sobaeksan.'], quiz: 'In what year did Uisang found Buseoksa?', choices: ['576', '676', '776'],
+      routes: ['Enter the country at Incheon International Airport.', 'Take a train to Yeongju station, then a bus to Buseoksa.', 'The view at sunset is famous.'] },
   },
 };
 // 지금 서 있는 칸. 첫 칸은 첨성대다(기획서 8절). 주소에 ?sq=buseoksa 를 붙이면 그 칸에서 연다.
@@ -290,10 +375,19 @@ let HERE = new URLSearchParams(location.search).get('sq') ?? 'cheomseongdae';
 if (!SQ_TEXT[HERE]) HERE = 'cheomseongdae';
 const q = k => SQ_TEXT[HERE][lang][k];
 let lang = 'ko';
-try { lang = localStorage.getItem(LANG_KEY) ?? (/^(ko|ja|zh)\b/i.exec(navigator.language ?? 'ko')?.[1].toLowerCase() ?? 'ja'); } catch { /* 저장소가 없으면 한국어 */ }
+try { lang = localStorage.getItem(LANG_KEY) ?? (/^(ko|ja|zh|en)\b/i.exec(navigator.language ?? 'ko')?.[1].toLowerCase() ?? 'en'); } catch { /* 저장소가 없으면 한국어 */ }
 lang = new URLSearchParams(location.search).get('lang') ?? lang;   // 주소에 ?lang=ja 를 붙이면 그 말로 연다(그림 파일로 찍을 때 쓴다)
 if (!TEXT[lang]) lang = 'ko';
 const t = k => TEXT[lang][k];
+// 설정의 Help 쪽과 About 쪽을 고른 말로 채운다.
+function renderHelp() {
+  const rows = (list, items) => list.replaceChildren(...items.flatMap(([term, text]) => {
+    const dt = document.createElement('dt'), dd = document.createElement('dd');
+    dt.textContent = term; dd.textContent = text; return [dt, dd];
+  }));
+  $('helpLead').textContent = HELP[lang].lead; rows($('helpList'), HELP[lang].items);
+  $('aboutTitle').firstElementChild.textContent = ABOUT[lang].title; $('aboutTitle').lastElementChild.textContent = ABOUT[lang].sub; rows($('aboutList'), ABOUT[lang].items);
+}
 function setLang(next) {
   lang = next;
   try { localStorage.setItem(LANG_KEY, lang); } catch { /* 저장하지 못해도 이번에는 바뀐다 */ }
@@ -302,7 +396,7 @@ function setLang(next) {
   $('memo').firstElementChild.textContent = q('memo');
   if (hushAt >= 0) $('bubble').textContent = t('hush'); else if (shot) $('bubble').textContent = q('bubble');
   $('settingsTitle').textContent = t('settings'); $('closeSettings').textContent = t('close');
-  $('soundTerm').textContent = t('soundTerm'); $('soundNote').textContent = t('soundNote'); showSound(); renderNews();
+  $('soundTerm').textContent = t('soundTerm'); $('soundNote').textContent = t('soundNote'); showSound(); renderNews(); renderHelp();
   $('soundButton').setAttribute('aria-label', t('sound')); $('bgmButton').setAttribute('aria-label', t('music')); $('settingsButton').setAttribute('aria-label', t('settings'));
   document.querySelectorAll('#langRow button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   $('storyButton').textContent = t('story'); $('routeButton').textContent = t('route'); $('closeCard').textContent = t('close');
@@ -326,6 +420,7 @@ const TERM_NAMES = {
   ko: '소한 대한 입춘 우수 경칩 춘분 청명 곡우 입하 소만 망종 하지 소서 대서 입추 처서 백로 추분 한로 상강 입동 소설 대설 동지'.split(' '),
   ja: '小寒 大寒 立春 雨水 啓蟄 春分 清明 穀雨 立夏 小満 芒種 夏至 小暑 大暑 立秋 処暑 白露 秋分 寒露 霜降 立冬 小雪 大雪 冬至'.split(' '),
   zh: '小寒 大寒 立春 雨水 惊蛰 春分 清明 谷雨 立夏 小满 芒种 夏至 小暑 大暑 立秋 处暑 白露 秋分 寒露 霜降 立冬 小雪 大雪 冬至'.split(' '),
+  en: 'Minor Cold|Major Cold|Start of Spring|Rain Water|Awakening of Insects|Spring Equinox|Clear and Bright|Grain Rain|Start of Summer|Grain Buds|Grain in Ear|Summer Solstice|Minor Heat|Major Heat|Start of Autumn|End of Heat|White Dew|Autumn Equinox|Cold Dew|Frost Descent|Start of Winter|Minor Snow|Major Snow|Winter Solstice'.split('|'),
 };
 const TERM_AT = new Map(TERM_DAYS.map((day, i) => [day, i]));
 function dateText(n) {
@@ -759,7 +854,7 @@ function drawDial(now) {
     const from = at(n / STEP, 11), to = at(n / STEP, 11 + long);
     c.globalAlpha = long === 18 ? 1 : long === 12 ? 0.75 : 0.5; c.lineWidth = long === 18 ? 2 : 1;
     c.beginPath(); c.moveTo(from.x, from.y); c.lineTo(to.x, to.y); c.stroke();
-    if (long === 18) { const p = at(n / STEP, 11 + 18 + 13); c.globalAlpha = 1; c.fillText(`${month + 1}${t('month')}`, p.x, p.y); }
+    if (long === 18) { const p = at(n / STEP, 11 + 18 + 13); c.globalAlpha = 1; c.fillText(t('months')?.[month] ?? `${month + 1}${t('month')}`, p.x, p.y); }
   }
   c.globalAlpha = 1;
 
@@ -1008,7 +1103,7 @@ const filled = new Set(stored(FILLED_KEY, '').split(',').filter(Boolean));
 function fill(id) { filled.add(id); store(FILLED_KEY, [...filled].join(',')); showJournal(); }
 const REGION_COLOR = { '서울·경기·인천': '#3b5bb5', '강원': '#2f8f7a', '충청': '#b5803b', '전라': '#5a8c4a', '경상': '#b9502c', '제주': '#8a4fa8', '섬과 끝': '#3b2a1a' };
 // 그 말의 이름 하나만 보인다(한글을 나란히 적지 않는다). 일본어와 중국어에 아직 이름이 없는 칸만 한글이 보인다.
-const nameOf = sq => lang === 'ja' ? sq.ja ?? sq.ko : lang === 'zh' ? sq.zh ?? sq.ko : sq.ko;
+const nameOf = sq => sq[lang] ?? sq.ko;
 let picked = null, journalTab = 'map';
 
 function showJournal() {

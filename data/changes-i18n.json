@@ -1,98 +1,127 @@
 {
+ "영어가 생겼습니다. 설정에서 한국어, English, 日本語, 中文 넷 가운데 고릅니다. 설정에는 Help(도움말)와 About 쪽도 생겨 갈래가 넷이 되었습니다.": {
+  "ja": "英語ができました。設定で한국어、English、日本語、中文の四つから選びます。設定にはHelp（ヘルプ）とAboutのページもでき、ページは四つになりました。",
+  "zh": "新增了英语。在设置里从한국어、English、日本語、中文四种里选择。设置里还新增了Help（帮助）和About页面，一共有四个页面。",
+  "en": "English is in. Choose among 한국어, English, 日本語 and 中文 in the settings. The settings also gained Help and About pages, four pages in all."
+ },
  "설정 창이 우주 한량과 같은 톤이 되었습니다. 남색 유리 판에 금빛 작은 제목, 고른 것은 금빛 테로 보입니다.": {
   "ja": "設定の画面がSpace Oddityと同じ色合いになりました。紺色のガラスの板に金色の小見出し、選んだものは金色の枠で見えます。",
-  "zh": "设置窗口换成了和Space Oddity一样的色调。深蓝色的玻璃面板，金色的小标题，选中的项目用金色边框表示。"
+  "zh": "设置窗口换成了和Space Oddity一样的色调。深蓝色的玻璃面板，金色的小标题，选中的项目用金色边框表示。",
+  "en": "The settings panel now has the same tone as Space Oddity: a navy glass sheet, small gold headings, and a gold outline on whatever is chosen."
  },
  "다이얼을 돌릴 때 나는 눈금 소리를 절반으로 줄였습니다.": {
   "ja": "ダイヤルを回すときの目盛りの音を半分に小さくしました。",
-  "zh": "转动拨盘时的刻度声减小了一半。"
+  "zh": "转动拨盘时的刻度声减小了一半。",
+  "en": "The tick you hear when turning the dial is now half as loud."
  },
  "소라가 커졌습니다. 우주 한량에서와 같은 크기로, 손전화에서 화면 높이의 5분의 1쯤입니다. 너비로는 84픽셀에서 127픽셀이 되었습니다.": {
   "ja": "ソラが大きくなりました。Space Oddityと同じ大きさで、スマホでは画面の高さの5分の1くらいです。幅は84ピクセルから127ピクセルになりました。",
-  "zh": "索拉变大了。和Space Oddity里一样大，在手机上大约是屏幕高度的五分之一。宽度从84像素变成了127像素。"
+  "zh": "索拉变大了。和Space Oddity里一样大，在手机上大约是屏幕高度的五分之一。宽度从84像素变成了127像素。",
+  "en": "Sora is bigger. She is the size she has in Space Oddity, about a fifth of the screen's height on a phone. She went from 84 to 127 pixels wide."
  },
  "배경 음악을 새로 지었습니다. 우주 한량의 열한 곡을 내리고 스무 곡을 올렸습니다. 돌담길, 대숲, 산사, 숨비소리처럼 팔도의 풍경에서 이름을 땄고, 여덟 곡은 우리 민요의 다섯 음으로 지었습니다.": {
   "ja": "BGMを新しく作りました。Space Oddityの十一曲を下ろして、二十曲を入れました。石垣の道、竹林、山寺、海女の磯笛のように八道の風景から名前を取り、八曲は韓国民謡の五つの音で作りました。",
-  "zh": "背景音乐重新写了。撤下Space Oddity的十一首，换上二十首。石墙路、竹林、山寺、海女的哨声，曲名都取自八道的风景，其中八首用韩国民谣的五个音写成。"
+  "zh": "背景音乐重新写了。撤下Space Oddity的十一首，换上二十首。石墙路、竹林、山寺、海女的哨声，曲名都取自八道的风景，其中八首用韩国民谣的五个音写成。",
+  "en": "The background music is newly written. The eleven tunes from Space Oddity came down and twenty went up. They are named after sights of the eight provinces, such as a stone-wall lane, a bamboo grove, a mountain temple and a diver's whistle, and eight of them use the five notes of Korean folk song."
  },
  "설정에 바뀐 것들 쪽이 생겼습니다. 날마다 무엇이 바뀌었는지 한 줄씩 볼 수 있습니다.": {
   "ja": "設定に「変わったこと」のページができました。毎日なにが変わったかを一行ずつ見られます。",
-  "zh": "设置里新增了“更新记录”页面。可以逐行查看每天改了什么。"
+  "zh": "设置里新增了“更新记录”页面。可以逐行查看每天改了什么。",
+  "en": "The settings have a Changes page. It shows, a line a day, what has changed."
  },
  "정말 다녀온 사람은 내 사진을 붙일 수 있습니다. 그 자리에서 카메라에 할머니의 사진을 겹쳐 놓고 찍으면, 엽서가 석 장이 되고 수첩에 다녀온 곳이 세어집니다.": {
   "ja": "本当に行ってきた人は、わたしの写真を貼れます。その場でカメラにおばあちゃんの写真を重ねて撮ると、はがきが3枚になり、手帳に行ってきた場所が数えられます。",
-  "zh": "真正去过的人可以贴上我的照片。在那个地方让相机叠上奶奶的照片拍下来，明信片就会变成三张，笔记本里会记上去过的地方。"
+  "zh": "真正去过的人可以贴上我的照片。在那个地方让相机叠上奶奶的照片拍下来，明信片就会变成三张，笔记本里会记上去过的地方。",
+  "en": "If you have really been there, you can add your own photo. Lay Grandma's photo over the camera on the spot and shoot: the postcard grows to three pictures and the notebook counts the place as visited."
  },
  "철이 바뀌면 풀밭과 나무와 먼 산의 색이 바뀝니다. 겨울에는 눈이 덮이고 가을에는 나무가 붉습니다. 돌탑과 기와는 그대로입니다.": {
   "ja": "季節が変わると、草地と木と遠い山の色が変わります。冬には雪が積もり、秋には木が赤くなります。石塔と瓦はそのままです。",
-  "zh": "季节变换时，草地、树木和远山的颜色会变。冬天会被雪覆盖，秋天树木是红的。石塔和瓦片保持原样。"
+  "zh": "季节变换时，草地、树木和远山的颜色会变。冬天会被雪覆盖，秋天树木是红的。石塔和瓦片保持原样。",
+  "en": "When the season turns, the grass, the trees and the far hills change colour. Snow lies in winter and the trees go red in autumn. The stone tower and the roof tiles stay as they are."
  },
  "다이얼이 시간 한량의 것과 같아졌습니다. 두꺼운 밤하늘 유리 속에 북두칠성이 함께 돌고, 굴리면 유리가 반짝입니다. 좋은 때와 오늘에는 별과 딱지가 붙습니다.": {
   "ja": "ダイヤルがTime Oddityのものと同じになりました。厚い夜空のガラスの中で北斗七星が一緒に回り、転がすとガラスがきらめきます。いい季節と今日には、星とシールが付きます。",
-  "zh": "转盘和Time Oddity的一样了。厚厚的夜空玻璃里北斗七星一起转动，滚动时玻璃会闪烁。好时节和今天会贴上星星和贴纸。"
+  "zh": "转盘和Time Oddity的一样了。厚厚的夜空玻璃里北斗七星一起转动，滚动时玻璃会闪烁。好时节和今天会贴上星星和贴纸。",
+  "en": "The dial is now the one from Time Oddity. The Big Dipper turns inside thick night-sky glass, and the glass glints as you roll it. The best time and today each carry a star and a tag."
  },
  "땅 그림을 주문해 받았습니다. 첨성대와 고분, 무량수전과 소백산이 종이를 오려 겹친 그림 일곱 장으로 왔습니다.": {
   "ja": "土地の絵を注文して受け取りました。瞻星台と古墳、無量寿殿と小白山が、紙を切り抜いて重ねた絵七枚で届きました。",
-  "zh": "订购的土地画收到了。瞻星台和古墓、无量寿殿和小白山，以七幅剪纸叠层画的形式送到了。"
+  "zh": "订购的土地画收到了。瞻星台和古墓、无量寿殿和小白山，以七幅剪纸叠层画的形式送到了。",
+  "en": "The pictures of the land were ordered and have arrived. Cheomseongdae and the burial mounds, Muryangsujeon and Sobaeksan came as seven layers of cut paper."
  },
  "둘째 칸 첨성대가 생겼습니다. 1971년 수학여행 사진 속에는 아이들이 탑 앞에 줄지어 있고, 오늘 풍경에는 없습니다. 수첩에서 \"가기\"를 누르면 칸을 옮겨 갑니다.": {
   "ja": "二つ目のマス、瞻星台ができました。1971年の修学旅行の写真には子どもたちが塔の前に並んでいますが、今日の風景にはいません。手帳で「行く」を押すと、マスを移れます。",
-  "zh": "第二个格瞻星台做好了。1971年修学旅行的照片里，孩子们在塔前排成一列，今天的风景里却没有。在笔记本里点“前往”，就会移到那个格子。"
+  "zh": "第二个格瞻星台做好了。1971年修学旅行的照片里，孩子们在塔前排成一列，今天的风景里却没有。在笔记本里点“前往”，就会移到那个格子。",
+  "en": "A second square, Cheomseongdae, is in. In the 1971 school-trip photo children stand in a row before the tower; in today's view they are gone. Press \"Go\" in the notebook to move to another square."
  },
  "수첩의 지도에 땅이 그려집니다. 제주도와 울릉도, 바다 건너 쓰시마와 규슈도 보입니다.": {
   "ja": "手帳の地図に土地が描かれます。済州島と鬱陵島、海の向こうの対馬と九州も見えます。",
-  "zh": "笔记本的地图上画出了土地。济州岛和郁陵岛，海那边的对马和九州也能看到。"
+  "zh": "笔记本的地图上画出了土地。济州岛和郁陵岛，海那边的对马和九州也能看到。",
+  "en": "The notebook's map now draws the land. You can see Jeju and Ulleungdo, and Tsushima and Kyushu across the sea."
  },
  "할머니의 메모도 고른 말 하나로만 적습니다.": {
   "ja": "おばあちゃんのメモも、選んだ言葉一つだけで書きます。",
-  "zh": "奶奶的便条也只用选定的一种语言来写。"
+  "zh": "奶奶的便条也只用选定的一种语言来写。",
+  "en": "Grandma's notes, too, are written in the one language you chose."
  },
  "지명을 고른 말 하나로만 적습니다. 한국어면 부석사, 일본어와 중국어면 浮石寺입니다. 한자와 한글을 나란히 적던 것을 뺐습니다.": {
   "ja": "地名を選んだ言葉一つだけで書きます。韓国語なら부석사、日本語と中国語なら浮石寺です。漢字とハングルを並べて書いていたのをやめました。",
-  "zh": "地名只用选定的一种语言来写。韩语是부석사，日语和汉语是浮石寺。去掉了把汉字和韩文并排写的做法。"
+  "zh": "地名只用选定的一种语言来写。韩语是부석사，日语和汉语是浮石寺。去掉了把汉字和韩文并排写的做法。",
+  "en": "Place names are written in the one language you chose: 부석사 in Korean, 浮石寺 in Japanese and Chinese. Hanja and Hangul are no longer shown side by side."
  },
  "해가 계산한 자리에 뜹니다. 다이얼을 돌리면 해 지는 시각이 바뀝니다. 부석사는 10월 7일에 18:00, 동지에 17:12입니다.": {
   "ja": "太陽が計算した位置に昇ります。ダイヤルを回すと日没の時刻が変わります。浮石寺は10月7日に18:00、冬至に17:12です。",
-  "zh": "太阳会升到计算出的位置。转动转盘，日落时间会变。浮石寺在10月7日是18:00，冬至是17:12。"
+  "zh": "太阳会升到计算出的位置。转动转盘，日落时间会变。浮石寺在10月7日是18:00，冬至是17:12。",
+  "en": "The sun rises where the sums put it. Turn the dial and the time of sunset changes. At Buseoksa it is 18:00 on 7 October and 17:12 at the winter solstice."
  },
  "부석사 칸에 이야기 카드, 문제, 가는 길이 붙었습니다. 가는 길은 사진을 포개 찍은 뒤에 열립니다.": {
   "ja": "浮石寺のマスに、物語カード、問題、行き方が付きました。行き方は、写真を重ねて撮った後に開きます。",
-  "zh": "浮石寺的格子加上了故事卡、问题和怎么去。怎么去要在叠拍照片之后才会打开。"
+  "zh": "浮石寺的格子加上了故事卡、问题和怎么去。怎么去要在叠拍照片之后才会打开。",
+  "en": "The Buseoksa square has a story card, a question and directions. The directions open once you have laid the photo over the view and taken it."
  },
  "수첩을 열 수 있습니다. 지도에 칸 100개가 점으로 찍혀 있고, 점을 누르면 그 칸의 이름이 세 나라 말로 보입니다.": {
   "ja": "手帳が開けるようになりました。地図にマス100個が点で打たれていて、点を押すとそのマスの名前が三か国語で見えます。",
-  "zh": "笔记本可以打开了。地图上用点标出了100个格子，点一下点，就能看到那个格子的名字的三种语言写法。"
+  "zh": "笔记本可以打开了。地图上用点标出了100个格子，点一下点，就能看到那个格子的名字的三种语言写法。",
+  "en": "The notebook opens. Its map has 100 squares as dots; press a dot to see that square's name in three languages."
  },
  "시험판에 우주 한량의 단추와 설정을 붙였습니다. 말 셋(한국어, 일본어, 중국어)을 고르고, 효과음과 배경 음악 열한 곡을 따로 켜고 끕니다. 끄면 소라가 \"쉬잇\" 합니다.": {
   "ja": "テスト版にSpace Oddityのボタンと設定を付けました。言葉三つ（韓国語、日本語、中国語）を選び、効果音とBGM十一曲を別々にオン・オフします。オフにするとソラが「しーっ」と言います。",
-  "zh": "试用版加入了Space Oddity的按钮和设置。可以选择三种语言（韩语、日语、汉语），并分别开关音效和十一首背景音乐。关掉时索拉会说“嘘～”。"
+  "zh": "试用版加入了Space Oddity的按钮和设置。可以选择三种语言（韩语、日语、汉语），并分别开关音效和十一首背景音乐。关掉时索拉会说“嘘～”。",
+  "en": "The prototype has Space Oddity's buttons and settings. Choose from three languages (Korean, Japanese, Chinese) and switch the sound effects and the eleven background tunes on and off separately. Switch them off and Sora says \"Shh~\"."
  },
  "다이얼을 남색 유리에 금빛 눈금과 별자리 무늬로 바꿨습니다.": {
   "ja": "ダイヤルを紺色のガラスに金色の目盛りと星座の模様に変えました。",
-  "zh": "把转盘换成了藏青色玻璃配金色刻度和星座图案。"
+  "zh": "把转盘换成了藏青色玻璃配金色刻度和星座图案。",
+  "en": "The dial is now navy glass with gold ticks and a pattern of constellations."
  },
  "이름표로 이름을 채워 열 칸을 다시 번역했습니다. 이름이 틀린 줄이 10줄에서 0줄이 되었고, 흠 없는 칸이 3칸에서 8칸이 되었습니다.": {
   "ja": "名札で名前を埋めて、十マスを翻訳し直しました。名前が間違っている行が10行から0行になり、傷のないマスが3マスから8マスになりました。",
-  "zh": "用名牌填入名字，重新翻译了十个格子。名字有误的行从10行变成了0行，没有瑕疵的格子从3格变成了8格。"
+  "zh": "用名牌填入名字，重新翻译了十个格子。名字有误的行从10行变成了0行，没有瑕疵的格子从3格变成了8格。",
+  "en": "The ten squares were translated again with names filled in from the name table. Lines with a wrong name went from 10 to 0, and squares with no flaw from 3 to 8."
  },
  "열 칸에 나오는 이름 48개의 이름표를 만들었습니다. 한라산은 漢拏山, 정동진은 正東津입니다. 앞선 시험에서 기계가 漢拿山, 正東進으로 틀렸던 이름입니다.": {
   "ja": "十マスに出てくる名前48個の名札を作りました。漢拏山は「漢拏山」、正東津は「正東津」です。前回のテストで機械が漢拿山、正東進と間違えた名前です。",
-  "zh": "给十个格子里出现的48个名字做了名牌。汉拏山写作“漢拏山”，正东津写作“正東津”。这是先前测试中机器写错成漢拿山、正東進的名字。"
+  "zh": "给十个格子里出现的48个名字做了名牌。汉拏山写作“漢拏山”，正东津写作“正東津”。这是先前测试中机器写错成漢拿山、正東進的名字。",
+  "en": "A name table of the 48 names in the ten squares is made. Hallasan is 漢拏山 and Jeongdongjin is 正東津; in the earlier test the machine got them wrong as 漢拿山 and 正東進."
  },
  "번역에서도 소라의 반말과 할머니의 말씨를 살리기로 했습니다. 1권의 번역을 본으로 45줄을 옮겨 보니, 일본어는 할머니의 말 22줄 가운데 18줄이 어른의 말로 읽혔습니다.": {
   "ja": "翻訳でもソラのタメ口とおばあちゃんの話し方を生かすことにしました。1巻の翻訳を手本に45行を移してみたところ、日本語はおばあちゃんの言葉22行のうち18行が大人の言葉に読めました。",
-  "zh": "翻译中也决定保留索拉不用敬语的口吻和奶奶的说话方式。以第1卷的翻译为蓝本翻了45行，结果日语在奶奶的22行台词中有18行读起来像成年人说的话。"
+  "zh": "翻译中也决定保留索拉不用敬语的口吻和奶奶的说话方式。以第1卷的翻译为蓝本翻了45行，结果日语在奶奶的22行台词中有18行读起来像成年人说的话。",
+  "en": "The translations, too, will keep Sora's casual speech and Grandma's way of talking. With volume 1's translation as the model, 45 lines were carried over; in Japanese, 18 of Grandma's 22 lines read as an elder speaking."
  },
  "사진 포개기 시험판을 만들었습니다. 부석사에서 산 다섯 겹을 할머니 사진과 포개면 찍히고, 다이얼을 돌리면 네 계절의 색이 바뀝니다.": {
   "ja": "写真重ねの試験版を作りました。浮石寺で買った五枚重ねをおばあちゃんの写真と重ねると撮れて、ダイヤルを回すと四季の色が変わります。",
-  "zh": "做了照片叠拍的试用版。把在浮石寺买的五层和奶奶的照片叠在一起就能拍下来，转动转盘，四季的颜色就会变。"
+  "zh": "做了照片叠拍的试用版。把在浮石寺买的五层和奶奶的照片叠在一起就能拍下来，转动转盘，四季的颜色就会变。",
+  "en": "A prototype for laying photos over the view is made. At Buseoksa, line up five ridges with Grandma's photo and it is taken; turn the dial and the colours of the four seasons change."
  },
  "일본어 번역을 시험했습니다. 101줄 가운데 문장은 99줄이 맞았고, 이름은 10줄이 틀렸습니다. 이름은 손으로 만든 이름표를 쓰기로 했습니다.": {
   "ja": "日本語の翻訳をテストしました。101行のうち文は99行が合っていて、名前は10行が間違っていました。名前は手で作った名札を使うことにしました。",
-  "zh": "测试了日语翻译。101行中句子有99行是对的，名字有10行是错的。名字决定使用手工制作的名牌。"
+  "zh": "测试了日语翻译。101行中句子有99行是对的，名字有10行是错的。名字决定使用手工制作的名牌。",
+  "en": "The Japanese translation was tested. Of 101 lines, 99 sentences were right and 10 had a wrong name. Names will come from a hand-made name table."
  },
  "기획서 「할머니의 수첩 3권」을 썼습니다. 자리 칸 100곳, 길 아홉, 쪽지 넷.": {
   "ja": "企画書「おばあちゃんの手帳 3巻」を書きました。場所のマス100か所、道九つ、メモ四つ。",
-  "zh": "写了策划书《奶奶的笔记本 第3卷》。位置格100处，路九条，纸条四张。"
+  "zh": "写了策划书《奶奶的笔记本 第3卷》。位置格100处，路九条，纸条四张。",
+  "en": "The plan \"Grandma's Notes, volume 3\" is written: 100 squares, nine roads, four slips of paper."
  }
 }

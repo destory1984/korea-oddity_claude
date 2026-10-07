@@ -11,7 +11,8 @@
   "jaKana": "キョンボックン",
   "zhHans": "景福宫",
   "zhHant": "景福宮",
-  "missing": []
+  "missing": [],
+  "en": "Gyeongbokgung"
  },
  {
   "no": 2,
@@ -25,7 +26,8 @@
   "jaKana": "チャンドックン",
   "zhHans": "昌德宫",
   "zhHant": "昌德宮",
-  "missing": []
+  "missing": [],
+  "en": "Changdeokgung"
  },
  {
   "no": 3,
@@ -39,7 +41,8 @@
   "jaKana": "チョンミョ",
   "zhHans": "宗庙 (首尔特别市)",
   "zhHant": "宗廟 (首爾特別市)",
-  "missing": []
+  "missing": [],
+  "en": "Jongmyo"
  },
  {
   "no": 4,
@@ -57,7 +60,8 @@
   "wikidata": "Q490981",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Bukchon Hanok Village"
  },
  {
   "no": 5,
@@ -71,7 +75,8 @@
   "jaKana": "ナムサン",
   "zhHans": "南山 (首尔特别市)",
   "zhHant": "南山 (首爾特別市)",
-  "missing": []
+  "missing": [],
+  "en": "Namsan"
  },
  {
   "no": 6,
@@ -89,7 +94,8 @@
   "wikidata": "Q495437",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Cheonggyecheon"
  },
  {
   "no": 7,
@@ -108,7 +114,8 @@
   "fromWikidata": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 8,
@@ -122,7 +129,8 @@
   "jaKana": null,
   "zhHans": "国立中央博物馆",
   "zhHant": "國立中央博物館",
-  "missing": []
+  "missing": [],
+  "en": "National Museum of Korea"
  },
  {
   "no": 9,
@@ -141,7 +149,8 @@
   "fromWikidata": [
    "좌표",
    "ja"
-  ]
+  ],
+  "en": "Seoul City Wall"
  },
  {
   "no": 10,
@@ -159,7 +168,8 @@
   "wikidata": "Q5295847",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Dongdaemun Design Plaza"
  },
  {
   "no": 11,
@@ -173,7 +183,8 @@
   "jaKana": "スウォンファソン",
   "zhHans": "水原华城",
   "zhHant": "水原華城",
-  "missing": []
+  "missing": [],
+  "en": "Hwaseong Fortress"
  },
  {
   "no": 12,
@@ -187,7 +198,8 @@
   "jaKana": "ナムハンサンソン",
   "zhHans": "南汉山城",
   "zhHant": "南漢山城",
-  "missing": []
+  "missing": [],
+  "en": "Namhansanseong"
  },
  {
   "no": 13,
@@ -205,7 +217,8 @@
   "wikidata": "Q489493",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Imjingak"
  },
  {
   "no": 14,
@@ -225,7 +238,8 @@
   "wikidata": "Q12608684",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": "Yongmunsa"
  },
  {
   "no": 15,
@@ -243,7 +257,8 @@
    "좌표",
    "ja"
   ],
-  "wikidata": "Q12593676"
+  "wikidata": "Q12593676",
+  "en": null
  },
  {
   "no": 16,
@@ -261,7 +276,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q22973965"
+  "wikidata": "Q22973965",
+  "en": null
  },
  {
   "no": 17,
@@ -278,7 +294,8 @@
   "missing": [
    "zh"
   ],
-  "wikidata": "Q11269377"
+  "wikidata": "Q11269377",
+  "en": "Jeondeungsa"
  },
  {
   "no": 18,
@@ -296,7 +313,8 @@
   "wikidata": "Q6014440",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Incheon Chinatown"
  },
  {
   "no": 19,
@@ -316,7 +334,8 @@
   "wikidata": "Q6431670",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Korea National Arboretum"
  },
  {
   "no": 20,
@@ -337,7 +356,8 @@
   "fromWikidata": [
    "좌표",
    "zh"
-  ]
+  ],
+  "en": "Yeongneung"
  },
  {
   "no": 21,
@@ -357,7 +377,8 @@
   "wikidata": "Q56063386",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": "Ulsanbawi"
  },
  {
   "no": 22,
@@ -375,7 +396,8 @@
   "wikidata": "Q983383",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Jeongdongjin station"
  },
  {
   "no": 23,
@@ -395,7 +417,8 @@
    "좌표",
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Gyeongpo Lake"
  },
  {
   "no": 24,
@@ -414,7 +437,8 @@
   "fromWikidata": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Ojukheon"
  },
  {
   "no": 25,
@@ -432,7 +456,8 @@
   "wikidata": "Q562760",
   "fromWikidata": [
    "zh"
-  ]
+  ],
+  "en": "Naksansa"
  },
  {
   "no": 26,
@@ -450,7 +475,8 @@
   "wikidata": "Q492822",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Hantan River"
  },
  {
   "no": 27,
@@ -468,7 +494,8 @@
   "wikidata": "Q12621264",
   "fromWikidata": [
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 28,
@@ -486,7 +513,8 @@
   "wikidata": "Q487536",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Namiseom"
  },
  {
   "no": 29,
@@ -506,7 +534,8 @@
   "wikidata": "Q5208208",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Daegwallyeong"
  },
  {
   "no": 30,
@@ -524,7 +553,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q12583425"
+  "wikidata": "Q12583425",
+  "en": "Geomnyongso"
  },
  {
   "no": 31,
@@ -542,7 +572,8 @@
   "wikidata": "Q50323",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Jeongseon County"
  },
  {
   "no": 32,
@@ -563,7 +594,8 @@
   "wikidata": "Q10765372",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Hwanseon Cave"
  },
  {
   "no": 33,
@@ -577,7 +609,8 @@
   "jaKana": null,
   "zhHans": "定林寺遗址 (韩国)",
   "zhHant": "定林寺遺址 (韓國)",
-  "missing": []
+  "missing": [],
+  "en": "Jeongnimsa"
  },
  {
   "no": 34,
@@ -591,7 +624,8 @@
   "jaKana": "コンサンソン",
   "zhHans": "公山城",
   "zhHant": "公山城",
-  "missing": []
+  "missing": [],
+  "en": "Gongsanseong"
  },
  {
   "no": 35,
@@ -611,7 +645,8 @@
   "wikidata": "Q17995800",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 36,
@@ -629,7 +664,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q277173"
+  "wikidata": "Q277173",
+  "en": null
  },
  {
   "no": 37,
@@ -643,7 +679,8 @@
   "jaKana": "ポプチュサ",
   "zhHans": "法住寺 (韩国)",
   "zhHant": "法住寺 (韓國)",
-  "missing": []
+  "missing": [],
+  "en": "Beopjusa"
  },
  {
   "no": 38,
@@ -661,7 +698,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q61091232"
+  "wikidata": "Q61091232",
+  "en": null
  },
  {
   "no": 39,
@@ -675,7 +713,8 @@
   "jaKana": "エキスポ",
   "zhHans": "EXPO科学公园",
   "zhHant": "EXPO科學公園",
-  "missing": []
+  "missing": [],
+  "en": "Expo Science Park"
  },
  {
   "no": 40,
@@ -695,7 +734,8 @@
   "wikidata": "Q12485627",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": "Heungdeoksa"
  },
  {
   "no": 41,
@@ -713,7 +753,8 @@
   "wikidata": "Q625268",
   "fromWikidata": [
    "zh"
-  ]
+  ],
+  "en": "Haemieupseong"
  },
  {
   "no": 42,
@@ -734,7 +775,8 @@
   "wikidata": "Q12591871",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Daecheon Beach"
  },
  {
   "no": 43,
@@ -751,7 +793,8 @@
   "missing": [
    "ja"
   ],
-  "wikidata": "Q16094218"
+  "wikidata": "Q16094218",
+  "en": "Oeam"
  },
  {
   "no": 44,
@@ -769,7 +812,8 @@
   "wikidata": "Q491449",
   "fromWikidata": [
    "zh"
-  ]
+  ],
+  "en": "Sudeoksa"
  },
  {
   "no": 45,
@@ -789,7 +833,8 @@
    "좌표",
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Jeonju Hanok Village"
  },
  {
   "no": 46,
@@ -810,7 +855,8 @@
   "fromWikidata": [
    "좌표",
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 47,
@@ -828,7 +874,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q28700211"
+  "wikidata": "Q28700211",
+  "en": null
  },
  {
   "no": 48,
@@ -846,7 +893,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q27952407"
+  "wikidata": "Q27952407",
+  "en": null
  },
  {
   "no": 49,
@@ -864,7 +912,8 @@
   "wikidata": "Q50240",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Damyang County"
  },
  {
   "no": 50,
@@ -882,7 +931,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q28671311"
+  "wikidata": "Q28671311",
+  "en": null
  },
  {
   "no": 51,
@@ -900,7 +950,8 @@
   "wikidata": "Q486960",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": "Suncheon Bay"
  },
  {
   "no": 52,
@@ -918,7 +969,8 @@
   "wikidata": "Q7451561",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Seonamsa"
  },
  {
   "no": 53,
@@ -939,7 +991,8 @@
   "fromWikidata": [
    "좌표",
    "ja"
-  ]
+  ],
+  "en": "Odongdo"
  },
  {
   "no": 54,
@@ -958,7 +1011,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q18685165"
+  "wikidata": "Q18685165",
+  "en": null
  },
  {
   "no": 55,
@@ -976,7 +1030,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q16092178"
+  "wikidata": "Q16092178",
+  "en": null
  },
  {
   "no": 56,
@@ -995,7 +1050,8 @@
   "fromWikidata": [
    "좌표",
    "zh"
-  ]
+  ],
+  "en": "Wolchulsan"
  },
  {
   "no": 57,
@@ -1015,7 +1071,8 @@
    "좌표",
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Mudeungsan"
  },
  {
   "no": 58,
@@ -1033,7 +1090,8 @@
    "좌표",
    "ja",
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 59,
@@ -1051,7 +1109,8 @@
   "wikidata": "Q626648",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Naejangsan"
  },
  {
   "no": 60,
@@ -1071,7 +1130,8 @@
   "wikidata": "Q130821",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Deogyusan"
  },
  {
   "no": 61,
@@ -1085,7 +1145,8 @@
   "jaKana": "プルグクサ",
   "zhHans": "佛国寺",
   "zhHant": "佛國寺",
-  "missing": []
+  "missing": [],
+  "en": "Bulguksa"
  },
  {
   "no": 62,
@@ -1099,7 +1160,8 @@
   "jaKana": "ソックラム",
   "zhHans": "石窟庵",
   "zhHant": "石窟庵",
-  "missing": []
+  "missing": [],
+  "en": "Seokguram"
  },
  {
   "no": 63,
@@ -1113,7 +1175,8 @@
   "jaKana": null,
   "zhHans": "瞻星台",
   "zhHant": "瞻星臺",
-  "missing": []
+  "missing": [],
+  "en": "Cheomseongdae"
  },
  {
   "no": 64,
@@ -1131,7 +1194,8 @@
   "wikidata": "Q496454",
   "fromWikidata": [
    "zh"
-  ]
+  ],
+  "en": "Donggung Palace and Wolji Pond"
  },
  {
   "no": 65,
@@ -1145,7 +1209,8 @@
   "jaKana": "ヤンドンマウル",
   "zhHans": "良洞村",
   "zhHant": "良洞村",
-  "missing": []
+  "missing": [],
+  "en": "Yangdong Folk Village"
  },
  {
   "no": 66,
@@ -1159,7 +1224,8 @@
   "jaKana": "ヘインサ",
   "zhHans": "海印寺",
   "zhHant": "海印寺",
-  "missing": []
+  "missing": [],
+  "en": "Haeinsa"
  },
  {
   "no": 67,
@@ -1173,7 +1239,8 @@
   "jaKana": "ハフェマウル",
   "zhHans": "河回村",
   "zhHant": "河回村",
-  "missing": []
+  "missing": [],
+  "en": "Hahoe Folk Village"
  },
  {
   "no": 68,
@@ -1187,7 +1254,8 @@
   "jaKana": "プソクサ",
   "zhHans": "浮石寺",
   "zhHant": "浮石寺",
-  "missing": []
+  "missing": [],
+  "en": "Buseoksa"
  },
  {
   "no": 69,
@@ -1205,7 +1273,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q12616651"
+  "wikidata": "Q12616651",
+  "en": null
  },
  {
   "no": 70,
@@ -1226,7 +1295,8 @@
   "fromWikidata": [
    "좌표",
    "ja"
-  ]
+  ],
+  "en": "Juwangsan"
  },
  {
   "no": 71,
@@ -1244,7 +1314,8 @@
   "wikidata": "Q50263",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Yeongyang County"
  },
  {
   "no": 72,
@@ -1258,7 +1329,8 @@
   "jaKana": "トンドサ",
   "zhHans": "通度寺",
   "zhHant": "通度寺",
-  "missing": []
+  "missing": [],
+  "en": "Tongdosa"
  },
  {
   "no": 73,
@@ -1275,7 +1347,8 @@
   "missing": [
    "ja"
   ],
-  "wikidata": "Q6745185"
+  "wikidata": "Q6745185",
+  "en": null
  },
  {
   "no": 74,
@@ -1295,7 +1368,8 @@
    "좌표",
    "ja",
    "zh"
-  ]
+  ],
+  "en": "Mireuksan (South Gyeongsang)"
  },
  {
   "no": 75,
@@ -1314,7 +1388,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q109458487"
+  "wikidata": "Q109458487",
+  "en": null
  },
  {
   "no": 76,
@@ -1332,7 +1407,8 @@
   "wikidata": "Q623528",
   "fromWikidata": [
    "zh"
-  ]
+  ],
+  "en": "Ssanggyesa"
  },
  {
   "no": 77,
@@ -1346,7 +1422,8 @@
   "jaKana": "チリ",
   "zhHans": "智异山国立公园",
   "zhHant": "智異山國立公園",
-  "missing": []
+  "missing": [],
+  "en": "Jirisan"
  },
  {
   "no": 78,
@@ -1360,7 +1437,8 @@
   "jaKana": "ウポヌプ",
   "zhHans": "牛浦沼",
   "zhHant": "牛浦沼",
-  "missing": []
+  "missing": [],
+  "en": "Upo Wetland"
  },
  {
   "no": 79,
@@ -1378,7 +1456,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q5526956"
+  "wikidata": "Q5526956",
+  "en": "Gatbawi"
  },
  {
   "no": 80,
@@ -1397,7 +1476,8 @@
   "fromWikidata": [
    "좌표",
    "ja"
-  ]
+  ],
+  "en": "Bangudae Petroglyphs"
  },
  {
   "no": 81,
@@ -1415,7 +1495,8 @@
   "wikidata": "Q18641306",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Gamcheon Culture Village"
  },
  {
   "no": 82,
@@ -1429,7 +1510,8 @@
   "jaKana": "ヘドンヨングンサ",
   "zhHans": "海东龙宫寺",
   "zhHant": "海東龍宮寺",
-  "missing": []
+  "missing": [],
+  "en": "Haedong Yonggungsa"
  },
  {
   "no": 83,
@@ -1447,7 +1529,8 @@
   "wikidata": "Q122225",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": "Seongsan Ilchulbong"
  },
  {
   "no": 84,
@@ -1466,7 +1549,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q18697665"
+  "wikidata": "Q18697665",
+  "en": null
  },
  {
   "no": 85,
@@ -1480,7 +1564,8 @@
   "jaKana": "マンジャンクル",
   "zhHans": "霹雷摩芝窟",
   "zhHant": "霹雷摩芝窟",
-  "missing": []
+  "missing": [],
+  "en": "Manjanggul"
  },
  {
   "no": 86,
@@ -1498,7 +1583,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q2157711"
+  "wikidata": "Q2157711",
+  "en": "Daepo Jusangjeolli Cliff"
  },
  {
   "no": 87,
@@ -1512,7 +1598,8 @@
   "jaKana": "ウド",
   "zhHans": "牛岛 (济州市)",
   "zhHant": "牛島 (濟州市)",
-  "missing": []
+  "missing": [],
+  "en": "Udo (Jeju Province)"
  },
  {
   "no": 88,
@@ -1532,7 +1619,8 @@
   "wikidata": "Q24000167",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": "Oedolgae"
  },
  {
   "no": 89,
@@ -1550,7 +1638,8 @@
   "wikidata": "Q18016054",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 90,
@@ -1570,7 +1659,8 @@
   "wikidata": "Q16094611",
   "fromWikidata": [
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 91,
@@ -1588,7 +1678,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q97213100"
+  "wikidata": "Q97213100",
+  "en": null
  },
  {
   "no": 92,
@@ -1606,7 +1697,8 @@
   "wikidata": "Q625993",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": "Jeongbang Waterfall"
  },
  {
   "no": 93,
@@ -1624,7 +1716,8 @@
   "wikidata": "Q490430",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Hongdo"
  },
  {
   "no": 94,
@@ -1642,7 +1735,8 @@
   "wikidata": "Q18815767",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Cheongsando"
  },
  {
   "no": 95,
@@ -1660,7 +1754,8 @@
   "wikidata": "Q485315",
   "fromWikidata": [
    "좌표"
-  ]
+  ],
+  "en": "Baengnyeongdo"
  },
  {
   "no": 96,
@@ -1674,7 +1769,8 @@
   "jaKana": null,
   "zhHans": "马罗岛",
   "zhHant": "馬羅島",
-  "missing": []
+  "missing": [],
+  "en": "Marado"
  },
  {
   "no": 97,
@@ -1693,7 +1789,8 @@
    "ja",
    "zh"
   ],
-  "wikidata": "Q16183469"
+  "wikidata": "Q16183469",
+  "en": null
  },
  {
   "no": 98,
@@ -1714,7 +1811,8 @@
   "fromWikidata": [
    "ja",
    "zh"
-  ]
+  ],
+  "en": null
  },
  {
   "no": 99,
@@ -1735,7 +1833,8 @@
   "fromWikidata": [
    "좌표",
    "ja"
-  ]
+  ],
+  "en": "Ttangkkeut"
  },
  {
   "no": 100,
@@ -1753,6 +1852,7 @@
   "wikidata": "Q18657526",
   "fromWikidata": [
    "ja"
-  ]
+  ],
+  "en": null
  }
 ]
