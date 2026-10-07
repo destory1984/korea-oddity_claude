@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "proto",
+      "runtimeExecutable": "py",
+      "runtimeArgs": ["-m", "http.server", "4319", "--directory", "docs"],
+      "port": 4319
+    }
+  ]
+}

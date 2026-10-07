@@ -313,7 +313,7 @@ let W = 0, H = 0;
 
 // 받은 겹 그림(발주서 1, docs/art-order-1.md). tools/key-sky.py 가 잰 값이다.
 // HOR: 그림에서 윤곽이 가장 낮게 내려온 높이(위에서부터의 비율). 맨 앞 겹에서는 땅의 윗가장자리다. 이 높이를 화면의 at 에 맞춘다.
-// FOOT: 그림 맨 아래의 색. 그림 아래로 땅을 이어 칠할 때 쓴다.
+// FOOT: 그림 맨 아래의 색(여름). 지금은 값이 있으면 "그림 아래로 땅을 잇는다"는 뜻으로만 쓴다.
 const HOR = { cheomFar: 0.498, cheomMid: 0.497, cheomFront: 0.604, busFar: 0.435, busMid: 0.503, busFront: 0.604 };
 const FOOT = { cheomFar: '#4b8291', cheomMid: '#70aa54', cheomFront: '#6ea84d', busFar: '#a3b9c7', busMid: '#60974e', busFront: '#e4ca99' };
 const SCENES = {
@@ -353,43 +353,38 @@ function sunSpot(day) {
   return { x: W * 0.5 + (p.az - S.viewAz) / VIEW_WIDE * W, y: H * 0.315 - p.alt * W / VIEW_WIDE };
 }
 // ── 받은 겹 그림으로 그리기 ──
-// 그림은 한낮의 풀빛으로 받았다. 철의 색은 그 위에 입힌다: 겨울은 흰빛, 봄은 옅은 분홍, 여름은 짙은 풀빛, 가을은 붉은빛.
-// 건물이 든 맨 앞 겹(stone)에는 절반만 입힌다. 돌탑과 기와가 붉게 물들지 않게.
+// 겹마다 철의 그림이 넉 장 있다(봄, 여름, 가을, 겨울). 받은 그림(여름)에서 풀과 나무와 먼 산의 색만 바꿔 미리 만들어 둔
+// 것이다(tools/season-layers.py). 윤곽이 같아서, 다이얼을 돌리면 이웃한 두 철의 그림을 겹쳐 녹여 잇는다.
+const SEASON_NAMES = ['winter', 'spring', 'summer', 'autumn'];
 const PICS = {};
-function pic(src) {
-  if (!PICS[src]) { PICS[src] = new Image(); PICS[src].onload = () => { if (W) layout(); }; PICS[src].src = `assets/scenes/${src}.webp`; }
-  return PICS[src];
+function pic(name) {
+  if (!PICS[name]) { PICS[name] = new Image(); PICS[name].onload = () => { if (W) layout(); }; PICS[name].src = `assets/scenes/${name}.webp`; }
+  return PICS[name];
 }
 const usable = im => im.complete && im.naturalWidth > 0;
-const painted = sc => sc.layers.every(L => usable(pic(L.src))) && (!sc.photoOnly || usable(pic(sc.photoOnly.src)));
-const TINT = { winter: [228, 233, 244, 0.56], spring: [247, 205, 218, 0.10], summer: [44, 112, 62, 0.14], autumn: [205, 96, 42, 0.44] };
-function tintOf(w) {
-  const t = [0, 0, 0, 0];
-  for (const k in TINT) for (let i = 0; i < 4; i++) t[i] += TINT[k][i] * w[k];
-  return t;
-}
+const painted = sc => sc.layers.every(L => SEASON_NAMES.every(season => usable(pic(`${L.src}-${season}`)))) && (!sc.photoOnly || usable(pic(sc.photoOnly.src)));
 const LAYER_WIDE = 1.45;   // 겹 그림의 너비는 화면 너비의 1.45배다. 좌우로 밀 여유다(맨 앞 겹이 85픽셀씩)
-const buffer = document.createElement('canvas');
-function drawLayer(c, L, cam, tint) {
-  const im = pic(L.src), dw = W * LAYER_WIDE, dh = dw * im.naturalHeight / im.naturalWidth;
+function drawPic(c, im, L, cam, alpha) {
+  const dw = W * LAYER_WIDE, dh = dw * im.naturalHeight / im.naturalWidth;
   const x = W / 2 - dw / 2 - cam.x * L.K, y = H * L.at + cam.y * L.K - dh * L.hor;
-  const alpha = tint[3] * (L.stone ? 0.5 : 1), dpr = window.devicePixelRatio || 1, color = `rgba(${tint.slice(0, 3).map(Math.round).join(',')},${alpha})`;
-  if (alpha > 0.01) {   // 따로 그려 색을 입힌 뒤 옮긴다. 그래야 겹의 모양 안에만 색이 든다
-    buffer.width = Math.ceil(W * dpr); buffer.height = Math.ceil(dh * dpr);
-    const b = buffer.getContext('2d'); b.setTransform(dpr, 0, 0, dpr, 0, 0);
-    b.drawImage(im, x, 0, dw, dh);
-    b.globalCompositeOperation = 'source-atop'; b.fillStyle = color; b.fillRect(0, 0, W, dh);
-    c.drawImage(buffer, 0, 0, buffer.width, buffer.height, 0, y, W, dh);
-  } else c.drawImage(im, x, y, dw, dh);
-  if (L.foot) {   // 그림 아래로 같은 땅을 이어 칠한다
-    c.fillStyle = L.foot; c.fillRect(0, y + dh - 1, W, H);
-    if (alpha > 0.01) { c.fillStyle = color; c.fillRect(0, y + dh - 1, W, H); }
+  c.globalAlpha = alpha;
+  c.drawImage(im, x, y, dw, dh);
+  // 그림 아래로 같은 땅을 잇는다. 그림 맨 아래의 띠를 점 하나로 줄여 그 색 하나로 화면 아래까지 칠한다(줄을 그대로 늘이면
+  // 세로줄 무늬가 생긴다). 사진에만 있는 겹(foot 없음)은 잇지 않는다.
+  if (L.foot) {
+    if (!im.footDot) { im.footDot = document.createElement('canvas'); im.footDot.width = im.footDot.height = 1; im.footDot.getContext('2d').drawImage(im, 0, im.naturalHeight - 14, im.naturalWidth, 12, 0, 0, 1, 1); }
+    c.drawImage(im.footDot, 0, 0, 1, 1, 0, y + dh - 1, W, Math.max(1, H - (y + dh) + 2));
   }
+  c.globalAlpha = 1;
 }
 function drawPainted(c, cam, w, isPhoto) {
-  const tint = tintOf(w);
-  for (const L of S.layers) drawLayer(c, L, cam, tint);
-  if (isPhoto && S.photoOnly) drawLayer(c, S.photoOnly, cam, [0, 0, 0, 0]);
+  // 무게가 큰 철을 먼저 다 그리고, 그 위에 다른 철을 그 무게만큼 얹는다.
+  const [main, other] = SEASON_NAMES.filter(season => w[season] > 0.004).sort((a, b) => w[b] - w[a]);
+  for (const L of S.layers) {
+    drawPic(c, pic(`${L.src}-${main}`), L, cam, 1);
+    if (other) drawPic(c, pic(`${L.src}-${other}`), L, cam, w[other]);
+  }
+  if (isPhoto && S.photoOnly) drawPic(c, pic(S.photoOnly.src), S.photoOnly, cam, 1);
   if (isPhoto) { c.fillStyle = 'rgba(236,208,150,.42)'; c.fillRect(0, 0, W, H); }   // 바랜 사진의 누런빛
 }
 
