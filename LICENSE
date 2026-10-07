@@ -9,8 +9,8 @@ This repository is licensed in two parts.
 
 2. Reserved: all rights reserved, NOT licensed under the MIT License
    - The pixel-art character "Sora" (소라): its design and every drawing of
-     it in this repository, including docs/mock/sora.png and any sprite of
-     the character added later.
+     it in this repository, including docs/mock/sora.png, the sprites in
+     docs/assets/sora/ and any sprite of the character added later.
    - Pictures that show the character, such as the mock screens in
      docs/mock/overlay-*.png, are reserved as far as they show it.
    The character comes from "Space Oddity — 할머니의 수첩"
