@@ -60,6 +60,31 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #post div{display:flex;gap:6px}
 #post canvas{display:block;border:1px solid #cbb98c;border-radius:6px}
 #post p{margin:6px 2px 0;display:flex;justify-content:space-between;font-family:"Nanum Pen Script","Gowun Batang",cursive;font-size:20px;line-height:1.1}
+/* 수첩: 단추를 누르면 열린다. 지도와 칸 두 갈래. 종이와 제본은 2권의 화면 어림에서 가져왔다. */
+#journal{inset:0;background:rgba(5,3,48,.62);display:none}
+#journal.on{display:block}
+#journal .book{position:absolute;left:12px;right:12px;top:12px;bottom:12px;background:var(--paper);color:var(--ink);border-radius:6px 14px 14px 6px;border-left:12px solid #6b4a2b;
+  padding:14px 12px 0 12px;font-family:"Gowun Batang","Malgun Gothic",serif;box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;overflow:hidden}
+#journal header{display:flex;align-items:baseline;gap:8px}
+#journal h1{margin:0;font-size:19px}
+#journal header small{font-size:12px;font-variant-numeric:tabular-nums}
+#closeJournal{margin-left:auto;border:1px solid var(--ink);border-radius:8px;background:none;color:var(--ink);font:inherit;font-size:14px;width:34px;height:34px}
+#journalTabs{display:flex;gap:4px;margin-top:8px;border-bottom:2px solid var(--ink)}
+#journalTabs button{padding:5px 16px;border:1px solid var(--ink);border-bottom:0;border-radius:7px 7px 0 0;background:none;color:var(--ink);font:inherit;font-size:13px}
+#journalTabs button.on{background:var(--ink);color:var(--paper)}
+#journal section{flex:1;min-height:0;display:none;flex-direction:column}
+#journal section.on{display:flex}
+#mapCanvas{width:100%;flex:1;min-height:0;touch-action:none}
+#mapCard{margin:0;padding:8px 2px 10px;border-top:1px dashed #b9a777;font-size:13px;line-height:1.45;min-height:84px}
+#mapCard b{font-size:15px}
+#mapCard button{margin-top:6px;border:1px solid var(--ink);border-radius:8px;background:var(--ink);color:var(--paper);font:inherit;font-size:13px;padding:6px 14px}
+#journalList{overflow-y:auto;padding-bottom:12px}
+#journalList h2{margin:12px 0 2px;font-size:13px;border-bottom:1px solid var(--ink)}
+#journalList div{display:grid;grid-template-columns:26px 1fr auto;gap:0 6px;padding:5px 0;border-bottom:1px dashed #b9a777;font-size:13px;align-items:baseline}
+#journalList div.done{background:rgba(246,185,81,.25)}
+#journalList i{font-style:normal;font-size:11px;opacity:.7;font-variant-numeric:tabular-nums}
+#journalList em{font-style:normal;font-size:11px;opacity:.75}
+#journalList small{grid-column:2/4;font-size:11px;opacity:.7}
 #again{left:50%;transform:translateX(-50%);padding:9px 16px;color:var(--white);font:inherit;font-size:13px;display:none}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,6 +113,12 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
   <div id="post"><div><canvas id="pl"></canvas><canvas id="pr"></canvas></div><p><span>1985.11</span><span id="pd"></span></p></div>
   <button id="again" class="glass"></button>
   <div id="flash"></div>
+  <div id="journal"><div class="book">
+    <header><h1 id="journalTitle"></h1><small id="journalCount"></small><button id="closeJournal" aria-label="닫기">✕</button></header>
+    <div id="journalTabs"><button data-tab="map"></button><button data-tab="list"></button></div>
+    <section data-tab="map"><canvas id="mapCanvas"></canvas><p id="mapCard"></p></section>
+    <section data-tab="list" id="journalList"></section>
+  </div></div>
   <div id="settings"><div>
     <h1 id="settingsTitle"></h1>
     <dl>
@@ -98,6 +129,7 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
   </div></div>
 </div>
 <script src="assets/music.js"></script>
+<script src="assets/squares.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const ph = $('ph'), scene = $('scene'), dial = $('dial'), fly = $('fly'), hit = $('hit');
@@ -112,13 +144,22 @@ const LANG_KEY = 'koreaoddity.lang.v1';
 const TEXT = {
   ko: { name: '부석사', memo: '', hint: '화면을 끌어 사진과 산을 포개 보렴', bubble: '겹쳤다! 산은 그대로네.', good: '좋은 때로', today: '오늘로', again: '다시 찾기',
     where: '영주, 경북 · 저녁', month: '월', sound: '효과음', music: '배경 음악', settings: '설정', close: '닫기', soundTerm: '소리', on: '켜짐', off: '꺼짐',
-    soundNote: '배경 음악은 우주 한량의 열한 곡입니다. 위쪽의 스피커 단추와 음표 단추로도 켜고 끕니다.', noJournal: '수첩은 아직 없습니다.', hush: '쉬잇~' },
+    soundNote: '배경 음악은 우주 한량의 열한 곡입니다. 위쪽의 스피커 단추와 음표 단추로도 켜고 끕니다.', noJournal: '수첩은 아직 없습니다.', hush: '쉬잇~',
+    journalTitle: '할머니의 수첩 3권', tabMap: '지도', tabList: '칸', went: '갔다', saw: '봤다', missed: '못 봤다', go: '가기', here: '지금 이 자리입니다.',
+    noArt: '이 칸은 아직 그림이 없습니다.', pick: '점을 누르면 그 칸이 보입니다.', rough: '자리는 어림입니다.',
+    regions: { '서울·경기·인천': '서울·경기·인천', '강원': '강원', '충청': '충청', '전라': '전라', '경상': '경상', '제주': '제주', '섬과 끝': '섬과 끝' } },
   ja: { name: '浮石寺（プソクサ） · 부석사', memo: '1985.11. 夕方。山が幾重にも見えた。', hint: '画面を引いて、写真と山を重ねてごらん', bubble: '重なった！山はそのままだね。', good: 'いい季節へ', today: '今日へ', again: 'もう一度さがす',
     where: '栄州、慶尚北道 · 夕方', month: '月', sound: '効果音', music: '音楽', settings: '設定', close: '閉じる', soundTerm: '音', on: 'オン', off: 'オフ',
-    soundNote: '音楽は「Space Oddity」の十一曲です。上のスピーカーと音符のボタンでもオン・オフできます。', noJournal: '手帳はまだありません。', hush: 'しーっ' },
+    soundNote: '音楽は「Space Oddity」の十一曲です。上のスピーカーと音符のボタンでもオン・オフできます。', noJournal: '手帳はまだありません。', hush: 'しーっ',
+    journalTitle: 'おばあちゃんの手帳 3巻', tabMap: '地図', tabList: 'マス', went: '行った', saw: '見た', missed: '見られなかった', go: '行く', here: '今いる場所です。',
+    noArt: 'このマスはまだ絵がありません。', pick: '点を押すとそのマスが見えます。', rough: '場所はおおよそです。',
+    regions: { '서울·경기·인천': 'ソウル・京畿・仁川', '강원': '江原', '충청': '忠清', '전라': '全羅', '경상': '慶尚', '제주': '済州', '섬과 끝': '島と果て' } },
   zh: { name: '浮石寺 · 부석사', memo: '1985.11. 傍晚。看见山层层叠叠。', hint: '拖动画面，把照片和山叠在一起吧', bubble: '重合啦！山还是老样子呢。', good: '去好时节', today: '回到今天', again: '再找一次',
     where: '荣州，庆尚北道 · 傍晚', month: '月', sound: '音效', music: '背景音乐', settings: '设置', close: '关闭', soundTerm: '声音', on: '开', off: '关',
-    soundNote: '背景音乐是《Space Oddity》的十一首曲子。也可以用上方的喇叭按钮和音符按钮开关。', noJournal: '笔记本还没有。', hush: '嘘～' },
+    soundNote: '背景音乐是《Space Oddity》的十一首曲子。也可以用上方的喇叭按钮和音符按钮开关。', noJournal: '笔记本还没有。', hush: '嘘～',
+    journalTitle: '奶奶的笔记本 第3本', tabMap: '地图', tabList: '格', went: '去过', saw: '看过', missed: '没看到', go: '前往', here: '现在就在这里。',
+    noArt: '这一格还没有图。', pick: '点一下圆点，就能看到那一格。', rough: '位置是大概的。',
+    regions: { '서울·경기·인천': '首尔·京畿·仁川', '강원': '江原', '충청': '忠清', '전라': '全罗', '경상': '庆尚', '제주': '济州', '섬과 끝': '岛屿与尽头' } },
 };
 let lang = 'ko';
 try { lang = localStorage.getItem(LANG_KEY) ?? (/^(ko|ja|zh)\b/i.exec(navigator.language ?? 'ko')?.[1].toLowerCase() ?? 'ja'); } catch { /* 저장소가 없으면 한국어 */ }
@@ -136,6 +177,7 @@ function setLang(next) {
   $('soundTerm').textContent = t('soundTerm'); $('soundNote').textContent = t('soundNote'); showSound();
   $('soundButton').setAttribute('aria-label', t('sound')); $('bgmButton').setAttribute('aria-label', t('music')); $('settingsButton').setAttribute('aria-label', t('settings'));
   document.querySelectorAll('#langRow button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  showJournal();
 }
 
 // ── 날 ──────────────────────────────────────────────────────────────
@@ -335,7 +377,7 @@ function capture() {
   shotDay = dv; fillPost();
   $('pd').textContent = dateText(d);
   $('post').style.display = 'block'; $('again').style.display = 'block';
-  hushAt = -1; $('sora').src = 'mock/sora.png'; $('bubble').textContent = t('bubble'); $('bubble').style.opacity = 1; filled = 1;
+  hushAt = -1; $('sora').src = 'mock/sora.png'; $('bubble').textContent = t('bubble'); $('bubble').style.opacity = 1; fill(HERE);
   if (location.hash === '#shot') return;   // 그림 파일로 찍을 때는 번쩍임을 뺀다
   const f = $('flash'); f.style.transition = 'none'; f.style.opacity = 0.9;
   requestAnimationFrame(() => { f.style.transition = 'opacity .5s'; f.style.opacity = 0; });
@@ -407,7 +449,7 @@ function drawAll() {
   $('date').firstElementChild.textContent = dateText(d);
   $('date').lastElementChild.textContent = `${termOf(d)} · ${t('where')}`;
   $('jump').textContent = gap(Math.round(d), GOOD) === 0 ? t('today') : t('good');
-  $('journalButton').textContent = `${filled}/100`;
+  $('journalButton').textContent = `${filled.size}/100`;
 }
 
 // ── 소리 ────────────────────────────────────────────────────────────
@@ -450,7 +492,7 @@ function sound() {
 const MUTE_KEY = 'koreaoddity.muted', MUSIC_KEY = 'koreaoddity.music';
 const stored = (key, fallback) => { try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; } };
 const store = (key, value) => { try { localStorage.setItem(key, value); } catch { /* 저장하지 못해도 이번에는 바뀐다 */ } };
-let muted = stored(MUTE_KEY, '0') === '1', musicOn = stored(MUSIC_KEY, '1') === '1', filled = 0, toastTimer = 0;   // filled: 채운 칸 수. 시험판에는 칸이 하나뿐이다.
+let muted = stored(MUTE_KEY, '0') === '1', musicOn = stored(MUSIC_KEY, '1') === '1', toastTimer = 0;   // filled: 채운 칸 수. 시험판에는 칸이 하나뿐이다.
 function toast(text) { const el = $('toast'); el.textContent = text; el.style.opacity = 1; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.style.opacity = 0; }, 1600); }
 function showSound() {
   $('soundButton').classList.toggle('off', muted); $('bgmButton').classList.toggle('off', !musicOn);
@@ -473,7 +515,72 @@ const flipSound = () => { muted = !muted; store(MUTE_KEY, muted ? '1' : '0'); sh
 const flipMusic = () => { musicOn = !musicOn; store(MUSIC_KEY, musicOn ? '1' : '0'); if (music) music.set(musicOn); showSound(); if (!musicOn) hush(); };
 $('soundButton').onclick = $('soundSwitch').onclick = flipSound;
 $('bgmButton').onclick = $('musicSwitch').onclick = flipMusic;
-$('journalButton').onclick = () => toast(t('noJournal'));
+
+// ── 수첩 ────────────────────────────────────────────────────────────
+// 칸 100개(assets/squares.js). 시험판에 그림이 있는 칸은 68번 부석사 하나다. 채운 칸은 기억한다.
+const HERE = 'buseoksa', FILLED_KEY = 'koreaoddity.filled.v1';
+const squares = typeof SQUARES === 'undefined' ? [] : SQUARES;
+const filled = new Set(stored(FILLED_KEY, '').split(',').filter(Boolean));
+function fill(id) { filled.add(id); store(FILLED_KEY, [...filled].join(',')); showJournal(); }
+const REGION_COLOR = { '서울·경기·인천': '#3b5bb5', '강원': '#2f8f7a', '충청': '#b5803b', '전라': '#5a8c4a', '경상': '#b9502c', '제주': '#8a4fa8', '섬과 끝': '#3b2a1a' };
+// 그 말의 이름. 일본어와 중국어에 이름이 없으면 한글을 그대로 보인다.
+const nameOf = sq => lang === 'ja' ? sq.ja ?? sq.ko : lang === 'zh' ? sq.zh ?? sq.ko : sq.ko;
+const hangulOf = sq => lang !== 'ko' && nameOf(sq) !== sq.ko ? sq.ko : '';
+let picked = null, journalTab = 'map';
+
+function showJournal() {
+  $('journalTitle').textContent = t('journalTitle'); $('journalCount').textContent = `${filled.size}/100`;
+  document.querySelectorAll('#journalTabs button').forEach(b => { b.textContent = t(b.dataset.tab === 'map' ? 'tabMap' : 'tabList'); b.classList.toggle('on', b.dataset.tab === journalTab); });
+  document.querySelectorAll('#journal section').forEach(el => el.classList.toggle('on', el.dataset.tab === journalTab));
+  let html = '', region = null;
+  for (const sq of squares) {
+    if (sq.region !== region) { region = sq.region; html += `<h2>${t('regions')[region]}</h2>`; }
+    html += `<div data-id="${sq.id}" class="${filled.has(sq.id) ? 'done' : ''}"><i>${sq.no}</i><b>${nameOf(sq)}</b><em>${t(sq.grandma)}</em><small>${hangulOf(sq)}${lang === 'ko' ? sq.where + ' · ' + sq.what : ''}</small></div>`;
+  }
+  $('journalList').innerHTML = html;
+  showCard();
+  if ($('journal').classList.contains('on') && journalTab === 'map') drawMap();
+}
+function showCard() {
+  const sq = squares.find(x => x.id === picked);
+  if (!sq) { $('mapCard').textContent = t('pick'); return; }
+  const sub = [hangulOf(sq), lang === 'ko' ? sq.where : '', t(sq.grandma)].filter(Boolean).join(' · ');
+  $('mapCard').innerHTML = `<b>${sq.no} ${nameOf(sq)}</b><br>${sub}${lang === 'ko' ? '<br>' + sq.what + ' · ' + sq.best : ''}${sq.rough ? '<br><small>' + t('rough') + '</small>' : ''}<br><button id="goSquare">${t('go')}</button>`;
+  $('goSquare').onclick = () => { if (sq.id === HERE) { $('journal').classList.remove('on'); toast(t('here')); } else toast(t('noArt')); };
+}
+// 지도: 바닷가 선은 없다. 칸 100개의 점만 찍는다. 점이 모여 나라의 생김새가 보인다.
+const MAP = { lon0: 124.4, lon1: 131.1, lat0: 33.0, lat1: 38.8, squeeze: Math.cos(36 * Math.PI / 180) };
+let mapDots = [];
+function drawMap() {
+  const c = $('mapCanvas'), r = c.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  if (!r.width) return;
+  c.width = r.width * dpr; c.height = r.height * dpr;
+  const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const wu = (MAP.lon1 - MAP.lon0) * MAP.squeeze, hu = MAP.lat1 - MAP.lat0, k = Math.min((r.width - 16) / wu, (r.height - 16) / hu);
+  const ox = (r.width - wu * k) / 2, oy = (r.height - hu * k) / 2;
+  g.strokeStyle = '#dccb9f'; g.lineWidth = 1;   // 위도와 경도 1도마다 옅은 줄
+  for (let lon = 125; lon <= 131; lon++) { const x = ox + (lon - MAP.lon0) * MAP.squeeze * k; g.beginPath(); g.moveTo(x, oy); g.lineTo(x, oy + hu * k); g.stroke(); }
+  for (let lat = 33; lat <= 38; lat++) { const y = oy + (MAP.lat1 - lat) * k; g.beginPath(); g.moveTo(ox, y); g.lineTo(ox + wu * k, y); g.stroke(); }
+  mapDots = squares.map(sq => ({ sq, x: ox + (sq.lon - MAP.lon0) * MAP.squeeze * k, y: oy + (MAP.lat1 - sq.lat) * k }));
+  for (const { sq, x, y } of mapDots) {
+    g.beginPath(); g.arc(x, y, filled.has(sq.id) ? 6 : 4.2, 0, 6.2832);
+    g.fillStyle = filled.has(sq.id) ? '#f6b951' : REGION_COLOR[sq.region]; g.globalAlpha = filled.has(sq.id) ? 1 : 0.8; g.fill(); g.globalAlpha = 1;
+    if (filled.has(sq.id)) { g.strokeStyle = '#3b2a1a'; g.lineWidth = 1.5; g.stroke(); }
+  }
+  const p = mapDots.find(d => d.sq.id === picked);
+  if (p) { g.strokeStyle = '#3b2a1a'; g.lineWidth = 2; g.beginPath(); g.arc(p.x, p.y, 10, 0, 6.2832); g.stroke(); }
+}
+$('mapCanvas').addEventListener('pointerdown', e => {
+  const r = $('mapCanvas').getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  let best = null, bd = 22;
+  for (const d of mapDots) { const q = Math.hypot(d.x - x, d.y - y); if (q < bd) { bd = q; best = d; } }
+  if (best) { picked = best.sq.id; showCard(); drawMap(); }
+});
+$('journalList').onclick = e => { const row = e.target.closest('div[data-id]'); if (row) { picked = row.dataset.id; journalTab = 'map'; showJournal(); } };
+document.querySelectorAll('#journalTabs button').forEach(b => { b.onclick = () => { journalTab = b.dataset.tab; showJournal(); }; });
+$('journalButton').onclick = () => { $('journal').classList.add('on'); showJournal(); };
+$('closeJournal').onclick = () => $('journal').classList.remove('on');
+addEventListener('resize', () => { if ($('journal').classList.contains('on')) drawMap(); });
 $('settingsButton').onclick = () => $('settings').classList.add('on');
 $('closeSettings').onclick = () => $('settings').classList.remove('on');
 $('settings').onclick = e => { if (e.target === $('settings')) $('settings').classList.remove('on'); };
@@ -493,6 +600,7 @@ layout();
 if (location.hash === '#near' || location.hash === '#shot') { d = dv = GOOD; $('hint').style.opacity = 0; cam.x = TARGET.x - 22; cam.y = TARGET.y + 9; }
 if (location.hash === '#shot') { cam.x = TARGET.x; cam.y = TARGET.y; touched = true; }
 if (location.hash === '#settings') $('settings').classList.add('on');
+if (location.hash === '#journal' || location.hash === '#list') { picked = HERE; journalTab = location.hash === '#list' ? 'list' : 'map'; $('journal').classList.add('on'); showJournal(); }
 if (location.hash === '#hush') { muted = true; showSound(); hush(); hushHold = true; }   // 넷째 그림에서 멈춘다
 requestAnimationFrame(loop);
 </script>
