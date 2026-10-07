@@ -30,6 +30,7 @@
 | `docs/overlay-proto.html` 의 다이얼 생김새(`drawDial`) | 밤하늘 유리, 금빛 테, 북두칠성과 별가루, 반짝임, 표시와 딱지, 바늘. 색과 치수와 그리는 차례 | 2권의 `game/src/ui/dialView.js` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 다이얼 움직임과 눈금 소리 | 한 칸 12픽셀, 미끄러지다 서기, 1,200Hz와 760Hz의 소리 | 2권의 `docs/dial-proto.html` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 유리 단추 모양, 설정의 언어 고르기, "쉬잇" 움직임의 숫자(1초에 넉 장, 3초) | 화면의 틀 | 1권의 `style.css`, `index.html`, `src/core/sprite.js`, `src/main.js` | 2026.10.7 | MIT |
+| `docs/overlay-proto.html` 의 설정 갈래와 Changes 쪽 | 갈래 단추, 날짜를 그날의 첫 줄에만 적는 줄 목록, "만들기 시작한 날"과 "오늘로 며칠째" | 1권의 `index.html`, `style.css`, `src/ui/settings.js`(renderNews), `src/core/changes.js`(startedLine, dayLabel) | 2026.10.7 | MIT |
 | `translation-test/round2/style-ref.json`, `docs/번역-규칙.md` 의 본보기와 굳은 낱말, 시험판의 "맞았다. 꼼꼼히 읽었구나." 같은 말 | 일본어, 중국어 번역문 | 1권의 `src/i18n/ja.json`, `zh.json` | 2026.10.7 | MIT |
 
 ## 아직 가져오지 않았지만 가져올 것

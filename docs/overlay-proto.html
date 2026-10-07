@@ -43,6 +43,19 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #settings button{padding:8px 13px;font-size:13px}
 #settings button.on{background:var(--gold);border-color:var(--gold);color:var(--night);font-weight:600}
 #settings #closeSettings{margin-top:14px;width:100%}
+/* 설정의 갈래: Options 와 Changes. 1권의 설정에서 가져온 꼴이다. */
+#settings>div{max-height:calc(min(100dvh,860px) * .86);display:flex;flex-direction:column}
+#settingsTabs{display:flex;gap:8px;margin:0 0 12px}
+#settings #settingsTabs button{flex:1 1 0;min-height:38px;padding:6px 10px;font-size:13px}
+#settings #settingsTabs button[aria-selected="true"]{border-color:var(--gold);color:var(--gold);font-weight:600}
+#settings section{overflow-y:auto;min-height:0}
+#settings section[hidden]{display:none}
+#newsStarted{white-space:pre-line;margin:0 0 8px;font-size:12px;opacity:.8}
+#newsList{margin:0;padding:0;list-style:none}
+#newsList li{display:grid;grid-template-columns:38px 1fr;gap:0 6px;padding:7px 0;border-bottom:1px solid rgba(59,42,26,.18);font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+/* 한국어만 낱말 사이에서 줄을 바꾼다. 일본어와 중국어는 띄어쓰기가 없어 그렇게 하면 줄이 화면 밖으로 나간다. */
+:lang(ko) #newsList li,:lang(ko) #newsStarted{word-break:keep-all}
+#newsList time{color:#9a6a1c;font-size:12px;font-variant-numeric:tabular-nums;line-height:1.8}
 #hint{left:50%;transform:translateX(-50%);padding:6px 12px;font-size:12px;white-space:nowrap;transition:opacity .4s;pointer-events:none}
 #memo{left:14px;max-width:70%;background:var(--paper);color:var(--ink);padding:6px 10px 5px;transform:rotate(-1.5deg);
   box-shadow:1px 2px 0 rgba(59,42,26,.4);pointer-events:none}
@@ -186,10 +199,12 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
   <div id="card"><div><h1 id="cardTitle"></h1><div id="cardBody"></div><button id="closeCard"></button></div></div>
   <div id="settings"><div>
     <h1 id="settingsTitle"></h1>
-    <dl>
+    <div id="settingsTabs" role="tablist"><button role="tab" data-tab="options">Options</button><button role="tab" data-tab="news">Changes</button></div>
+    <section data-tab="news" hidden><p id="newsStarted"></p><ul id="newsList"></ul></section>
+    <section data-tab="options"><dl>
       <dt>언어 · Language</dt><dd id="langRow"><button data-lang="ko" lang="ko">한국어</button><button data-lang="ja" lang="ja">日本語</button><button data-lang="zh" lang="zh-Hans">中文</button></dd>
       <dt id="soundTerm"></dt><dd><button id="soundSwitch"></button><button id="musicSwitch"></button></dd><dd id="soundNote"></dd>
-    </dl>
+    </dl></section>
     <button id="closeSettings"></button>
   </div></div>
 </div>
@@ -197,6 +212,7 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 <script src="assets/squares.js"></script>
 <script src="assets/sun.js"></script>
 <script src="assets/coast.js"></script>
+<script src="assets/changes.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const ph = $('ph'), scene = $('scene'), dial = $('dial'), fly = $('fly'), hit = $('hit');
@@ -210,7 +226,7 @@ const smooth = t => t * t * (3 - 2 * t);
 // 단추 이름은 1권의 사전에서 가져왔고, 나머지는 번역 시험 2차의 글과 임시 번역이다. 원어민이 보지 않았다.
 const LANG_KEY = 'koreaoddity.lang.v1';
 const TEXT = {
-  ko: { markGood: '좋은 때', markToday: '오늘', hint: '화면을 끌어 사진과 그 자리를 포개 보렴', good: '좋은 때로', today: '오늘로', again: '다시 찾기',
+  ko: { started: '만들기 시작한 날: {y}년 {m}월 {d}일', days: '팔도 유람 오늘로 {n}일째', markGood: '좋은 때', markToday: '오늘', hint: '화면을 끌어 사진과 그 자리를 포개 보렴', good: '좋은 때로', today: '오늘로', again: '다시 찾기',
     sunset: '해 짐', month: '월', sound: '효과음', music: '배경 음악', settings: '설정', close: '닫기', soundTerm: '소리', on: '켜짐', off: '꺼짐',
     soundNote: '배경 음악은 우주 한량의 열한 곡입니다. 위쪽의 스피커 단추와 음표 단추로도 켜고 끕니다.', noJournal: '수첩은 아직 없습니다.', mine: '내 사진', mineTitle: '내가 찍은 사진', mineCam: '그 자리에서 찍기', mineFile: '사진첩에서 고르기', mineDrop: '지우기', mineNote: '정말 다녀왔다면 그 자리에서 찍은 사진을 붙여 보렴. 사진은 이 기기에만 남는다.',
     mineThanks: '정말 다녀왔구나. 고맙다.', camHint: '할머니의 사진과 풍경을 포개어 찍어 보렴', camGhostOn: '사진 겹치기', camGhostOff: '사진 끄기', camClose: '닫기', camNo: '이 브라우저에서는 카메라를 열 수 없습니다. 사진첩에서 골라 주세요.', visited: '다녀온 곳', hush: '쉬잇~',
@@ -218,7 +234,7 @@ const TEXT = {
     noArt: '이 칸은 아직 그림이 없습니다.', pick: '점을 누르면 그 칸이 보입니다.', rough: '자리는 어림입니다.',
     story: '이야기', route: '가는 길', quizHead: '맞혀 보렴.', right: '맞았다. 꼼꼼히 읽었구나.', wrong: '답은 "{}". 다음에 또 맞혀 보렴.', check: '가기 전에 확인하렴.', routeLocked: '사진을 포개 찍으면 가는 길이 붙습니다.',
     regions: { '서울·경기·인천': '서울·경기·인천', '강원': '강원', '충청': '충청', '전라': '전라', '경상': '경상', '제주': '제주', '섬과 끝': '섬과 끝' } },
-  ja: { markGood: 'いい季節', markToday: '今日', hint: '画面を引いて、写真とその場所を重ねてごらん', good: 'いい季節へ', today: '今日へ', again: 'もう一度さがす',
+  ja: { started: '作りはじめた日: {y}年{m}月{d}日', days: '八道めぐり、今日で{n}日目', markGood: 'いい季節', markToday: '今日', hint: '画面を引いて、写真とその場所を重ねてごらん', good: 'いい季節へ', today: '今日へ', again: 'もう一度さがす',
     sunset: '日の入り', month: '月', sound: '効果音', music: '音楽', settings: '設定', close: '閉じる', soundTerm: '音', on: 'オン', off: 'オフ',
     soundNote: '音楽は「Space Oddity」の十一曲です。上のスピーカーと音符のボタンでもオン・オフできます。', noJournal: '手帳はまだありません。', mine: 'わたしの写真', mineTitle: 'わたしが撮った写真', mineCam: 'その場所で撮る', mineFile: 'アルバムから選ぶ', mineDrop: '消す', mineNote: 'ほんとうに行ってきたなら、その場所で撮った写真を貼ってごらん。写真はこの端末にだけ残る。',
     mineThanks: 'ほんとうに行ってきたんだね。ありがとう。', camHint: 'おばあちゃんの写真と景色を重ねて撮ってごらん', camGhostOn: '写真を重ねる', camGhostOff: '写真を消す', camClose: '閉じる', camNo: 'このブラウザではカメラを開けません。アルバムから選んでください。', visited: '行った場所', hush: 'しーっ',
@@ -226,7 +242,7 @@ const TEXT = {
     noArt: 'このマスはまだ絵がありません。', pick: '点を押すとそのマスが見えます。', rough: '場所はおおよそです。',
     story: '物語', route: '行き方', quizHead: '当ててごらん。', right: '正解だよ。ていねいに読んだね。', wrong: '答えは「{}」。次にまた当ててごらん。', check: '行く前に確かめてごらん。', routeLocked: '写真を重ねて撮ると、行き方がつきます。',
     regions: { '서울·경기·인천': 'ソウル・京畿・仁川', '강원': '江原', '충청': '忠清', '전라': '全羅', '경상': '慶尚', '제주': '済州', '섬과 끝': '島と果て' } },
-  zh: { markGood: '好时节', markToday: '今天', hint: '拖动画面，把照片和那个地方叠在一起吧', good: '去好时节', today: '回到今天', again: '再找一次',
+  zh: { started: '开始制作的日子：{y}年{m}月{d}日', days: '八道游览，今天是第{n}天', markGood: '好时节', markToday: '今天', hint: '拖动画面，把照片和那个地方叠在一起吧', good: '去好时节', today: '回到今天', again: '再找一次',
     sunset: '日落', month: '月', sound: '音效', music: '背景音乐', settings: '设置', close: '关闭', soundTerm: '声音', on: '开', off: '关',
     soundNote: '背景音乐是《Space Oddity》的十一首曲子。也可以用上方的喇叭按钮和音符按钮开关。', noJournal: '笔记本还没有。', mine: '我的照片', mineTitle: '我拍的照片', mineCam: '在那个地方拍', mineFile: '从相册里选', mineDrop: '删除', mineNote: '要是真的去过，就把在那儿拍的照片贴上来吧。照片只留在这台设备里。',
     mineThanks: '真的去过啦。谢谢你呀。', camHint: '把奶奶的照片和风景叠在一起拍吧', camGhostOn: '叠上照片', camGhostOff: '关掉照片', camClose: '关闭', camNo: '这个浏览器打不开相机。请从相册里选。', visited: '去过的地方', hush: '嘘～',
@@ -280,7 +296,7 @@ function setLang(next) {
   $('memo').firstElementChild.textContent = q('memo');
   if (hushAt >= 0) $('bubble').textContent = t('hush'); else if (shot) $('bubble').textContent = q('bubble');
   $('settingsTitle').textContent = t('settings'); $('closeSettings').textContent = t('close');
-  $('soundTerm').textContent = t('soundTerm'); $('soundNote').textContent = t('soundNote'); showSound();
+  $('soundTerm').textContent = t('soundTerm'); $('soundNote').textContent = t('soundNote'); showSound(); renderNews();
   $('soundButton').setAttribute('aria-label', t('sound')); $('bgmButton').setAttribute('aria-label', t('music')); $('settingsButton').setAttribute('aria-label', t('settings'));
   document.querySelectorAll('#langRow button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   $('storyButton').textContent = t('story'); $('routeButton').textContent = t('route'); $('closeCard').textContent = t('close');
@@ -1047,7 +1063,35 @@ document.querySelectorAll('#journalTabs button').forEach(b => { b.onclick = () =
 $('journalButton').onclick = () => { $('journal').classList.add('on'); showJournal(); };
 $('closeJournal').onclick = () => $('journal').classList.remove('on');
 addEventListener('resize', () => { if ($('journal').classList.contains('on')) drawMap(); });
-$('settingsButton').onclick = () => $('settings').classList.add('on');
+// ── 설정의 갈래와 바뀐 것들 ─────────────────────────────────────────
+// 1권의 설정처럼 갈래를 둔다. "Changes" 쪽은 날마다 바뀐 것을 한 줄씩 보인다(assets/changes.js ← docs/바뀐-것들.md).
+// 날짜는 그날의 첫 줄에만 적는다. 맨 위에 만들기 시작한 날과 오늘로 며칠째인지를 적는다. 그날이 1일째다.
+const NEWS = typeof CHANGES === 'undefined' ? [] : CHANGES;
+const stamp = day => { const [y, m, d] = day.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+function renderNews() {
+  const now = new Date(), today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  if (typeof CHANGES_STARTED !== 'undefined') {
+    const [y, m, d] = CHANGES_STARTED.split('-').map(Number), days = Math.round((stamp(today) - stamp(CHANGES_STARTED)) / 86400000) + 1;
+    const began = t('started').replace('{y}', y).replace('{m}', m).replace('{d}', d);
+    $('newsStarted').textContent = days >= 1 ? `${began}\n${t('days').replace('{n}', days.toLocaleString())}` : began;
+  }
+  const words = (typeof CHANGE_WORDS === 'undefined' ? {} : CHANGE_WORDS)[lang] ?? {};
+  let lastDay = null;
+  $('newsList').replaceChildren(...NEWS.filter(c => stamp(c.day) <= stamp(today)).map(({ day, text }) => {
+    const item = document.createElement('li'), when = document.createElement('time');
+    const [, month, date] = day.split('-').map(Number);
+    when.dateTime = day; when.textContent = day === lastDay ? '' : `${month}.${date}`; lastDay = day;
+    item.append(when, words[text] ?? text);
+    return item;
+  }));
+}
+function showTab(name) {
+  document.querySelectorAll('#settingsTabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+  document.querySelectorAll('#settings section').forEach(el => { el.hidden = el.dataset.tab !== name; });
+  if (name === 'news') $('settings').querySelector('section[data-tab="news"]').scrollTop = 0;
+}
+document.querySelectorAll('#settingsTabs button').forEach(b => { b.onclick = () => showTab(b.dataset.tab); });
+$('settingsButton').onclick = () => { renderNews(); showTab('options'); $('settings').classList.add('on'); };
 $('closeSettings').onclick = () => $('settings').classList.remove('on');
 $('settings').onclick = e => { if (e.target === $('settings')) $('settings').classList.remove('on'); };
 document.querySelectorAll('#langRow button').forEach(b => { b.onclick = () => setLang(b.dataset.lang); });
@@ -1066,6 +1110,7 @@ layout();
 if (location.hash === '#near' || location.hash === '#shot') { d = dv = anchor = GOOD; $('hint').style.opacity = 0; cam.x = TARGET.x - 22; cam.y = TARGET.y + 9; }
 if (location.hash === '#shot') { cam.x = TARGET.x; cam.y = TARGET.y; touched = true; }
 if (location.hash === '#settings') $('settings').classList.add('on');
+if (location.hash === '#changes') { renderNews(); showTab('news'); $('settings').classList.add('on'); }
 if (location.hash === '#story') openCard('story');
 if (location.hash === '#route') openCard('route');
 if (location.hash === '#mine') openMine(HERE);
