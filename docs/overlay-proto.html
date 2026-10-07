@@ -16,8 +16,9 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 .glass{background:rgba(5,3,48,.6);border:1px solid rgba(226,218,246,.45);border-radius:16px}
 #date{top:14px;left:16px;pointer-events:none;text-shadow:0 1px 6px rgba(5,3,48,.7)}
 #date b{display:block;font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
-#date span{font-size:13px}
-#name{top:92px;left:16px;font-size:12px;padding:4px 10px;pointer-events:none}
+#date{max-width:46%}
+#date span{display:block;font-size:13px;line-height:1.3}
+#name{top:112px;left:16px;font-size:12px;padding:4px 10px;pointer-events:none}
 /* 위쪽 단추 줄과 설정 창: 우주 한량(1권)의 유리 단추와 아이콘(assets/ui/icon-*.svg)을 그대로 옮겼다. */
 #nav{top:14px;right:14px;display:flex;gap:9px}
 #nav button,#settings button{border:1px solid #9fb4ff66;border-radius:12px;background:#0d1a3acc;box-shadow:0 2px 10px #0006;color:#eef3ff;font:inherit}
@@ -148,6 +149,7 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 </div>
 <script src="assets/music.js"></script>
 <script src="assets/squares.js"></script>
+<script src="assets/sun.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const ph = $('ph'), scene = $('scene'), dial = $('dial'), fly = $('fly'), hit = $('hit');
@@ -161,7 +163,7 @@ const smooth = t => t * t * (3 - 2 * t);
 const LANG_KEY = 'koreaoddity.lang.v1';
 const TEXT = {
   ko: { name: '부석사', memo: '', hint: '화면을 끌어 사진과 산을 포개 보렴', bubble: '겹쳤다! 산은 그대로네.', good: '좋은 때로', today: '오늘로', again: '다시 찾기',
-    where: '영주, 경북 · 저녁', month: '월', sound: '효과음', music: '배경 음악', settings: '설정', close: '닫기', soundTerm: '소리', on: '켜짐', off: '꺼짐',
+    where: '영주, 경북', sunset: '해 짐', month: '월', sound: '효과음', music: '배경 음악', settings: '설정', close: '닫기', soundTerm: '소리', on: '켜짐', off: '꺼짐',
     soundNote: '배경 음악은 우주 한량의 열한 곡입니다. 위쪽의 스피커 단추와 음표 단추로도 켜고 끕니다.', noJournal: '수첩은 아직 없습니다.', hush: '쉬잇~',
     journalTitle: '할머니의 수첩 3권', tabMap: '지도', tabList: '칸', went: '갔다', saw: '봤다', missed: '못 봤다', go: '가기', here: '지금 이 자리입니다.',
     noArt: '이 칸은 아직 그림이 없습니다.', pick: '점을 누르면 그 칸이 보입니다.', rough: '자리는 어림입니다.',
@@ -170,7 +172,7 @@ const TEXT = {
     routes: ['인천공항으로 입국한다.', '영주역까지 열차를 타고, 부석사까지 버스를 탄다.', '해 질 때의 경치가 유명하다.'],
     regions: { '서울·경기·인천': '서울·경기·인천', '강원': '강원', '충청': '충청', '전라': '전라', '경상': '경상', '제주': '제주', '섬과 끝': '섬과 끝' } },
   ja: { name: '浮石寺（プソクサ） · 부석사', memo: '1985.11. 夕方。山が幾重にも見えた。', hint: '画面を引いて、写真と山を重ねてごらん', bubble: '重なった！山はそのままだね。', good: 'いい季節へ', today: '今日へ', again: 'もう一度さがす',
-    where: '栄州、慶尚北道 · 夕方', month: '月', sound: '効果音', music: '音楽', settings: '設定', close: '閉じる', soundTerm: '音', on: 'オン', off: 'オフ',
+    where: '栄州、慶尚北道', sunset: '日の入り', month: '月', sound: '効果音', music: '音楽', settings: '設定', close: '閉じる', soundTerm: '音', on: 'オン', off: 'オフ',
     soundNote: '音楽は「Space Oddity」の十一曲です。上のスピーカーと音符のボタンでもオン・オフできます。', noJournal: '手帳はまだありません。', hush: 'しーっ',
     journalTitle: 'おばあちゃんの手帳 3巻', tabMap: '地図', tabList: 'マス', went: '行った', saw: '見た', missed: '見られなかった', go: '行く', here: '今いる場所です。',
     noArt: 'このマスはまだ絵がありません。', pick: '点を押すとそのマスが見えます。', rough: '場所はおおよそです。',
@@ -179,7 +181,7 @@ const TEXT = {
     routes: ['仁川国際空港から入国する。', '栄州駅まで列車に乗り、浮石寺までバスに乗る。', '日没時の景色が有名である。'],
     regions: { '서울·경기·인천': 'ソウル・京畿・仁川', '강원': '江原', '충청': '忠清', '전라': '全羅', '경상': '慶尚', '제주': '済州', '섬과 끝': '島と果て' } },
   zh: { name: '浮石寺 · 부석사', memo: '1985.11. 傍晚。看见山层层叠叠。', hint: '拖动画面，把照片和山叠在一起吧', bubble: '重合啦！山还是老样子呢。', good: '去好时节', today: '回到今天', again: '再找一次',
-    where: '荣州，庆尚北道 · 傍晚', month: '月', sound: '音效', music: '背景音乐', settings: '设置', close: '关闭', soundTerm: '声音', on: '开', off: '关',
+    where: '荣州，庆尚北道', sunset: '日落', month: '月', sound: '音效', music: '背景音乐', settings: '设置', close: '关闭', soundTerm: '声音', on: '开', off: '关',
     soundNote: '背景音乐是《Space Oddity》的十一首曲子。也可以用上方的喇叭按钮和音符按钮开关。', noJournal: '笔记本还没有。', hush: '嘘～',
     journalTitle: '奶奶的笔记本 第3本', tabMap: '地图', tabList: '格', went: '去过', saw: '看过', missed: '没看到', go: '前往', here: '现在就在这里。',
     noArt: '这一格还没有图。', pick: '点一下圆点，就能看到那一格。', rough: '位置是大概的。',
@@ -281,11 +283,19 @@ function ridgePath(c, i, cam) {
   for (let sx = 0; sx <= W + 4; sx += 4) c.lineTo(sx, H * BASE[i] + cam.y * K[i] - AMP[i] * ridge(i, sx + cam.x * K[i]));
   c.lineTo(W, H); c.closePath();
 }
-function drawScene(c, cam, pal, w, outline) {
+// 해: 그 자리, 그날, 해 지기 40분 전의 높이와 방위를 셈해 그린다(assets/sun.js). 그림이 보는 쪽은 남서(방위 235도)로
+// 잡았고 가로로 80도가 보인다. 보는 쪽은 어림이다. 부석사에서 실제로 어느 쪽을 보는 구도인지 확인해야 한다.
+const PLACE = (typeof SQUARES === 'undefined' ? null : SQUARES.find(x => x.id === 'buseoksa')) ?? { lat: 36.9989, lon: 128.6873 };
+const VIEW_AZ = 235, VIEW_WIDE = 80, BEFORE_SET = 40;
+function sunSpot(day) {
+  const n = mod(Math.round(day), YEAR), p = sunAt(PLACE.lat, PLACE.lon, n, sunTimes(PLACE.lat, PLACE.lon, n).set - BEFORE_SET);
+  return { x: W * 0.5 + (p.az - VIEW_AZ) / VIEW_WIDE * W, y: H * 0.315 - p.alt * W / VIEW_WIDE };
+}
+function drawScene(c, cam, pal, w, outline, sun) {
   const g = c.createLinearGradient(0, 0, 0, H * 0.5);
   g.addColorStop(0, css(pal.top)); g.addColorStop(1, css(pal.bot));
   c.fillStyle = g; c.fillRect(0, 0, W, H);
-  c.fillStyle = css(pal.sun); c.beginPath(); c.arc(W * 0.7 - cam.x * 0.03, H * 0.275 + cam.y * 0.03, 16, 0, 6.2832); c.fill();
+  c.fillStyle = css(pal.sun); c.beginPath(); c.arc(sun.x - cam.x * 0.03, sun.y + cam.y * 0.03, 16, 0, 6.2832); c.fill();
   for (let i = 0; i < 5; i++) {
     c.save();
     c.shadowColor = 'rgba(40,30,20,.3)'; c.shadowBlur = 7; c.shadowOffsetY = -2;   // 종이 겹의 그림자
@@ -333,7 +343,7 @@ function layout() {
   for (const c of [scene, dial, photo, snap]) { c.width = W * dpr; c.height = H * dpr; c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0); }
   const fw = W * 0.74, fh = fw * 0.72;
   frame = { x: (W - fw) / 2, y: H * 0.205, w: fw, h: fh };
-  drawScene(photo.getContext('2d'), TARGET, PHOTO, NOSEASON, true);
+  drawScene(photo.getContext('2d'), TARGET, PHOTO, NOSEASON, true, sunSpot(GOOD));
   $('memo').style.top = frame.y + fh + 16 + 'px';
   $('hint').style.top = frame.y - 40 + 'px';
   $('post').style.top = frame.y - 6 + 'px';
@@ -397,7 +407,7 @@ const dist = () => Math.hypot(cam.x - TARGET.x, cam.y - TARGET.y);
 let shotDay = TODAY;   // 찍은 날. 화면 크기가 바뀌면 이 날의 색으로 엽서를 다시 그린다.
 function fillPost() {
   const s = seasonAt(shotDay), dpr = window.devicePixelRatio || 1;
-  drawScene(snap.getContext('2d'), TARGET, s.pal, s.w, false);
+  drawScene(snap.getContext('2d'), TARGET, s.pal, s.w, false, sunSpot(shotDay));
   for (const [id, src] of [['pl', photo], ['pr', snap]]) {
     const c = $(id); c.getContext('2d').drawImage(src, frame.x * dpr, frame.y * dpr, frame.w * dpr, frame.h * dpr, 0, 0, c.width, c.height);
   }
@@ -433,7 +443,7 @@ function star4(c, x, y, r, color) {
 }
 function drawAll() {
   const c = scene.getContext('2d'), s = seasonAt(dv), dpr = window.devicePixelRatio || 1;
-  drawScene(c, cam, s.pal, s.w, false);
+  drawScene(c, cam, s.pal, s.w, false, sunSpot(dv));
   if (!shot) {
     const near = clamp(1 - dist() / 40, 0, 1), f = frame;
     c.save(); c.beginPath(); c.roundRect(f.x, f.y, f.w, f.h, 12); c.clip();
@@ -477,7 +487,7 @@ function drawAll() {
   needle.addColorStop(0, '#f8dc8a'); needle.addColorStop(1, '#c9962e');
   k.fillStyle = needle; k.beginPath(); k.moveTo(cx - 9, H - 116); k.lineTo(cx + 9, H - 116); k.lineTo(cx, H - 97); k.fill();
   $('date').firstElementChild.textContent = dateText(d);
-  $('date').lastElementChild.textContent = `${termOf(d)} · ${t('where')}`;
+  $('date').lastElementChild.textContent = `${termOf(d)} · ${t('where')} · ${t('sunset')} ${clockText(sunTimes(PLACE.lat, PLACE.lon, mod(Math.round(d), YEAR)).set)}`;
   $('jump').textContent = gap(Math.round(d), GOOD) === 0 ? t('today') : t('good');
   $('journalButton').textContent = `${filled.size}/100`;
 }
