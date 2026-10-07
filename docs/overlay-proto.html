@@ -85,6 +85,22 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #journalList i{font-style:normal;font-size:11px;opacity:.7;font-variant-numeric:tabular-nums}
 #journalList em{font-style:normal;font-size:11px;opacity:.75}
 #journalList small{grid-column:2/4;font-size:11px;opacity:.7}
+/* 이야기 카드와 가는 길: 접혀 있고 눌러야 펼쳐진다(기획서 4절). */
+#chips{right:14px;display:grid;gap:6px;justify-items:end}
+#chips button{padding:7px 12px;color:var(--white);font:inherit;font-size:12px}
+#card{inset:0;background:rgba(5,3,48,.62);display:none;place-items:center}
+#card.on{display:grid}
+#card>div{width:88%;background:var(--paper);color:var(--ink);border-radius:6px;padding:16px 16px 14px;box-shadow:0 10px 30px rgba(0,0,0,.5);font-family:"Gowun Batang","Malgun Gothic",serif}
+#card h1{margin:0 0 8px;font-size:18px;border-bottom:2px solid var(--ink);padding-bottom:6px}
+#card p{margin:6px 0;font-size:14px;line-height:1.6}
+#card ol{margin:6px 0;padding-left:20px;font-size:14px;line-height:1.7}
+#card .hand{font-family:"Nanum Pen Script","Gowun Batang",cursive;font-size:21px;line-height:1.2;margin-top:10px}
+#card .quiz{border-top:1px dashed #b9a777;margin-top:10px;padding-top:8px}
+#card .pick{display:flex;gap:6px;margin-top:6px}
+#card button{border:1px solid var(--ink);border-radius:8px;background:none;color:var(--ink);font:inherit;font-size:14px;padding:7px 14px}
+#card button.right{background:var(--gold);border-color:var(--gold)}
+#card button.wrong{opacity:.45;text-decoration:line-through}
+#card #closeCard{margin-top:14px;width:100%;background:var(--ink);color:var(--paper)}
 #again{left:50%;transform:translateX(-50%);padding:9px 16px;color:var(--white);font:inherit;font-size:13px;display:none}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,6 +125,7 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
     <button id="bgmButton"></button>
     <button id="settingsButton"></button>
   </nav>
+  <div id="chips"><button id="storyButton" class="glass"></button><button id="routeButton" class="glass"></button></div>
   <div id="toast" class="glass"></div>
   <div id="post"><div><canvas id="pl"></canvas><canvas id="pr"></canvas></div><p><span>1985.11</span><span id="pd"></span></p></div>
   <button id="again" class="glass"></button>
@@ -119,6 +136,7 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
     <section data-tab="map"><canvas id="mapCanvas"></canvas><p id="mapCard"></p></section>
     <section data-tab="list" id="journalList"></section>
   </div></div>
+  <div id="card"><div><h1 id="cardTitle"></h1><div id="cardBody"></div><button id="closeCard"></button></div></div>
   <div id="settings"><div>
     <h1 id="settingsTitle"></h1>
     <dl>
@@ -147,18 +165,27 @@ const TEXT = {
     soundNote: '배경 음악은 우주 한량의 열한 곡입니다. 위쪽의 스피커 단추와 음표 단추로도 켜고 끕니다.', noJournal: '수첩은 아직 없습니다.', hush: '쉬잇~',
     journalTitle: '할머니의 수첩 3권', tabMap: '지도', tabList: '칸', went: '갔다', saw: '봤다', missed: '못 봤다', go: '가기', here: '지금 이 자리입니다.',
     noArt: '이 칸은 아직 그림이 없습니다.', pick: '점을 누르면 그 칸이 보입니다.', rough: '자리는 어림입니다.',
+    story: '이야기', route: '가는 길', quizHead: '맞혀 보렴.', right: '맞았다. 꼼꼼히 읽었구나.', wrong: '답은 "676". 다음에 또 맞혀 보렴.', check: '가기 전에 확인하렴.', routeLocked: '사진을 포개 찍으면 가는 길이 붙습니다.',
+    card: ['부석사는 신라의 의상이 676년에 세운 절이다.', '무량수전은 한국에서 가장 오래된 목조 건물 가운데 하나이다.', '무량수전 앞에 서면 소백산 능선이 보인다.'], quiz: '의상은 몇 년에 부석사를 세웠을까?',
+    routes: ['인천공항으로 입국한다.', '영주역까지 열차를 타고, 부석사까지 버스를 탄다.', '해 질 때의 경치가 유명하다.'],
     regions: { '서울·경기·인천': '서울·경기·인천', '강원': '강원', '충청': '충청', '전라': '전라', '경상': '경상', '제주': '제주', '섬과 끝': '섬과 끝' } },
   ja: { name: '浮石寺（プソクサ） · 부석사', memo: '1985.11. 夕方。山が幾重にも見えた。', hint: '画面を引いて、写真と山を重ねてごらん', bubble: '重なった！山はそのままだね。', good: 'いい季節へ', today: '今日へ', again: 'もう一度さがす',
     where: '栄州、慶尚北道 · 夕方', month: '月', sound: '効果音', music: '音楽', settings: '設定', close: '閉じる', soundTerm: '音', on: 'オン', off: 'オフ',
     soundNote: '音楽は「Space Oddity」の十一曲です。上のスピーカーと音符のボタンでもオン・オフできます。', noJournal: '手帳はまだありません。', hush: 'しーっ',
     journalTitle: 'おばあちゃんの手帳 3巻', tabMap: '地図', tabList: 'マス', went: '行った', saw: '見た', missed: '見られなかった', go: '行く', here: '今いる場所です。',
     noArt: 'このマスはまだ絵がありません。', pick: '点を押すとそのマスが見えます。', rough: '場所はおおよそです。',
+    story: '物語', route: '行き方', quizHead: '当ててごらん。', right: '正解だよ。ていねいに読んだね。', wrong: '答えは「676」。次にまた当ててごらん。', check: '行く前に確かめてごらん。', routeLocked: '写真を重ねて撮ると、行き方がつきます。',
+    card: ['浮石寺は新羅の義湘が676年に建てた寺である。', '無量寿殿は韓国で最も古い木造建築の一つである。', '無量寿殿の前に立つと小白山の稜線が見える。'], quiz: '義湘は何年に浮石寺を建てたのだろうか。',
+    routes: ['仁川国際空港から入国する。', '栄州駅まで列車に乗り、浮石寺までバスに乗る。', '日没時の景色が有名である。'],
     regions: { '서울·경기·인천': 'ソウル・京畿・仁川', '강원': '江原', '충청': '忠清', '전라': '全羅', '경상': '慶尚', '제주': '済州', '섬과 끝': '島と果て' } },
   zh: { name: '浮石寺 · 부석사', memo: '1985.11. 傍晚。看见山层层叠叠。', hint: '拖动画面，把照片和山叠在一起吧', bubble: '重合啦！山还是老样子呢。', good: '去好时节', today: '回到今天', again: '再找一次',
     where: '荣州，庆尚北道 · 傍晚', month: '月', sound: '音效', music: '背景音乐', settings: '设置', close: '关闭', soundTerm: '声音', on: '开', off: '关',
     soundNote: '背景音乐是《Space Oddity》的十一首曲子。也可以用上方的喇叭按钮和音符按钮开关。', noJournal: '笔记本还没有。', hush: '嘘～',
     journalTitle: '奶奶的笔记本 第3本', tabMap: '地图', tabList: '格', went: '去过', saw: '看过', missed: '没看到', go: '前往', here: '现在就在这里。',
     noArt: '这一格还没有图。', pick: '点一下圆点，就能看到那一格。', rough: '位置是大概的。',
+    story: '故事', route: '怎么去', quizHead: '猜猜看吧。', right: '答对啦。读得真仔细呀。', wrong: '答案是“676”。下次再来猜猜吧。', check: '去之前先确认一下吧。', routeLocked: '把照片叠好拍下来，就会附上去的路。',
+    card: ['浮石寺是新罗的义湘于676年建造的寺庙。', '无量寿殿是韩国现存最古老的木结构建筑之一。', '站在无量寿殿前，可以看到小白山的山脊线。'], quiz: '义湘是在哪一年建造了浮石寺？',
+    routes: ['从仁川国际机场入境。', '乘列车到荣州站，再乘公共汽车到浮石寺。', '日落时的景色很有名。'],
     regions: { '서울·경기·인천': '首尔·京畿·仁川', '강원': '江原', '충청': '忠清', '전라': '全罗', '경상': '庆尚', '제주': '济州', '섬과 끝': '岛屿与尽头' } },
 };
 let lang = 'ko';
@@ -177,6 +204,8 @@ function setLang(next) {
   $('soundTerm').textContent = t('soundTerm'); $('soundNote').textContent = t('soundNote'); showSound();
   $('soundButton').setAttribute('aria-label', t('sound')); $('bgmButton').setAttribute('aria-label', t('music')); $('settingsButton').setAttribute('aria-label', t('settings'));
   document.querySelectorAll('#langRow button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  $('storyButton').textContent = t('story'); $('routeButton').textContent = t('route'); $('closeCard').textContent = t('close');
+  if ($('card').classList.contains('on')) openCard(cardKind);
   showJournal();
 }
 
@@ -309,6 +338,7 @@ function layout() {
   $('hint').style.top = frame.y - 40 + 'px';
   $('post').style.top = frame.y - 6 + 'px';
   $('again').style.top = frame.y + fh + 84 + 'px';
+  $('chips').style.top = frame.y + fh + 14 + 'px';
   for (const id of ['pl', 'pr']) { const c = $(id); c.width = fw * 0.5 * dpr; c.height = fh * 0.5 * dpr; c.style.width = fw * 0.5 + 'px'; c.style.height = fh * 0.5 + 'px'; }
   if (shot) fillPost();
 }
@@ -516,6 +546,32 @@ const flipMusic = () => { musicOn = !musicOn; store(MUSIC_KEY, musicOn ? '1' : '
 $('soundButton').onclick = $('soundSwitch').onclick = flipSound;
 $('bgmButton').onclick = $('musicSwitch').onclick = flipMusic;
 
+// ── 이야기 카드와 가는 길 ───────────────────────────────────────────
+// 문제의 보기는 해 셋이다. 고르면 할머니의 말이 손글씨로 뜬다.
+const QUIZ = { choices: ['576', '676', '776'], answer: '676' };
+let cardKind = 'story';
+function openCard(kind) {
+  cardKind = kind;
+  $('cardTitle').textContent = `${nameOf(squares.find(x => x.id === HERE) ?? { ko: '부석사' })} · ${t(kind)}`;
+  if (kind === 'story') {
+    $('cardBody').innerHTML = t('card').map(line => `<p>${line}</p>`).join('') +
+      `<div class="quiz"><p><b>${t('quizHead')}</b> ${t('quiz')}</p><div class="pick">${QUIZ.choices.map(c => `<button data-c="${c}">${c}</button>`).join('')}</div><p class="hand" id="quizSay"></p></div>`;
+    $('cardBody').querySelectorAll('.pick button').forEach(b => { b.onclick = () => {
+      const ok = b.dataset.c === QUIZ.answer;
+      $('cardBody').querySelectorAll('.pick button').forEach(x => x.classList.toggle('right', x.dataset.c === QUIZ.answer));
+      if (!ok) b.classList.add('wrong');
+      $('quizSay').textContent = t(ok ? 'right' : 'wrong');
+    }; });
+  } else {
+    $('cardBody').innerHTML = `<ol>${t('routes').map(line => `<li>${line}</li>`).join('')}</ol><p class="hand">${t('check')}</p>`;
+  }
+  $('card').classList.add('on');
+}
+$('storyButton').onclick = () => openCard('story');
+$('routeButton').onclick = () => { if (filled.has(HERE)) openCard('route'); else toast(t('routeLocked')); };
+$('closeCard').onclick = () => $('card').classList.remove('on');
+$('card').onclick = e => { if (e.target === $('card')) $('card').classList.remove('on'); };
+
 // ── 수첩 ────────────────────────────────────────────────────────────
 // 칸 100개(assets/squares.js). 시험판에 그림이 있는 칸은 68번 부석사 하나다. 채운 칸은 기억한다.
 const HERE = 'buseoksa', FILLED_KEY = 'koreaoddity.filled.v1';
@@ -600,6 +656,8 @@ layout();
 if (location.hash === '#near' || location.hash === '#shot') { d = dv = GOOD; $('hint').style.opacity = 0; cam.x = TARGET.x - 22; cam.y = TARGET.y + 9; }
 if (location.hash === '#shot') { cam.x = TARGET.x; cam.y = TARGET.y; touched = true; }
 if (location.hash === '#settings') $('settings').classList.add('on');
+if (location.hash === '#story') openCard('story');
+if (location.hash === '#route') openCard('route');
 if (location.hash === '#journal' || location.hash === '#list') { picked = HERE; journalTab = location.hash === '#list' ? 'list' : 'map'; $('journal').classList.add('on'); showJournal(); }
 if (location.hash === '#hush') { muted = true; showSound(); hush(); hushHold = true; }   // 넷째 그림에서 멈춘다
 requestAnimationFrame(loop);
