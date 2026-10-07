@@ -575,6 +575,12 @@ function drawDial(now) {
     c.fillStyle = GOLD_LIT; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, x, y + 0.5);
   };
 
+  // 다이얼 둘레의 땅을 어둡게 누른다. 2권의 다이얼은 어두운 땅 위에 놓여 금빛 테와 유리의 빛이 도드라진다(사용자가 보낸
+  // 영상, 2026.10.7). 3권의 땅은 밝은 풀밭과 흙마당이라 같은 색의 유리가 검게 보이고 빛이 묻혔다. 그래서 테에 가까울수록
+  // 짙어지는 남색 그늘을 먼저 깐다. 테에서 150픽셀 밖까지 번진다.
+  const shade = c.createRadialGradient(cx, cy, radius, cx, cy, radius + 150);
+  shade.addColorStop(0, 'rgba(8,6,40,.78)'); shade.addColorStop(0.35, 'rgba(8,6,40,.42)'); shade.addColorStop(1, 'rgba(8,6,40,0)');
+  c.fillStyle = shade; c.fillRect(0, apex - 150, W, H);
   // 유리. 테 위의 땅에 옅은 그림자가 진다.
   c.save(); c.shadowColor = 'rgba(0,0,0,.45)'; c.shadowBlur = 9; c.shadowOffsetY = -1;
   const glass = c.createLinearGradient(0, apex, 0, H);
