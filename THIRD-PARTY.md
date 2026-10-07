@@ -25,7 +25,7 @@
 | `docs/mock/sora.png` | 소라 그림 | 2권의 `docs/mock/sora.png` (본디 1권의 `public/assets/seora-sprites/`) | 2026.10.7 | 권리 유보. MIT가 아니다(`LICENSE` 2부) |
 | `docs/assets/sora/see-hush-1.png` → `see-hush-4.png` | 소라가 "쉬잇" 하는 그림 넉 장 | 1권의 `public/assets/seora-sprites/` | 2026.10.7 | 권리 유보. MIT가 아니다(`LICENSE` 2부) |
 | `docs/assets/ui/icon-*.svg` 18개 | 단추 아이콘 | 1권의 `public/assets/ui/` | 2026.10.7 | 1권에서 직접 그린 것. MIT |
-| `docs/assets/music.js` | 배경 음악 열한 곡을 짜는 코드와 울리는 코드 | 1권의 `src/core/music.js` 전부와 `src/ui/sound.js` 의 tone, padNote, playBar, music, setMusic (`tools/copy-music.mjs`) | 2026.10.7 | 1권에서 직접 만든 것. MIT |
+| `docs/assets/music.js` 의 마디 짜기와 울리기 | 음 이름을 Hz로 바꾸기(hz, chord, scale), 마디를 짜는 법(chance, tuneFor, tuneOrder, barInOrder, barPlan), 울리는 코드(createMusic). 곡 스물(TUNES)은 여기서 지은 것이라 해당하지 않는다. 1권의 곡 열하나는 2026.10.7에 지웠다 | 1권의 `src/core/music.js` 와 `src/ui/sound.js` 의 tone, padNote, playBar, music, setMusic | 2026.10.7 | 1권에서 직접 만든 것. MIT |
 | `tools/art-order.sh`, `tools/key-sky.py` | 그림을 주문하는 스크립트와 자홍색 바탕을 지우는 스크립트 | 2권의 `tools/` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 다이얼 생김새(`drawDial`) | 밤하늘 유리, 금빛 테, 북두칠성과 별가루, 반짝임, 표시와 딱지, 바늘. 색과 치수와 그리는 차례 | 2권의 `game/src/ui/dialView.js` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 다이얼 움직임과 눈금 소리 | 한 칸 12픽셀, 미끄러지다 서기, 1,200Hz와 760Hz의 소리 | 2권의 `docs/dial-proto.html` | 2026.10.7 | MIT |
