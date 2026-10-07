@@ -302,91 +302,45 @@ const FADE = [236, 208, 150];
 const fadedPal = season => mixPal(PAL[season], { top: FADE, bot: FADE, sun: FADE, ground: FADE, r: [FADE, FADE, FADE, FADE, FADE] }, 0.52);
 const seasonOnly = season => ({ winter: 0, spring: 0, summer: 0, autumn: 0, [season]: 1 });
 
-// ── 땅 그림(임시) ───────────────────────────────────────────────────
-// 종이를 오려 겹친 그림이다. 가까운 겹일수록 소라가 움직일 때 많이 밀린다. 그래서 한 자리에서만 모든 겹이 사진과 포개진다.
-// 장면은 칸마다 하나다(SCENES). 겹마다 K(밀리는 정도), BASE(높이), AMP(굴곡), tone(색판의 몇째 색인가)을 적고,
-// shape 가 겹의 윤곽을, front 가 맨 앞의 건물과 땅을, extra 가 할머니 사진에만 있는 것을 그린다.
-const wave = (F, P) => (i, xw) => 0.5 * Math.sin(xw / F[i] + P[i]) + 0.3 * Math.sin(xw / (F[i] * 0.41) + P[i] * 2.3) + 0.2 * Math.sin(xw / (F[i] * 0.19) + P[i] * 4.1);
-const BLOSSOM = Array.from({ length: 46 }, (_, i) => [Math.abs(Math.sin(i * 12.9898) * 43758.5453) % 1, Math.abs(Math.sin(i * 78.233) * 12543.123) % 1]);
-const INK = 'rgba(59,42,26,.5)';
+// ── 땅 그림 ─────────────────────────────────────────────────────────
+// 그림은 코드로 그리지 않는다. 발주서를 써서 챗GPT의 그림 그리기에 맡기고 받은 것을 쓴다(docs/art-order-1.md).
+// 한 자리의 그림은 앞뒤로 나눈 겹 석 장이다. 가까운 겹일수록 소라가 움직일 때 많이 밀린다(K). 그래서 한 자리에서만
+// 모든 겹이 할머니의 사진과 포개진다. 장면은 칸마다 하나다(SCENES).
 let W = 0, H = 0;
 
-// 68 부석사: 소백산 능선 다섯 겹과 무량수전 지붕
-function drawHall(c, cam, pal, w, outline) {
-  const cx = W * 0.5 - cam.x, ry = H * 0.47 + cam.y;
-  c.fillStyle = css(pal.ground); c.fillRect(0, ry + 138, W, H);
-  c.fillStyle = css(mix(pal.ground, [236, 222, 190], 0.6)); c.fillRect(cx - 150, ry + 58, 300, 84);
-  c.fillStyle = '#6b2f24'; for (let i = 0; i < 6; i++) c.fillRect(cx - 150 + i * 58.4, ry + 58, 8, 84);
-  c.save(); c.shadowColor = 'rgba(40,30,20,.35)'; c.shadowBlur = 8; c.shadowOffsetY = -2;
-  c.beginPath(); c.moveTo(cx - 186, ry + 46); c.quadraticCurveTo(cx - 122, ry + 48, cx - 92, ry + 8);
-  c.lineTo(cx - 98, ry); c.lineTo(cx + 98, ry); c.lineTo(cx + 92, ry + 8);
-  c.quadraticCurveTo(cx + 122, ry + 48, cx + 186, ry + 46); c.lineTo(cx + 176, ry + 60);
-  c.quadraticCurveTo(cx, ry + 74, cx - 176, ry + 60); c.closePath();
-  c.fillStyle = '#2b2433'; c.fill(); c.restore();
-  if (w.winter > 0.02) { c.strokeStyle = `rgba(255,255,255,${0.85 * w.winter})`; c.lineWidth = 5; c.lineCap = 'round'; c.beginPath(); c.moveTo(cx - 96, ry + 1); c.lineTo(cx + 96, ry + 1); c.stroke(); }
-  if (outline) { c.strokeStyle = INK; c.lineWidth = 1.2; c.beginPath(); c.moveTo(cx - 98, ry); c.lineTo(cx + 98, ry); c.stroke(); }
-}
-
-// 63 첨성대: 먼 산 두 겹, 고분 두 겹, 풀밭 위의 탑. 탑은 병 모양이고 가운데에 네모난 창이 있다.
-const mound = (F, P) => (i, xw) => i < 2 ? wave(F, P)(i, xw) : Math.max(0, Math.sin(xw / F[i] + P[i])) ** 0.7 * 1.25 - 0.25;
-function towerPath(c, cx, by) {   // 밑변 가운데(cx, by)에서 위로 104픽셀
-  c.beginPath(); c.moveTo(cx - 27, by);
-  c.bezierCurveTo(cx - 29, by - 46, cx - 15, by - 60, cx - 15, by - 92);
-  c.lineTo(cx - 19, by - 92); c.lineTo(cx - 19, by - 104); c.lineTo(cx + 19, by - 104); c.lineTo(cx + 19, by - 92); c.lineTo(cx + 15, by - 92);
-  c.bezierCurveTo(cx + 15, by - 60, cx + 29, by - 46, cx + 27, by); c.closePath();
-}
-function drawTower(c, cam, pal, w, outline) {
-  const cx = W * 0.5 - cam.x, gy = H * 0.385 + cam.y, by = gy + 30;
-  c.fillStyle = css(pal.ground); c.fillRect(0, gy, W, H);
-  c.fillStyle = css(mix(pal.ground, [70, 60, 40], 0.18)); c.fillRect(0, gy, W, 3);
-  c.fillStyle = 'rgba(40,30,20,.16)'; c.beginPath(); c.ellipse(cx + 10, by + 3, 44, 7, 0, 0, 6.2832); c.fill();   // 탑의 그림자
-  c.save(); c.shadowColor = 'rgba(40,30,20,.35)'; c.shadowBlur = 8; c.shadowOffsetY = -2;
-  c.fillStyle = css(mix([205, 191, 163], pal.ground, 0.12)); c.fillRect(cx - 33, by - 4, 66, 8);   // 기단
-  towerPath(c, cx, by - 4); c.fill(); c.restore();
-  c.save(); towerPath(c, cx, by - 4); c.clip();
-  c.strokeStyle = 'rgba(59,42,26,.22)'; c.lineWidth = 1;   // 돌을 쌓은 단
-  for (let y = by - 8; y > by - 96; y -= 3.4) { c.beginPath(); c.moveTo(cx - 32, y); c.lineTo(cx + 32, y); c.stroke(); }
-  c.restore();
-  c.fillStyle = '#2b2433'; c.fillRect(cx - 5, by - 60, 10, 11);   // 남쪽 창
-  if (w.winter > 0.02) { c.fillStyle = `rgba(255,255,255,${0.85 * w.winter})`; c.fillRect(cx - 19, by - 110, 38, 4); }
-  if (outline) { c.strokeStyle = INK; c.lineWidth = 1.2; towerPath(c, cx, by - 4); c.stroke(); }
-}
-// 사진에만 있는 것: 1971년 수학여행의 아이들. 얼굴은 그리지 않는다(기획서 3절). 누가 할머니인지는 알 수 없다.
-function drawClass(c, cam) {
-  const cx = W * 0.5 - cam.x, by = H * 0.385 + cam.y + 38;
-  c.fillStyle = 'rgba(43,36,51,.82)';
-  for (let row = 0; row < 2; row++) for (let i = 0; i < 9 - row; i++) {
-    const x = cx - 84 + i * 21 + row * 10.5 + (i > 3 ? 6 : 0), y = by - row * 9, h = 20 + ((i * 7 + row * 3) % 4);
-    c.beginPath(); c.arc(x, y - h - 4, 4.2, 0, 6.2832); c.fill();
-    c.beginPath(); c.moveTo(x - 6, y); c.lineTo(x - 4.5, y - h); c.lineTo(x + 4.5, y - h); c.lineTo(x + 6, y); c.closePath(); c.fill();
-  }
-}
-
+// 받은 겹 그림(발주서 1, docs/art-order-1.md). tools/key-sky.py 가 잰 값이다.
+// HOR: 그림에서 윤곽이 가장 낮게 내려온 높이(위에서부터의 비율). 맨 앞 겹에서는 땅의 윗가장자리다. 이 높이를 화면의 at 에 맞춘다.
+// FOOT: 그림 맨 아래의 색. 그림 아래로 땅을 이어 칠할 때 쓴다.
+const HOR = { cheomFar: 0.498, cheomMid: 0.497, cheomFront: 0.604, busFar: 0.435, busMid: 0.503, busFront: 0.604 };
+const FOOT = { cheomFar: '#4b8291', cheomMid: '#70aa54', cheomFront: '#6ea84d', busFar: '#a3b9c7', busMid: '#60974e', busFront: '#e4ca99' };
 const SCENES = {
   cheomseongdae: {
-    K: [0.07, 0.15, 0.36, 0.62], BASE: [0.300, 0.320, 0.352, 0.385], AMP: [9, 11, 30, 38], tone: [0, 1, 3, 4],
-    shape: mound([170, 130, 118, 96], [1.9, 0.4, 2.6, 5.5]), front: drawTower, extra: drawClass, blossom: true,
     target: { x: -38, y: 14 }, start: { x: 118, y: -30 },
     good: 129,            // 5.10. 사진은 1971.5.12 다. 눈금이 5일마다라 가장 가까운 날에 건다
     photoDate: '1971.5', photoSeason: 'spring',
     viewAz: 265, beforeSet: 80,   // 서쪽을 보고, 해 지기 80분 전. 보는 쪽은 어림이다
+    layers: [
+      { src: 'cheom-far', K: 0.06, at: 0.350, hor: HOR.cheomFar, foot: FOOT.cheomFar },
+      { src: 'cheom-mid', K: 0.22, at: 0.415, hor: HOR.cheomMid, foot: FOOT.cheomMid },
+      { src: 'cheom-front', K: 0.5, at: 0.430, hor: HOR.cheomFront, foot: FOOT.cheomFront, stone: true },
+    ],
+    photoOnly: { src: 'cheom-class', K: 0.5, at: 0.442, hor: 0.563 },   // 사진에만 있는 것. hor 는 아이들의 발이 닿는 높이다
   },
   buseoksa: {
-    K: [0.10, 0.20, 0.34, 0.52, 0.74], BASE: [0.300, 0.330, 0.362, 0.398, 0.436], AMP: [13, 16, 20, 24, 28], tone: [0, 1, 2, 3, 4],
-    shape: wave([150, 120, 100, 85, 70], [0.7, 2.1, 4.4, 1.3, 5.2]), front: drawHall, extra: null, blossom: true,
     target: { x: 46, y: -18 }, start: { x: -124, y: 30 },
     good: TODAY + 30,     // 11.6. 가을 저녁
     photoDate: '1985.11', photoSeason: 'autumn',
     viewAz: 235, beforeSet: 40,   // 남서쪽을 보고, 해 지기 40분 전. 보는 쪽은 어림이다
+    layers: [
+      { src: 'bus-far', K: 0.06, at: 0.320, hor: HOR.busFar, foot: FOOT.busFar },
+      { src: 'bus-mid', K: 0.22, at: 0.370, hor: HOR.busMid, foot: FOOT.busMid },
+      { src: 'bus-front', K: 0.5, at: 0.455, hor: HOR.busFront, foot: FOOT.busFront, stone: true },
+    ],
+    photoOnly: null,
   },
 };
 let S = SCENES[HERE];
 
-function ridgePath(c, i, cam) {
-  c.beginPath(); c.moveTo(0, H);
-  for (let sx = 0; sx <= W + 4; sx += 4) c.lineTo(sx, H * S.BASE[i] + cam.y * S.K[i] - S.AMP[i] * S.shape(i, sx + cam.x * S.K[i]));
-  c.lineTo(W, H); c.closePath();
-}
 // 해: 그 자리, 그날, 해 지기 얼마 전의 높이와 방위를 셈해 그린다(assets/sun.js). 가로로 80도가 보인다.
 const placeOf = id => (typeof SQUARES === 'undefined' ? null : SQUARES.find(x => x.id === id)) ?? { lat: 36.5, lon: 128.5 };
 let PLACE = placeOf(HERE);
@@ -395,30 +349,54 @@ function sunSpot(day) {
   const n = mod(Math.round(day), YEAR), p = sunAt(PLACE.lat, PLACE.lon, n, sunTimes(PLACE.lat, PLACE.lon, n).set - S.beforeSet);
   return { x: W * 0.5 + (p.az - S.viewAz) / VIEW_WIDE * W, y: H * 0.315 - p.alt * W / VIEW_WIDE };
 }
-function drawScene(c, cam, pal, w, outline, sun) {
+// ── 받은 겹 그림으로 그리기 ──
+// 그림은 한낮의 풀빛으로 받았다. 철의 색은 그 위에 입힌다: 겨울은 흰빛, 봄은 옅은 분홍, 여름은 짙은 풀빛, 가을은 붉은빛.
+// 건물이 든 맨 앞 겹(stone)에는 절반만 입힌다. 돌탑과 기와가 붉게 물들지 않게.
+const PICS = {};
+function pic(src) {
+  if (!PICS[src]) { PICS[src] = new Image(); PICS[src].onload = () => { if (W) layout(); }; PICS[src].src = `assets/scenes/${src}.webp`; }
+  return PICS[src];
+}
+const usable = im => im.complete && im.naturalWidth > 0;
+const painted = sc => sc.layers.every(L => usable(pic(L.src))) && (!sc.photoOnly || usable(pic(sc.photoOnly.src)));
+const TINT = { winter: [228, 233, 244, 0.56], spring: [247, 205, 218, 0.10], summer: [44, 112, 62, 0.14], autumn: [205, 96, 42, 0.44] };
+function tintOf(w) {
+  const t = [0, 0, 0, 0];
+  for (const k in TINT) for (let i = 0; i < 4; i++) t[i] += TINT[k][i] * w[k];
+  return t;
+}
+const LAYER_WIDE = 1.45;   // 겹 그림의 너비는 화면 너비의 1.45배다. 좌우로 밀 여유다(맨 앞 겹이 85픽셀씩)
+const buffer = document.createElement('canvas');
+function drawLayer(c, L, cam, tint) {
+  const im = pic(L.src), dw = W * LAYER_WIDE, dh = dw * im.naturalHeight / im.naturalWidth;
+  const x = W / 2 - dw / 2 - cam.x * L.K, y = H * L.at + cam.y * L.K - dh * L.hor;
+  const alpha = tint[3] * (L.stone ? 0.5 : 1), dpr = window.devicePixelRatio || 1, color = `rgba(${tint.slice(0, 3).map(Math.round).join(',')},${alpha})`;
+  if (alpha > 0.01) {   // 따로 그려 색을 입힌 뒤 옮긴다. 그래야 겹의 모양 안에만 색이 든다
+    buffer.width = Math.ceil(W * dpr); buffer.height = Math.ceil(dh * dpr);
+    const b = buffer.getContext('2d'); b.setTransform(dpr, 0, 0, dpr, 0, 0);
+    b.drawImage(im, x, 0, dw, dh);
+    b.globalCompositeOperation = 'source-atop'; b.fillStyle = color; b.fillRect(0, 0, W, dh);
+    c.drawImage(buffer, 0, 0, buffer.width, buffer.height, 0, y, W, dh);
+  } else c.drawImage(im, x, y, dw, dh);
+  if (L.foot) {   // 그림 아래로 같은 땅을 이어 칠한다
+    c.fillStyle = L.foot; c.fillRect(0, y + dh - 1, W, H);
+    if (alpha > 0.01) { c.fillStyle = color; c.fillRect(0, y + dh - 1, W, H); }
+  }
+}
+function drawPainted(c, cam, w, isPhoto) {
+  const tint = tintOf(w);
+  for (const L of S.layers) drawLayer(c, L, cam, tint);
+  if (isPhoto && S.photoOnly) drawLayer(c, S.photoOnly, cam, [0, 0, 0, 0]);
+  if (isPhoto) { c.fillStyle = 'rgba(236,208,150,.42)'; c.fillRect(0, 0, W, H); }   // 바랜 사진의 누런빛
+}
+
+// isPhoto: 할머니의 사진을 그릴 때 켠다. 사진에만 있는 것을 더하고 바랜 빛을 입힌다.
+function drawScene(c, cam, pal, w, isPhoto, sun) {
   const g = c.createLinearGradient(0, 0, 0, H * 0.5);
   g.addColorStop(0, css(pal.top)); g.addColorStop(1, css(pal.bot));
   c.fillStyle = g; c.fillRect(0, 0, W, H);
   c.fillStyle = css(pal.sun); c.beginPath(); c.arc(sun.x - cam.x * 0.03, sun.y + cam.y * 0.03, 16, 0, 6.2832); c.fill();
-  const last = S.K.length - 1;
-  for (let i = 0; i <= last; i++) {
-    c.save();
-    c.shadowColor = 'rgba(40,30,20,.3)'; c.shadowBlur = 7; c.shadowOffsetY = -2;   // 종이 겹의 그림자
-    ridgePath(c, i, cam); c.fillStyle = css(pal.r[S.tone[i]]); c.fill();
-    c.restore();
-    if (w.winter > 0.02) { ridgePath(c, i, cam); c.save(); c.clip(); c.strokeStyle = `rgba(255,255,255,${0.8 * w.winter})`; c.lineWidth = 9 + i * 2; c.stroke(); c.restore(); }
-    if (outline) { ridgePath(c, i, cam); c.strokeStyle = INK; c.lineWidth = 1.2; c.stroke(); }
-  }
-  if (S.blossom && w.spring > 0.02) {   // 봄에만 분홍
-    c.fillStyle = `rgba(247,178,205,${0.9 * w.spring})`;
-    for (const [u, v] of BLOSSOM) {
-      const xw = u * 700 - 160, sx = xw - cam.x * S.K[last];
-      const y = H * S.BASE[last] + cam.y * S.K[last] - S.AMP[last] * S.shape(last, xw) + 5 + v * 26;
-      c.beginPath(); c.arc(sx, y, 3 + v * 3, 0, 6.2832); c.fill();
-    }
-  }
-  S.front(c, cam, pal, w, outline);
-  if (outline && S.extra) S.extra(c, cam);   // outline 은 할머니 사진을 그릴 때만 켠다
+  if (painted(S)) drawPainted(c, cam, w, isPhoto);   // 그림을 아직 못 읽었으면 하늘만 보인다
 }
 
 // ── 상태 ────────────────────────────────────────────────────────────

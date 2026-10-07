@@ -10,6 +10,7 @@
 | `data/names.json`, `data/places.json`, `docs/assets/squares.js` 의 좌표와 일본어, 중국어, 한자 이름. `docs/이름표.md` 의 "위키" 줄 | 문서 제목, 언어 사이 연결, 첫머리의 한자와 읽기, 좌표 | 한국어, 일본어, 중국어 위키백과의 API (`tools/make-names.mjs`). 읽은 문서 제목은 `data/names-wanted.json`, `data/squares-wiki-titles.json` 에 있다 | 2026.10.7 | 위키백과의 글은 CC BY-SA 4.0. 여기서 쓴 것은 이름과 좌표라는 사실이지만, 출처로 위키백과를 적는다 |
 | `data/places.json` 의 `fromWikidata` 가 붙은 값 | 좌표(P625), 일본어와 중국어 이름표 | 위키데이터 API. 항목 번호는 줄마다 `wikidata` 에 있다 | 2026.10.7 | CC0 (저작권 없음) |
 | `docs/assets/sun.js` 의 계산식 | 해의 적위, 균시차, 뜨고 지는 시각, 높이와 방위 | 미국 해양대기청(NOAA) Global Monitoring Laboratory 의 Solar Calculator 계산식(Jean Meeus, Astronomical Algorithms 에 바탕). https://gml.noaa.gov/grad/solcalc/calcdetails.html . 식을 기억에서 옮겨 적었고 코드는 새로 썼다 | 2026.10.7 | 미국 정부 저작물, 저작권 없음. 식은 저작권의 대상이 아니다 |
+| `docs/assets/scenes/*.webp` 7장, `docs/art/order1-sheet.jpg` | 두 칸의 겹 그림. 주문한 문장은 `docs/art-order-1.md` 에 있다 | 챗GPT의 그림 그리기(OpenAI). Codex CLI 0.160.0으로 넣었다(`tools/art-order.sh`). 사용자의 ChatGPT 계정으로 로그인한 것이다 | 2026.10.7 | OpenAI의 이용 약관에 따라 만든 사람(사용자)이 쓴다. 공개 전에 약관의 그 대목을 다시 확인한다. AI로 만든 그림임을 밝힌다 |
 | 글꼴(파일은 저장소에 없다. 시험판이 구글 글꼴 서버에서 받는다) | 나눔손글씨 펜(Nanum Pen Script), Yomogi, Ma Shan Zheng | https://fonts.google.com/ | 2026.10.7 | SIL Open Font License 1.1. 중국에서는 구글 글꼴 서버가 닿지 않는다(기획서 14절 1번). 게임에서는 글꼴 파일을 함께 싣고 OFL 전문을 붙여야 한다 |
 
 ## 우주 한량(1권)과 시간 한량(2권)에서 가져온 것
@@ -22,6 +23,7 @@
 | `docs/assets/sora/see-hush-1.png` → `see-hush-4.png` | 소라가 "쉬잇" 하는 그림 넉 장 | 1권의 `public/assets/seora-sprites/` | 2026.10.7 | 권리 유보. MIT가 아니다(`LICENSE` 2부) |
 | `docs/assets/ui/icon-*.svg` 18개 | 단추 아이콘 | 1권의 `public/assets/ui/` | 2026.10.7 | 1권에서 직접 그린 것. MIT |
 | `docs/assets/music.js` | 배경 음악 열한 곡을 짜는 코드와 울리는 코드 | 1권의 `src/core/music.js` 전부와 `src/ui/sound.js` 의 tone, padNote, playBar, music, setMusic (`tools/copy-music.mjs`) | 2026.10.7 | 1권에서 직접 만든 것. MIT |
+| `tools/art-order.sh`, `tools/key-sky.py` | 그림을 주문하는 스크립트와 자홍색 바탕을 지우는 스크립트 | 2권의 `tools/` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 다이얼 움직임과 눈금 소리 | 한 칸 12픽셀, 미끄러지다 서기, 1,200Hz와 760Hz의 소리 | 2권의 `docs/dial-proto.html` | 2026.10.7 | MIT |
 | `docs/overlay-proto.html` 의 유리 단추 모양, 설정의 언어 고르기, "쉬잇" 움직임의 숫자(1초에 넉 장, 3초) | 화면의 틀 | 1권의 `style.css`, `index.html`, `src/core/sprite.js`, `src/main.js` | 2026.10.7 | MIT |
 | `translation-test/round2/style-ref.json`, `docs/번역-규칙.md` 의 본보기와 굳은 낱말, 시험판의 "맞았다. 꼼꼼히 읽었구나." 같은 말 | 일본어, 중국어 번역문 | 1권의 `src/i18n/ja.json`, `zh.json` | 2026.10.7 | MIT |
