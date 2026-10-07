@@ -28,6 +28,9 @@ venv/
 
 # 도구와 편집기 설정
 .claude/settings.local.json
+.superpowers/
+.playwright-mcp/
+*.local
 .vscode/
 .idea/
 
