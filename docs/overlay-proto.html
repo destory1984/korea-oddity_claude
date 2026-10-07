@@ -9,7 +9,7 @@
 :root{--night:#050330;--navy:#1a2894;--gold:#f6b951;--white:#fbf8f9;--lav:#e2daf6;--paper:#f2e6c8;--ink:#3b2a1a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:#15122b;overflow:hidden;overscroll-behavior:none}
-body{display:grid;place-items:center;font-family:"Malgun Gothic",system-ui,sans-serif;color:var(--white);user-select:none;-webkit-user-select:none}
+body{display:grid;place-items:center;font-family:"Pretendard Variable",Pretendard,"Segoe UI","Malgun Gothic",sans-serif;color:var(--white);user-select:none;-webkit-user-select:none}
 #ph{position:relative;width:min(100vw,420px);height:min(100dvh,860px);overflow:hidden;background:#141c7c}
 #ph>*{position:absolute}
 canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
@@ -52,7 +52,7 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 :lang(zh-Hans) #memo b,:lang(zh-Hans) #card .hand{font-family:"Ma Shan Zheng","Nanum Pen Script",cursive;font-size:18px;line-height:1.3}
 #sora{left:10px;bottom:118px;width:84px;image-rendering:pixelated;pointer-events:none}
 #bubble{left:88px;bottom:190px;background:var(--white);color:#1b1730;padding:6px 10px;border-radius:12px 12px 12px 2px;
-  font-size:12.5px;white-space:nowrap;transition:opacity .25s;opacity:0;pointer-events:none}
+  font-family:"Gaegu","Pretendard Variable",Pretendard,"Malgun Gothic",sans-serif;font-size:18px;line-height:1.2;white-space:nowrap;transition:opacity .25s;opacity:0;pointer-events:none}
 #fly,#hit{touch-action:none;cursor:grab}
 #fly{left:0;right:0;top:0;bottom:120px}
 #hit{left:0;right:0;bottom:0;height:120px}
@@ -105,8 +105,13 @@ canvas.full{inset:0;width:100%;height:100%;pointer-events:none}
 #card #closeCard{margin-top:14px;width:100%;background:var(--ink);color:var(--paper)}
 #again{left:50%;transform:translateX(-50%);padding:9px 16px;color:var(--white);font:inherit;font-size:13px;display:none}
 </style>
+<!-- 글씨는 1권, 2권과 같은 세 벌이다: 화면은 Pretendard, 할머니는 나눔손글씨 펜, 소라는 개구. 파일을 함께 싣는다. -->
+<link rel="stylesheet" href="assets/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="assets/fonts/nanum-pen-script/400.css">
+<link rel="stylesheet" href="assets/fonts/gaegu/400.css">
+<!-- 일본어와 중국어의 손글씨만 구글 글꼴 서버에서 받는다(임시). -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Yomogi&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yomogi&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="ph">
@@ -518,7 +523,7 @@ function go(id) {
 // 생김새는 시간 한량(2권)의 다이얼 그대로다(2권 game/src/ui/dialView.js 를 옮겼다. 사용자, 2026.10.7: "시간 한량에게 디자인
 // 물어봐서, 디자인 다시 고쳐줘"). 사용자가 2권에서 다섯 차례에 걸쳐 굳힌 것이다: 별자리판 같은 짙은 남색의 두꺼운 유리,
 // 은은하게 빛나는 금빛 가장자리, 유리 속에서 함께 도는 북두칠성과 별가루, 테에 맺혀 깜박이는 빛, 굴릴 때 유리 위의 반짝임.
-// 3권에서 다른 것은 눈금의 뜻뿐이다. 한 칸이 5일이고, 달이 바뀌는 날에 긴 눈금과 달 이름, 절기가 드는 날에 가운데 눈금이 선다.
+// 3권에서 다른 것은 눈금의 뜻뿐이다. 한 칸이 5일이고, 달이 바뀌는 날에 긴 눈금과 달 이름이 선다.
 const UI_FONT = '"Pretendard Variable", Pretendard, "Malgun Gothic", sans-serif';
 const GLASS_TOP = '#0c1442', GLASS_FOOT = '#04061e';
 const GOLD = '#d8b866', GOLD_LIT = '#f3dc9a', GOLD_SHADE = '#8a6f34', GOLD_BRIGHT = '#ffe9a8', TAG = '#0d1546';
@@ -650,13 +655,15 @@ function drawDial(now) {
   // 금빛 테 둘, 그 사이가 유리다
   ring(radius - 1.2, GOLD, 2.4); ring(radius - 0.3, GOLD_LIT, 0.7, 0.9); ring(radius - 6, GOLD, 1.2, 0.9); ring(radius - 7, GOLD_SHADE, 0.6, 0.8);
 
-  // 눈금: 가는 금빛. 5일마다 짧은 것, 절기가 드는 날에 가운데 것, 달이 바뀌는 날에 긴 것과 달 이름(바로 선 글씨).
+  // 눈금: 가는 금빛. 5일마다 짧은 것, 달이 바뀌는 날에 긴 것과 달 이름(바로 선 글씨).
   const reach = Math.ceil((radius * 0.7) / PX * STEP);
   c.strokeStyle = GOLD_LIT; c.fillStyle = GOLD_LIT; c.lineCap = 'butt';
   c.font = `600 12px ${UI_FONT}`; c.textAlign = 'center'; c.textBaseline = 'middle';
   for (let n = Math.floor(dv - reach); n <= dv + reach; n++) {
     const m = mod(n, YEAR), month = MONTH0.indexOf(m);
-    const long = month >= 0 ? 18 : TERM_AT.has(m) ? 12 : mod(n - anchor, STEP) === 0 ? 8 : 0;
+    // 달이 바뀌는 날에서 이틀 안에 드는 짧은 눈금은 긋지 않는다. 긴 눈금 곁에 바짝 붙어 두 줄로 보이기 때문이다.
+    const nearMonth = MONTH0.some(m0 => Math.abs(gap(m, m0)) <= 2);
+    const long = month >= 0 ? 18 : mod(n - anchor, STEP) === 0 && !nearMonth ? 8 : 0;
     if (!long) continue;
     const from = at(n / STEP, 11), to = at(n / STEP, 11 + long);
     c.globalAlpha = long === 18 ? 1 : long === 12 ? 0.75 : 0.5; c.lineWidth = long === 18 ? 2 : 1;
