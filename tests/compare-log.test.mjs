@@ -1,0 +1,59 @@
+// 쓰는 법: node --test tests/compare-log.test.mjs
+// 비교 시제품의 로그에서 비교의 숫자 넷이 나오는지 본다.
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import { metrics, exportText } from "../docs/compare/core/log.js";
+import { createStore } from "../docs/compare/core/store.js";
+
+const read = (id) => JSON.parse(fs.readFileSync(new URL(`../docs/compare/places/${id}.json`, import.meta.url), "utf8"));
+const places = { seongsan: read("seongsan"), cheomseongdae: read("cheomseongdae") };
+const line = (place, t, kind, value = null) => ({ place, t, kind, value });
+
+const played = [
+  line("cheomseongdae", 1000, "enter"),
+  line("cheomseongdae", 3000, "shutter", { spot: "A", time: "day", task: 1, ok: false }),
+  line("cheomseongdae", 4000, "help", 1),
+  line("seongsan", 5000, "enter"),
+  line("seongsan", 6000, "shutter", { x: 0, d: 0, s: 0, h: 0, matched: false }),
+  line("cheomseongdae", 9000, "shutter", { spot: "B", time: "day", task: 1, ok: true }),
+  line("cheomseongdae", 10000, "paste", 2),
+  line("cheomseongdae", 12000, "retry"),
+];
+
+test("첫 성공까지의 시간, 셔터, 도움, 다시 찍기가 나온다", () => {
+  assert.deepEqual(metrics(played, "cheomseongdae"), { firstSuccessMs: 8000, shutters: 2, helps: 1, retried: true });
+});
+
+test("성공이 없으면 시간이 비고, 다른 장소의 줄은 세지 않는다", () => {
+  assert.deepEqual(metrics(played, "seongsan"), { firstSuccessMs: null, shutters: 1, helps: 0, retried: false });
+});
+
+test("성공 전의 다시 찍기는 세지 않는다", () => {
+  const log = [line("seongsan", 0, "enter"), line("seongsan", 10, "retry"), line("seongsan", 50, "shutter", { matched: true })];
+  assert.deepEqual(metrics(log, "seongsan"), { firstSuccessMs: 50, shutters: 1, helps: 0, retried: false });
+});
+
+test("내보낸 글은 로그와 숫자와 답이 든 JSON이다", () => {
+  const out = JSON.parse(exportText({ log: played, answer: "cheomseongdae" }));
+  assert.equal(out.log.length, played.length);
+  assert.equal(out.metrics.cheomseongdae.firstSuccessMs, 8000);
+  assert.equal(out.metrics.seongsan.shutters, 1);
+  assert.equal(out.answer, "cheomseongdae");
+});
+
+test("store 가 하는 일이 차례대로 로그에 쌓인다", () => {
+  const map = new Map();
+  const storage = { getItem: (k) => map.get(k) ?? null, setItem: (k, v) => map.set(k, v), removeItem: (k) => map.delete(k) };
+  let t = 0;
+  const store = createStore(storage, places, () => (t += 500));
+  store.go("place", "seongsan");
+  store.setDials({ x: 0.3 });
+  const shot = store.addShot("seongsan", { ...store.state.seongsan.dials, matched: false });
+  store.paste("seongsan", shot.id);
+  store.go("journal");
+  const kinds = store.state.log.map((l) => l.kind);
+  assert.deepEqual(kinds, ["enter", "dial", "shutter", "paste", "leave"]);
+  assert.deepEqual(store.state.log[1].value, { x: 0.3 });
+  assert.ok(store.state.log.every((l) => l.place === "seongsan" && typeof l.t === "number"));
+});
