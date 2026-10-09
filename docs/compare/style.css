@@ -26,7 +26,7 @@ button.on { border-color: var(--gold); color: var(--gold); background: rgba(246,
 .frame .sky, .frame .stars { position: absolute; inset: 0; }
 .frame .stars { transition: opacity .4s; }
 .frame .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; }
-.frame .layer { position: absolute; left: -22.5%; width: 145%; height: 145%; max-width: none; pointer-events: none;
+.frame .layer { position: absolute; max-width: none; pointer-events: none;
   transition: transform .5s ease, filter .4s; }
 .frame.still .layer, .frame.still .stars { transition: none; }
 .frame .sun { position: absolute; width: 9%; aspect-ratio: 1; border-radius: 50%; background: #fff1b8;

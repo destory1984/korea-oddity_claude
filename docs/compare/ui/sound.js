@@ -12,7 +12,7 @@ function wake() {
   const data = noise.getChannelData(0);
   for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (data.length * 0.18));
 }
-addEventListener("pointerdown", wake);
+globalThis.addEventListener?.("pointerdown", wake);   // Node 시험에서는 없다
 
 function burst(freq, vol, when = 0) {
   const s = ac.createBufferSource(), f = ac.createBiquadFilter(), v = ac.createGain();

@@ -8,15 +8,16 @@
   "staging": true,
   "stagingNote": "임시 연출이다. 그림자가 능선 쪽으로 뻗으려면 해를 등져야 해서 사진기가 서쪽을 본다. 실제 일출봉은 뭍의 동쪽 끝이라 뭍에서는 동쪽을 본다.",
   "view": { "azimuth": 270, "fov": 60 },
+  "zoom": 1.9,
+  "shiftX": 0.42,
+  "zoomNear": 1.0,
   "layers": [
-    { "id": "sea", "image": "seong-sea", "parallax": 0.1, "horizon": 0.5, "at": 0.5, "seasons": false },
-    { "id": "ridge", "image": "seong-ridge", "parallax": 0.3, "horizon": 0.5, "at": 0.5, "seasons": false },
-    { "id": "field", "image": "seong-field", "parallax": 0.6, "horizon": 0.6, "at": 0.62, "seasons": true },
-    { "id": "grass", "image": "seong-grass", "parallax": 1.0, "horizon": 0.8, "at": 0.86, "seasons": true }
+    { "id": "sea", "image": "seong-sea", "parallax": 0.1, "horizon": 0.499, "at": 0.5, "foot": "#3973ad", "seasons": false, "rise": false },
+    { "id": "ridge", "image": "seong-ridge", "parallax": 0.3, "horizon": 0.544, "at": 0.55, "foot": "#72ab58", "seasons": false, "rise": false },
+    { "id": "field", "image": "seong-field", "parallax": 0.6, "horizon": 0.606, "at": 0.7, "foot": "#759b4c", "seasons": true, "rise": true },
+    { "id": "grass", "image": "seong-grass", "parallax": 1.0, "horizon": 0.751, "at": 0.93, "foot": "#415b31", "seasons": true, "rise": true }
   ],
-  "shiftX": 0.3,
-  "zoomNear": 0.8,
-  "shadow": { "image": "seong-shadow", "horizon": 1.0, "at": 1.0 },
+  "shadow": { "image": "seong-shadow", "horizon": 1.0, "at": 1.0, "zoom": 1.0 },
   "dials": { "x": [-1, 1], "d": [0, 1], "s": [0, 1], "h": [0, 24] },
   "start": { "x": -0.4, "d": 0.2, "s": 0.5, "h": 12 },
   "target": { "x": 0.3, "d": 0.6, "day": 287, "h": 6.6667 },

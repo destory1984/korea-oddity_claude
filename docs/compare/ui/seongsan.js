@@ -1,6 +1,88 @@
-// 성산일출봉 화면(A안). 작업 6에서 짓는다. 지금은 빈 화면이다.
+// 성산일출봉 화면(A안). 다이얼 넷(좌우, 거리, 계절, 시각)으로 할머니의 바랜 사진과 포갠다.
 
-export function mountSeongsan(root, { place, onBack }) {
-  root.innerHTML = `<header><button data-do="back">수첩</button><h1>${place.name}</h1><span></span></header>`;
-  root.querySelector("[data-do=back]").onclick = onBack;
+import { judgeContinuous, dayOfYear } from "../core/judge.js";
+import { renderScene, answerView, sunFor } from "./scene.js";
+import { createDial } from "./dial.js";
+import { shutter as shutterSound } from "./sound.js";
+
+const MONTH_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const MID = [14.5, 104.5, 195.5, 287.5].map((d) => d / 365);   // 네 철의 가운데(1월, 4월, 7월, 10월의 15일)
+
+function dateText(s) {
+  let day = dayOfYear(s), month = 0;
+  while (day >= MONTH_DAYS[month]) day -= MONTH_DAYS[month++];
+  return `${month + 1}월 ${day + 1}일`;
+}
+function clockText(h) {
+  const minutes = Math.round(h * 60) % 1440;
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+}
+
+export function mountSeongsan(root, { store, place, onShot, onBack }) {
+  const p = store.state.seongsan;
+  const dials = { ...p.dials };
+  if (place.fixDistance) {
+    dials.d = place.target.d;
+    if (!store.state.log.some((l) => l.kind === "config")) store.log(place.id, "config", { fixDistance: true });
+  }
+
+  root.innerHTML = `
+    <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">옛 사진</button></header>
+    <p class="hand memo task">${place.memoShort}</p>
+    <div class="stage"><div class="frame"></div><div class="frame overlay" hidden></div></div>
+    <div class="dials"><div data-dial="x"></div><div data-dial="d"></div><div data-dial="s"></div><div data-dial="h"></div></div>
+    <div class="tools"><button class="shutter" data-do="shutter" aria-label="셔터"></button></div>`;
+
+  const q = (sel) => root.querySelector(sel);
+  const frame = q(".stage > .frame");
+  const overlay = q(".overlay");
+  const oldButton = q("[data-do=old]");
+  let matched = null;
+
+  const look = () => {
+    const sun = sunFor(place, dials);
+    if (sun.staged && !store.state.log.some((l) => l.kind === "fallback")) store.log(place.id, "fallback", "sun");
+    return { sun, verdict: judgeContinuous(place, dials, sun) };
+  };
+
+  function draw() {
+    const { sun, verdict } = look();
+    renderScene(frame, place, { ...dials, sun }, { still: true });
+    // 포개지는 순간: 옛 사진을 켜 두었으면 겹친 윤곽선이 알리고, 꺼 두었으면 다이얼이 가볍게 떨린다.
+    if (matched === false && verdict.matched && !p.overlay) for (const dial of Object.values(made)) dial.shake();
+    matched = verdict.matched;
+  }
+
+  function drawOverlay() {
+    overlay.hidden = !p.overlay;
+    oldButton.classList.toggle("on", p.overlay);
+    if (p.overlay) renderScene(overlay, place, answerView(place), { faded: true, outline: true, still: true });
+  }
+
+  const common = (key) => ({
+    value: dials[key],
+    min: place.dials[key][0], max: place.dials[key][1],
+    onInput: (v) => { dials[key] = v; draw(); },
+    onRelease: (v) => { if (v !== p.dials[key]) store.setDials({ [key]: v }); },
+  });
+  const made = {
+    x: createDial(q("[data-dial=x]"), { ...common("x"), name: "왼쪽 ↔ 오른쪽", step: 0.02, wrap: false, major: 5 }),
+    s: createDial(q("[data-dial=s]"), { ...common("s"), name: "계절", step: 5 / 365, wrap: true, snaps: MID, major: 6, label: dateText }),
+    h: createDial(q("[data-dial=h]"), { ...common("h"), name: "시각", step: 1 / 6, wrap: true, major: 6, label: clockText }),
+  };
+  if (place.fixDistance) q("[data-dial=d]").remove();
+  else made.d = createDial(q("[data-dial=d]"), { ...common("d"), name: "가까이 ↔ 멀리", step: 0.02, wrap: false, major: 5 });
+
+  q("[data-do=back]").onclick = onBack;
+  oldButton.onclick = () => { store.setOverlay(!p.overlay); drawOverlay(); };
+  q("[data-do=shutter]").onclick = () => {
+    const { verdict } = look();
+    const shot = store.addShot(place.id, { ...dials, matched: verdict.matched });
+    if (!shot) return;   // 연달아 누른 것은 한 장이다
+    shutterSound();
+    onShot(shot, verdict);
+  };
+
+  draw();
+  drawOverlay();
 }

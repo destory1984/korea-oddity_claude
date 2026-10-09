@@ -4,7 +4,7 @@
 import { dayOfYear, stagedSun } from "../core/judge.js";
 
 const SCENES = "../assets/scenes/";
-const ZOOM = 1.45;   // 그림의 너비는 틀 너비의 1.45배다(시험판과 같다)
+const ZOOM = 1.45;   // 그림의 너비는 틀 너비의 1.45배다(시험판과 같다). 장소 자료의 zoom 으로 바꿀 수 있다.
 
 const el = (tag, cls, parent) => {
   const node = document.createElement(tag);
@@ -14,12 +14,14 @@ const el = (tag, cls, parent) => {
 };
 
 // 겹 한 장. horizon(그림 안의 높이)이 틀의 at 높이에 오게 놓는다. transform 의 기준점은 그 줄의 가운데다.
-function layerImg(frame, cls, image, horizon, at, origin = `50% ${horizon * 100}%`) {
+function layerImg(frame, place, cls, image, horizon, at, origin = `50% ${horizon * 100}%`, zoom = place.zoom ?? ZOOM) {
   const img = el("img", `layer ${cls}`, frame);
   img.src = `${SCENES}${image}.webp`;
   img.alt = "";
   img.draggable = false;
-  img.style.top = `${(at - horizon * ZOOM) * 100}%`;
+  img.style.width = img.style.height = `${zoom * 100}%`;
+  img.style.left = `${(1 - zoom) * 50}%`;
+  img.style.top = `${(at - horizon * zoom) * 100}%`;
   img.style.transformOrigin = origin;
   return img;
 }
@@ -59,8 +61,8 @@ function buildCheom(frame, place) {
     star.style.top = `${(edge ? rand() * 0.3 : rand() * 0.5) * 100}%`;
     star.style.opacity = String(0.6 + rand() * 0.4);
   }
-  for (const layer of place.layers) parts.layers[layer.id] = layerImg(frame, layer.id, layer.image, layer.horizon, layer.at);
-  parts.tree = layerImg(frame, "tree", place.tree.image, place.tree.horizon, place.tree.at);
+  for (const layer of place.layers) parts.layers[layer.id] = layerImg(frame, place, layer.id, layer.image, layer.horizon, layer.at);
+  parts.tree = layerImg(frame, place, "tree", place.tree.image, place.tree.horizon, place.tree.at);
   return parts;
 }
 
@@ -160,21 +162,22 @@ function skyColor(sun) {
   return `rgb(${rgb.join(",")})`;
 }
 
-const FOOT = "50% 100%";   // 성산의 겹은 그림의 맨 아래를 기준으로 커진다. 가까이 가면 풀이 위로 솟는다.
+const FOOT = "50% 100%";   // rise 가 켜진 겹(들판, 풀)은 그림의 맨 아래를 기준으로 커진다. 가까이 가면 위로 솟아 능선을 가린다.
 
 function buildSeongsan(frame, place) {
   const parts = { sky: el("div", "sky", frame), sun: null, layers: {} };
   parts.sun = el("div", "sun", frame);
   for (const layer of place.layers) {
+    const origin = layer.rise ? FOOT : undefined;
     if (layer.seasons) {
       parts.layers[layer.id] = Object.fromEntries(SEASONS.map((season) =>
-        [season, layerImg(frame, layer.id, `${layer.image}-${season}`, layer.horizon, layer.at, FOOT)]));
+        [season, layerImg(frame, place, layer.id, `${layer.image}-${season}`, layer.horizon, layer.at, origin)]));
     } else {
-      parts.layers[layer.id] = { all: layerImg(frame, layer.id, layer.image, layer.horizon, layer.at, FOOT) };
+      parts.layers[layer.id] = { all: layerImg(frame, place, layer.id, layer.image, layer.horizon, layer.at, origin) };
     }
   }
   const sh = place.shadow;
-  parts.shadow = layerImg(frame, "shadow", sh.image, sh.horizon, sh.at, FOOT);
+  parts.shadow = layerImg(frame, place, "shadow", sh.image, sh.horizon, sh.at, FOOT, sh.zoom);
   return parts;
 }
 
@@ -194,7 +197,7 @@ function drawSeongsan(parts, place, view) {
   const light = `brightness(${(0.4 + 0.6 * clamp((sun.alt + 6) / 16, 0, 1)).toFixed(3)})`;
   const mix = seasonMix(dayOfYear(view.s));
   for (const layer of place.layers) {
-    const move = `translateX(${-view.x * layer.parallax * place.shiftX * 100 / ZOOM}%) scale(${1 + (1 - view.d) * layer.parallax * place.zoomNear})`;
+    const move = `translateX(${-view.x * layer.parallax * place.shiftX * 100 / (place.zoom ?? ZOOM)}%) scale(${1 + (1 - view.d) * layer.parallax * place.zoomNear})`;
     for (const [season, img] of Object.entries(parts.layers[layer.id])) {
       img.style.transform = move;
       img.style.filter = light;
