@@ -68,8 +68,17 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
     value: dials[key],
     min: place.dials[key][0], max: place.dials[key][1],
     onInput: (v) => { dials[key] = v; draw(); },
-    onRelease: (v) => { if (v !== p.dials[key]) store.setDials({ [key]: v }); },
+    onRelease: () => keep(),
   });
+  // 화면의 다이얼 값을 저장에 옮긴다. 다이얼이 아직 구르는 중에 셔터나 수첩을 눌러도 값이 남게, 화면을 떠나기 전에도 부른다.
+  // (2026.10.10: 구르는 중에 찍고 돌아오면 다이얼이 옛 값으로 돌아가 있었다.)
+  function keep() {
+    const now = store.state.seongsan.dials;
+    const changed = Object.fromEntries(Object.entries(dials).filter(([key, v]) => v !== now[key]));
+    if (Object.keys(changed).length) store.setDials(changed);
+  }
+  const onHide = () => { if (root.isConnected && frame.isConnected && document.hidden) keep(); };
+  document.addEventListener("visibilitychange", onHide);
   const made = {
     x: createDial(q("[data-dial=x]"), { ...common("x"), name: "좌우", step: 0.02, wrap: false, major: 5, ends: ["왼쪽", "오른쪽"] }),
     s: createDial(q("[data-dial=s]"), { ...common("s"), name: "계절", step: 5 / 365, wrap: true, snaps: MID, major: 1000, marks: MONTH_MARKS, label: dateText }),
@@ -78,9 +87,10 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
   if (place.fixDistance) q("[data-dial=d]").remove();
   else made.d = createDial(q("[data-dial=d]"), { ...common("d"), name: "거리", step: 0.02, wrap: false, major: 5, ends: ["가까이", "멀리"] });
 
-  q("[data-do=back]").onclick = onBack;
+  q("[data-do=back]").onclick = () => { keep(); onBack(); };
   oldButton.onclick = () => { oldButton.classList.remove("pulse"); store.setOverlay(!p.overlay); drawOverlay(); };
   q("[data-do=shutter]").onclick = () => {
+    keep();
     const { verdict } = look();
     const shot = store.addShot(place.id, { ...dials, matched: verdict.matched });
     if (!shot) return;   // 연달아 누른 것은 한 장이다

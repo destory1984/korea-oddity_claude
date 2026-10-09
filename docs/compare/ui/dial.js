@@ -120,6 +120,7 @@ export function createDial(el, opts) {
 
   // 바늘 아래의 값을 옮긴다. 눈금을 넘을 때마다 소리와 떨림이 난다. 굴리는 동안에는 걸리지 않는다.
   function move(next) {
+    if (!el.isConnected) { cancelAnimationFrame(frame); return; }
     raw = wrap ? next : Math.min(max + OVER * step, Math.max(min - OVER * step, next));
     const v = settle(raw, { min, max, step, wrap });
     const index = Math.round((v - min) / step);
@@ -147,7 +148,7 @@ export function createDial(el, opts) {
         if (caught) { click(true); try { navigator.vibrate?.(12); } catch { /* 없음 */ } }
         draw();
         frame = 0;
-        opts.onRelease?.(value);
+        if (el.isConnected) opts.onRelease?.(value);   // 화면이 바뀐 뒤에 멎은 옛 다이얼은 아무것도 적지 않는다
         return;
       }
       move(goal - gap);
