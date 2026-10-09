@@ -78,7 +78,8 @@ button.main { display: block; margin: 14px auto 0; padding: 11px 26px; border-co
 .letter { margin-top: 12px; transform: rotate(-.6deg); }
 .letter p { margin: 0 0 4px; }
 .old { float: right; width: 44%; margin: 0 0 6px 10px; padding: 4px 4px 0; background: var(--white); transform: rotate(3deg); box-shadow: 1px 2px 0 rgba(0, 0, 0, .3); }
-.old img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; filter: sepia(.55) contrast(.86) brightness(1.08) saturate(.75); }
+/* 2004년의 인화 사진. 스무 해쯤 지나 조금만 바랬다(처음에는 1988년의 사진이라 더 누렇게 두었다). */
+.old img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; filter: sepia(.22) contrast(.93) brightness(1.04) saturate(.88); }
 .old figcaption { font-size: 14px; text-align: center; color: #5a4a3a; }
 figure { margin: 0; }
 
@@ -183,6 +184,19 @@ figure { margin: 0; }
 .reply h2 { border: 0; padding: 0; font-size: 12px; opacity: .6; text-align: left; }
 .reply p { margin: 2px 0 0; }
 
-/* 그 쪽이 언제의 길인지. 1988년의 사진과 지난봄의 길을 헷갈리지 않게 한다(사용자, 2026.10.10: "88년에 인천공항 없었는데"). */
+/* 그 쪽이 언제의 길인지. 옛 사진과 지난봄의 길을 헷갈리지 않게 한다(사용자, 2026.10.10: "88년에 인천공항 없었는데"). */
 .paper .when { margin: 5px 0 0; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: .04em; opacity: .7; }
 .letter .then { font-family: "Pretendard Variable", Pretendard, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .04em; opacity: .65; margin: 0 0 6px; }
+
+/* 표지판 따라가기: 공항의 길 안내판처럼 짙은 남색 판에 그림 기호와 이름 */
+.signboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.signboard button { border-radius: 10px; padding: 10px 4px; background: #16234f; border-color: #9fb4ff66; font-size: 13px; font-weight: 600; }
+.signboard button b { display: block; font-size: 30px; line-height: 1.2; font-weight: 400; }
+.signboard button:disabled { opacity: .3; }
+/* 서울역: 자리 셋. 고른 자리의 그림만 보인다. */
+.frame img.spot { opacity: 0; transition: opacity .35s; }
+.frame img.spot.on { opacity: 1; }
+.spots { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.spots button { font-size: 13px; padding: 7px 12px; }
+.spots button.on { border-color: var(--gold); color: var(--gold); background: rgba(246, 185, 81, .14); }
+.spread p b { font-size: 10px; letter-spacing: .05em; opacity: .65; display: block; }

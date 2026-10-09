@@ -71,10 +71,18 @@ test("걸음: 고른 길과 내는 법에 따라 차례가 갈리고, 어느 길
     }
     return seen;
   };
-  assert.deepEqual(walk({ route: "allstop", pay: "card" }), ["intro", "page", "route", "pay", "store", "gates", "ride", "arrive", "paste"]);
-  assert.deepEqual(walk({ route: "allstop", pay: "single" }), ["intro", "page", "route", "pay", "machine", "gates", "ride", "refund", "arrive", "paste"]);
-  assert.deepEqual(walk({ route: "express" }), ["intro", "page", "route", "expressTicket", "gates", "ride", "arrive", "paste"]);
+  assert.deepEqual(walk({ route: "allstop", pay: "card" }), ["intro", "page", "route", "signs", "pay", "store", "gates", "platform", "ride", "arrive", "paste"]);
+  assert.deepEqual(walk({ route: "allstop", pay: "single" }), ["intro", "page", "route", "signs", "pay", "machine", "gates", "platform", "ride", "refund", "arrive", "paste"]);
+  assert.deepEqual(walk({ route: "express" }), ["intro", "page", "route", "signs", "expressTicket", "gates", "platform", "ride", "arrive", "paste"]);
   for (const step of walk({ route: "allstop", pay: "single" })) assert.ok(trip.STEPS.includes(step), step);
+});
+
+test("자리: 서울역의 자리는 셋이고, 할머니와 같은 자리는 광장 한가운데다", () => {
+  assert.deepEqual(trip.SPOTS, ["A", "B", "C"]);
+  assert.equal(trip.sameSpot(at({ spot: "B" })), true);
+  assert.equal(trip.sameSpot(at({ spot: "A" })), false);
+  assert.equal(trip.fresh().spot, "B");
+  for (const spot of trip.SPOTS) for (const lang of LANGS) assert.ok(TEXT[lang][`spot${spot}`], `${lang} spot${spot}`);
 });
 
 test("저장: 쓴 것을 다시 읽고, 깨졌거나 모르는 걸음이면 새로 시작한다", () => {
@@ -117,18 +125,24 @@ test("글: 화면이 쓰는 열쇠가 모두 사전에 있다", () => {
   for (const id of fares.stations.allstop) for (const lang of LANGS) assert.ok(TEXT[lang][`st_${id}`], `${lang} st_${id}`);
 });
 
-test("글: 공항의 쪽은 지난봄의 길이라고 밝히고, 1988년에는 김포공항이었다고 적는다", () => {
-  // 인천공항은 2001년에 열었다. 1988년의 사진과 공항의 쪽이 한 화면에 놓여 1988년에 인천공항에 내린 것처럼 읽혔다.
+test("글: 공항의 쪽은 지난봄의 길이라고 밝히고, 첫 여행은 2004년 가을이며 그때 없던 것을 그때의 일로 적지 않는다", () => {
+  // 처음에는 첫 여행이 1988년이었다. 인천공항(2001), 교통카드(2004.7), 공항철도(2007, 서울역까지 2010)가 그때 없어
+  // 쪽마다 "그때는 없었지"를 달아야 했다. 사용자가 첫 여행을 2004년 가을(일본의 한류 붐)로 당겼다. 그때 없던 것은 공항철도뿐이다.
   const source = read("main.js");
   for (const key of ["gWhen", "gThenText", "grandmaSpring", "photoThen"]) assert.ok(source.includes(`t("${key}")`), key);
-  assert.ok(TEXT.ko.gThenText.includes("김포공항") && TEXT.ko.gThenText.includes("1988"));
-  assert.ok(TEXT.ja.gThenText.includes("金浦空港"));
-  // 공항철도도 그때는 없었다(2007년에 열었고 서울역까지는 2010년이다).
-  assert.ok(TEXT.ko.gThenText.includes("공항철도") && TEXT.ja.gThenText.includes("空港鉄道"));
-  // 교통카드도 그때는 없었다. 교통카드는 지난봄의 꾀로만 나온다.
-  assert.ok(TEXT.ko.gThenText.includes("교통카드") && TEXT.ja.gThenText.includes("交通カード"));
-  for (const lang of LANGS) assert.ok(!TEXT[lang].letter2.match(/카드|card|カード|卡/i), lang);
+  assert.ok(source.includes("典子, 2004.10") && !source.includes("1988"));
   assert.ok(TEXT.ko.gWhen.includes("지난봄"));
+  for (const lang of LANGS) {
+    for (const [key, text] of Object.entries(TEXT[lang])) assert.ok(!text.includes("1988"), `${lang}.${key}`);
+    for (const key of ["letter2", "gThenText", "photoThen", "clueTitle"]) assert.ok(TEXT[lang][key].includes("2004"), `${lang}.${key}`);
+  }
+  assert.ok(TEXT.ko.gThenText.includes("공항철도") && TEXT.ja.gThenText.includes("空港鉄道"));
+  assert.ok(!TEXT.ko.gThenText.includes("김포") && !TEXT.ko.gThenText.includes("교통카드"));
+});
+
+test("글: 드라마의 제목은 지어낸 것이고 실제 드라마의 제목을 쓰지 않는다", () => {
+  assert.ok(TEXT.ko.letter2.includes("가을연가"));
+  for (const lang of LANGS) for (const text of Object.values(TEXT[lang])) assert.ok(!/겨울연가|冬のソナタ|冬季恋歌|Winter Sonata/.test(text));
 });
 
 test("글: 고른 말이 없으면 기기의 말, 넷이 아니면 영어로 연다", () => {
@@ -141,5 +155,6 @@ test("글: 고른 말이 없으면 기기의 말, 넷이 아니면 영어로 연
 
 test("그림: 화면이 부르는 그림이 모두 있다", () => {
   const source = read("main.js");
+  for (const name of ["seoul-a", "seoul-station", "seoul-c"]) assert.ok(fs.existsSync(new URL(`../docs/trip/art/${name}.webp`, import.meta.url)), name);
   for (const [, name] of source.matchAll(/img\("([\w-]+)"\)/g)) assert.ok(fs.existsSync(new URL(`../docs/trip/art/${name}.webp`, import.meta.url)), name);
 });

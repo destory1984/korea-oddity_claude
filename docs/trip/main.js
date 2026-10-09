@@ -26,6 +26,8 @@ const t = (key, values) => translate(lang, key, values);
 const W = (amount, to = lang) => trip.won(amount, to);
 const date = fares.checked.replaceAll("-", ".");
 const station = (id, to = lang) => translate(to, `st_${id}`);
+// 서울역의 자리마다의 그림.
+const SPOT_ART = { A: "seoul-a", B: "seoul-station", C: "seoul-c" };
 const img = (name) => `<img src="${ART}${name}.webp" alt="" draggable="false">`;
 
 function keep() { trip.save(storage ?? memory, state); }
@@ -53,7 +55,7 @@ const SCREENS = {
       <p class="place">${t("introPlace")}</p>
       <div class="frame">${img("icn-arrivals")}</div>
       <div class="paper letter hand">
-        <figure class="old">${img("photo-1988")}<figcaption class="hand">典子, 1988.10</figcaption></figure>
+        <figure class="old">${img("photo-2004")}<figcaption class="hand">典子, 2004.10</figcaption></figure>
         <p class="then">${t("photoThen")}</p>
         <p>${t("letter1")}</p><p>${t("letter2")}</p><p>${t("letter3")}</p><p>${t("letter4")}</p>
         <p class="sign">${t("sign")}</p>
@@ -99,6 +101,32 @@ const SCREENS = {
     for (const button of screen.querySelectorAll("[data-route]")) button.onclick = () => {
       state.route = button.dataset.route;
       go();
+    };
+  },
+
+  // 입국장에서 기차의 표지판을 찾아 지하 1층으로 내려간다. 타는 곳과 표 사는 곳이 모두 지하 1층 교통센터에 있다.
+  signs() {
+    screen.innerHTML = `
+      <h1>${t("signsTitle")}</h1>
+      <div class="frame">${img("icn-arrivals")}</div>
+      <p class="yui">${t("signsAsk")}</p>
+      <div class="signboard">
+        <button data-sign="train"><b>🚆</b>${t("signTrain")}</button>
+        <button data-sign="bus"><b>🚌</b>${t("signBus")}</button>
+        <button data-sign="taxi"><b>🚕</b>${t("signTaxi")}</button>
+      </div>`;
+    const bubble = screen.querySelector(".yui");
+    for (const button of screen.querySelectorAll("[data-sign]")) button.onclick = () => {
+      if (button.dataset.sign !== "train") {
+        state.signMisses += 1; keep();
+        bubble.className = "yui warn"; bubble.textContent = t("signWrong");
+        button.disabled = true; play(tick, true);
+        return;
+      }
+      bubble.className = "yui"; bubble.textContent = t("signOk");
+      play(ding);
+      screen.querySelector(".signboard").outerHTML = `<button class="main" data-do="next">${t("signDown")}</button>`;
+      on("next", () => go());
     };
   },
 
@@ -244,6 +272,16 @@ const SCREENS = {
     };
   },
 
+  platform() {
+    const express = state.route === "express";
+    screen.innerHTML = `
+      <h1>${t("platformTitle")} · ${t(express ? "rideExpress" : "rideAllstop")}</h1>
+      <div class="frame">${img("arex-platform")}</div>
+      <p class="yui">${t(express ? "platformExpress" : "platformAllstop")}</p>
+      <button class="main" data-do="next">${t("board")}</button>`;
+    on("next", () => go());
+  },
+
   ride() {
     const express = state.route === "express";
     const stops = fares.stations[express ? "express" : "allstop"];
@@ -306,10 +344,20 @@ const SCREENS = {
   arrive() {
     screen.innerHTML = `
       <h1>${t("arriveTitle")}</h1>
-      <div class="frame">${img("seoul-station")}</div>
+      <div class="frame">${trip.SPOTS.map((spot) => `<img class="spot" data-spot="${spot}" src="${ART}${SPOT_ART[spot]}.webp" alt="" draggable="false">`).join("")}</div>
       <p class="yui">${t("arriveYui")}</p>
+      <div class="spots">${trip.SPOTS.map((spot) => `<button data-pick="${spot}">${t(`spot${spot}`)}</button>`).join("")}</div>
       <div class="tools"><button class="shutter" data-do="shutter" aria-label="${t("shutter")}"></button></div>`;
+    // 자리를 옮기면 그 자리에서 본 그림으로 넘어간다. 어느 자리든 사진은 된다.
+    const stand = (spot) => {
+      state.spot = spot; keep();
+      for (const image of screen.querySelectorAll("img.spot")) image.classList.toggle("on", image.dataset.spot === spot);
+      for (const button of screen.querySelectorAll("[data-pick]")) button.classList.toggle("on", button.dataset.pick === spot);
+    };
+    for (const button of screen.querySelectorAll("[data-pick]")) button.onclick = () => { stand(button.dataset.pick); play(tick); };
+    stand(state.spot);
     on("shutter", () => {
+      for (const pick of screen.querySelectorAll("[data-pick]")) pick.disabled = true;
       const button = screen.querySelector(".shutter"), frame = screen.querySelector(".frame");
       button.disabled = true;
       state.shot = true; keep();
@@ -326,21 +374,24 @@ const SCREENS = {
     const lines = state.route === "express" ? ["replyE1", "replyE2", "replyE3"] : ["replyA1", "replyA2", "replyA3"];
     // 개찰구를 잘못 갔으면 "바로 들어갔구나" 자리에 "너도 한 번 섰구나"가 온다.
     if (state.gateMisses > 0) lines[state.route === "express" ? 1 : 0] = "replyLost";
-    const reply = lines.map((key) => `<p>${t(key)}</p>`).join("") + (gap > 0 ? `<p>${t("replySaved", { won: W(gap) })}</p>` : "");
+    const reply = lines.map((key) => `<p>${t(key)}</p>`).join("")
+      + (trip.sameSpot(state) ? `<p>${t("replySame")}</p>` : "")
+      + (gap > 0 ? `<p>${t("replySaved", { won: W(gap) })}</p>` : "");
     screen.innerHTML = `
       <h1>${t("pasteTitle")}</h1>
       <div class="spread">
         <article class="paper">
           <h2>${t("grandmaSpring")}</h2>
-          <div class="frame faded">${img("seoul-station")}</div>
+          <div class="frame faded">${img(SPOT_ART[trip.GRANDMA_SPOT])}</div>
           <p class="hand">${t("gHowText")}</p>
           <p class="hand lost">${t("gLostText")}</p>
           <ul><li><span>${t("itemExpress")}</span><span>${W(hers)}</span></li><li class="sum"><span>${t("total")}</span><span>${W(hers)}</span></li></ul>
         </article>
         <article class="paper">
           <h2>${t("yui")}</h2>
-          <div class="frame">${state.pasted ? img("seoul-station") : ""}</div>
+          <div class="frame">${state.pasted ? img(SPOT_ART[state.spot]) : ""}</div>
           <p>${t(how)}</p>
+          <p><b>${t("changed")}</b> ${t("changedText")}</p>
           <p>${state.gateMisses ? t("gateNote", { n: state.gateMisses }) : t("gateClean")}</p>
           <ul>${mine.items.map((item) => `<li><span>${t(item.key)}</span><span>${W(item.amount)}</span></li>`).join("")}
             <li class="sum"><span>${t("total")}</span><span>${W(mine.total)}</span></li></ul>
@@ -397,7 +448,7 @@ function render() {
 function showJournal() {
   $("journalTitle").textContent = t("title");
   $("journalBody").innerHTML = `
-    <figure class="old" style="float:none;width:70%;margin:0 auto 8px">${img("photo-1988")}<figcaption class="hand">典子, 1988.10</figcaption></figure>
+    <figure class="old" style="float:none;width:70%;margin:0 auto 8px">${img("photo-2004")}<figcaption class="hand">典子, 2004.10</figcaption></figure>
     <p><b>${t("clueTitle")}</b> · ${t("photoThen")}<br>${t("clueText")}</p>
     ${state.step === "intro" ? `<p>${t("pageLocked")}</p>` : grandmaPage()}`;
   $("journal").classList.add("on");

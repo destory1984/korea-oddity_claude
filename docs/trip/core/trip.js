@@ -10,6 +10,8 @@ export const fresh = () => ({
   ticket: false,      // 표나 카드를 손에 쥐었는가
   gateMisses: 0,      // 다른 개찰구로 간 횟수
   refunded: null,     // 1회용의 보증금: true 돌려받음, false 그냥 감, null 아직
+  signMisses: 0,      // 입국장에서 다른 표지판을 따라간 횟수
+  spot: "B",          // 서울역에서 사진을 찍은 자리: A 역 건물 코앞, B 광장 한가운데, C 정류장 쪽
   shot: false,
   pasted: false,
 });
@@ -45,6 +47,11 @@ export const grandmaTotal = (fares) => fares.express.adult;
 // 할머니보다 얼마나 아꼈는가(더 썼으면 음수).
 export const saved = (state, fares) => grandmaTotal(fares) - spending(state, fares).total;
 
+// 서울역의 자리 셋. 할머니가 지난봄에 찍은 자리는 광장 한가운데다. 같은 자리에서 찍으면 답장에 한 줄이 붙는다.
+export const SPOTS = ["A", "B", "C"];
+export const GRANDMA_SPOT = "B";
+export const sameSpot = (state) => state.spot === GRANDMA_SPOT;
+
 // 표와 개찰구가 맞는가. 직통 표는 주황, 일반(카드와 1회용)은 파랑.
 export const gateOpens = (state, gate) => (state.route === "express" ? "orange" : "blue") === gate;
 
@@ -53,10 +60,12 @@ export function nextStep(state) {
   switch (state.step) {
     case "intro": return "page";
     case "page": return "route";
-    case "route": return state.route === "express" ? "expressTicket" : "pay";
+    case "route": return "signs";   // 길을 정했으면 표지판을 따라 지하 1층으로 내려간다
+    case "signs": return state.route === "express" ? "expressTicket" : "pay";
     case "pay": return state.pay === "card" ? "store" : "machine";
     case "store": case "machine": case "expressTicket": return "gates";
-    case "gates": return "ride";
+    case "gates": return "platform";
+    case "platform": return "ride";
     case "ride": return state.route === "allstop" && state.pay === "single" ? "refund" : "arrive";
     case "refund": return "arrive";
     case "arrive": return "paste";   // 서울역에서 한 장 찍고 수첩에 붙이러 간다
@@ -64,7 +73,7 @@ export function nextStep(state) {
   }
 }
 
-export const STEPS = ["intro", "page", "route", "pay", "store", "machine", "expressTicket", "gates", "ride", "refund", "arrive", "paste", "done"];
+export const STEPS = ["intro", "page", "route", "signs", "platform", "pay", "store", "machine", "expressTicket", "gates", "ride", "refund", "arrive", "paste", "done"];
 
 // 돈을 그 말의 꼴로. 원은 그대로 원이다(기획서 15절: 지갑은 원으로 보인다).
 export function won(amount, lang) {
