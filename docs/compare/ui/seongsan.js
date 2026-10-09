@@ -33,8 +33,7 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
 
   root.innerHTML = `
     <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">옛 사진</button></header>
-    <p class="hand memo task">${place.memoShort}</p>
-    <div class="stage"><div class="frame"></div><div class="frame overlay" hidden></div></div>
+    <div class="stage"><div class="frame"></div><div class="frame overlay" hidden></div><p class="hand memo task">${place.memoShort}</p></div>
     <div class="dials"><div data-dial="x"></div><div data-dial="d"></div><div data-dial="s"></div><div data-dial="h"></div></div>
     <div class="tools"><button class="shutter" data-do="shutter" aria-label="셔터"></button></div>`;
 

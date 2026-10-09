@@ -58,7 +58,9 @@ button.on { border-color: var(--gold); color: var(--gold); background: rgba(246,
 header { display: grid; grid-template-columns: 76px 1fr 76px; align-items: center; margin-bottom: 4px; }
 header h1 { margin: 0; }
 header button { padding: 6px 0; font-size: 13px; }
-.task { text-align: center; margin: 6px 0 8px; color: var(--paper); min-height: 1.2em; }
+/* 할머니의 부탁. 풍경의 아래쪽에 손글씨로 얹는다. */
+.stage .task { position: absolute; left: 0; right: 0; bottom: 5px; margin: 0; text-align: center; color: #fff8e6; pointer-events: none; z-index: 2;
+  text-shadow: 0 1px 3px rgba(5, 3, 48, .95), 0 0 8px rgba(5, 3, 48, .8); }
 .stage { position: relative; }
 .stage .lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; fill: none; stroke: var(--gold);
   stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -100,18 +102,17 @@ figcaption { text-align: center; font-size: 19px; }
 
 /* 성산의 다이얼 */
 .dials { margin-top: 10px; display: grid; gap: 7px; }
-/* 유리 뒤에서 도는 통. 금빛 테 두 겹과 안쪽 그늘은 2권의 유리 다이얼에서 왔다. */
-.dial { position: relative; height: 58px; border-radius: 12px; overflow: hidden; background: #04061e; border: 1.5px solid #d8b866;
-  box-shadow: inset 0 0 0 1px #8a6f34, inset 0 6px 10px rgba(0, 0, 0, .55), 0 2px 6px rgba(0, 0, 0, .5);
-  touch-action: none; cursor: grab; }
+/* 2권의 유리 다이얼. 금빛 테의 둥근 유리 윗머리가 띠 안에 솟아 있다. 유리, 테, 눈금, 별자리판은 모두 캔버스가 그린다(ui/dial.js). */
+.dial { position: relative; height: 68px; overflow: hidden; touch-action: none; cursor: grab; }
 .dial:active { cursor: grabbing; }
 .dial canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.dial .name { position: absolute; left: 9px; top: 5px; padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; color: #f3dc9a;
-  background: rgba(13, 21, 70, .85); border: 1px solid rgba(216, 184, 102, .6); pointer-events: none; }
-.dial .value { position: absolute; right: 9px; top: 5px; font-size: 13px; font-weight: 600; color: #ffe9a8; text-shadow: 0 0 6px rgba(255, 233, 168, .5);
-  pointer-events: none; }
-.dial.hint { animation: hint 1.1s ease-in-out infinite; }
-@keyframes hint { 0%, 100% { box-shadow: inset 0 0 0 1px #8a6f34, 0 0 0 0 rgba(255, 233, 168, 0); } 50% { box-shadow: inset 0 0 0 1px #ffe9a8, 0 0 12px 3px rgba(255, 233, 168, .75); } }
+.dial .name, .dial .value { position: absolute; top: 0; height: 20px; line-height: 18px; padding: 0 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
+  color: #f3dc9a; background: #0d1546; border: 1px solid #d8b866; box-shadow: 0 1px 4px rgba(0, 0, 0, .4); pointer-events: none; }
+.dial .name { left: 0; }
+.dial .value { right: 0; }
+.dial .value:empty { display: none; }
+.dial.hint canvas { animation: hint 1.1s ease-in-out infinite; }
+@keyframes hint { 0%, 100% { filter: none; } 50% { filter: drop-shadow(0 0 7px rgba(255, 233, 168, .95)) brightness(1.25); } }
 .dial.shake { animation: shake .3s; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-2px); } 40%, 80% { transform: translateX(2px); } }
 .stage .overlay { position: absolute; inset: 0; opacity: .4; pointer-events: none; }
@@ -141,7 +142,6 @@ figcaption { text-align: center; font-size: 19px; }
 .frame.reveal .layer.shadow { transition: opacity 1.6s ease-in !important; }
 .dials.locked { pointer-events: none; opacity: .5; transition: opacity .4s; }
 
-/* 다이얼의 값이 맞는 자리에 있다 */
-.dial.good { border-color: #8fe39a; box-shadow: inset 0 0 0 1px #3f9a52, inset 0 6px 10px rgba(0, 0, 0, .55), 0 0 10px 2px rgba(143, 227, 154, .55); }
+/* 다이얼의 값이 맞는 자리에 있다. 테의 초록빛은 캔버스가 그린다. */
 .dial.good .name { color: #0b2a12; background: #8fe39a; border-color: #8fe39a; }
 .dial.good .name::after { content: " ✓ 맞아"; }

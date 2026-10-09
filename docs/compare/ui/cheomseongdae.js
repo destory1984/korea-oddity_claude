@@ -3,6 +3,7 @@
 import { judgeDiscrete } from "../core/judge.js";
 import { renderScene, viewOf, answerView, shotOpts, oldOpts } from "./scene.js";
 import { shutter as shutterSound } from "./sound.js";
+import { createDial } from "./dial.js";
 import { showMiss, clearMiss } from "./miss.js";
 
 const MOVE_MS = 500;   // 지점을 옮기는 연출. 그동안 셔터가 잠긴다.
@@ -38,15 +39,14 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
 
   root.innerHTML = `
     <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">옛 사진</button></header>
-    <p class="hand memo task"></p>
     <div class="oldphoto" hidden><div class="frame"></div><div class="boxes"></div></div>
     <div class="stage">
       <div class="frame"></div>
+      <p class="hand memo task"></p>
       <svg class="lines" viewBox="0 0 300 200" hidden></svg>
       <div class="preview" hidden><div class="frame"></div></div>
-      <div class="spots">${place.spots.map((s) => `<button data-spot="${s}">${place.spotNames[s]}</button>`).join("")}</div>
     </div>
-    <div class="times">${place.times.map((t) => `<button data-time="${t}">${place.timeNames[t]}</button>`).join("")}</div>
+    <div class="dials"><div data-dial="spot"></div><div data-dial="time"></div></div>
     <div class="tools">
       <button data-do="compare">비교</button>
       <button class="shutter" data-do="shutter" aria-label="셔터"></button>
@@ -66,9 +66,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     const s = c();
     renderScene(frame, place, { spot: s.spot, time: s.time });
     q(".task").textContent = task().memo;
-    q(".times").hidden = task().timesLocked;
-    for (const b of root.querySelectorAll("[data-spot]")) b.classList.toggle("on", b.dataset.spot === s.spot);
-    for (const b of root.querySelectorAll("[data-time]")) b.classList.toggle("on", b.dataset.time === s.time);
+    q("[data-dial=time]").hidden = task().timesLocked;   // 첫 과제에서는 때를 고르지 않는다
     q("[data-do=compare]").disabled = s.shots.length < 2;
     drawHelp();
   }
@@ -93,21 +91,26 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     if (level >= 3) renderScene(preview.querySelector(".frame"), place, answerView(place, c().task), { gray: true, still: true });
   }
 
-  for (const b of root.querySelectorAll("[data-spot]")) {
-    b.onclick = () => {
-      if (b.dataset.spot === c().spot) return;
-      store.setSpot(b.dataset.spot);
+  // 자리와 때는 세 자리에 딱딱 걸리는 다이얼로 고른다(사용자, 2026.10.10: "버튼은 맛이 없어"). 값은 여전히 셋씩이다.
+  const stops = (list, names) => list.map((id, i) => ({ at: i, text: names[id] }));
+  createDial(q("[data-dial=spot]"), {
+    name: "자리", min: 0, max: place.spots.length - 1, step: 1, wrap: false, major: 1, tickPx: 84,
+    value: place.spots.indexOf(c().spot), marks: stops(place.spots, place.spotNames),
+    onInput: (v) => {
+      store.setSpot(place.spots[v]);
       clearMiss(q(".stage"));   // 자리를 옮기면 방금 한 말은 맞지 않는다
-      // 옮기는 중에 다른 지점을 누르면 마지막에 누른 곳으로 간다. 다 옮길 때까지 셔터를 잠근다.
+      // 옮기는 중에 또 돌리면 마지막에 고른 곳으로 간다. 다 옮길 때까지 셔터를 잠근다.
       shutterButton.disabled = true;
       clearTimeout(moving);
       moving = setTimeout(() => { shutterButton.disabled = false; }, MOVE_MS);
       draw();
-    };
-  }
-  for (const b of root.querySelectorAll("[data-time]")) {
-    b.onclick = () => { if (b.dataset.time !== c().time) { store.setTime(b.dataset.time); clearMiss(q(".stage")); draw(); } };
-  }
+    },
+  });
+  createDial(q("[data-dial=time]"), {
+    name: "때", min: 0, max: place.times.length - 1, step: 1, wrap: false, major: 1, tickPx: 84,
+    value: place.times.indexOf(c().time), marks: stops(place.times, place.timeNames),
+    onInput: (v) => { store.setTime(place.times[v]); clearMiss(q(".stage")); draw(); },
+  });
 
   q("[data-do=back]").onclick = onBack;
   q("[data-do=old]").onclick = () => {
