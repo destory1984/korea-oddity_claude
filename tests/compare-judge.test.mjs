@@ -29,8 +29,18 @@ test("dayOfYear: 0 → 364 안에서 감아 돈다", () => {
 test("성산: 들어오자마자 찍으면 포개지지 않고 구도를 짚는다", () => {
   const v = judge(seongsan.start);
   assert.equal(v.matched, false);
-  assert.equal(v.sora, "composition");
-  assert.equal(v.line, seongsan.sora.composition);
+  assert.equal(v.sora, "ridgeRight");
+  assert.equal(v.line, seongsan.sora.ridgeRight);
+});
+
+test("성산: 구도가 틀리면 산이 어느 쪽에 있는지, 큰지 작은지를 짚는다", () => {
+  // 좌우 값이 작으면 겹이 덜 밀려 산이 사진보다 오른쪽에 보이고, 거리 값이 작으면 가까워서 크게 보인다.
+  assert.equal(judge({ ...good, x: 0.1 }).sora, "ridgeRight");
+  assert.equal(judge({ ...good, x: 0.5 }).sora, "ridgeLeft");
+  assert.equal(judge({ ...good, d: 0.3 }).sora, "tooNear");
+  assert.equal(judge({ ...good, d: 0.9 }).sora, "tooFar");
+  assert.equal(judge({ ...good, x: 0.1, d: 0.3 }).sora, "ridgeRight");   // 둘 다 틀리면 좌우부터
+  for (const key of ["ridgeRight", "ridgeLeft", "tooNear", "tooFar"]) assert.ok(seongsan.sora[key], key);
 });
 
 test("성산: 구도가 맞아도 12시면 그림자가 없다고 한다", () => {
@@ -75,7 +85,7 @@ test("성산: 계절은 9월 15일 → 11월 15일이다", () => {
 });
 
 test("성산: 여럿이 틀리면 구도, 계절, 시각의 차례로 하나만 짚는다", () => {
-  assert.equal(judge({ x: 0, d: 0.6, s: S(195), h: 12 }).sora, "composition");
+  assert.equal(judge({ x: 0, d: 0.6, s: S(195), h: 12 }).sora, "ridgeRight");
   assert.equal(judge({ ...good, s: S(195), h: 12 }).sora, "season");
 });
 
@@ -121,4 +131,12 @@ test("첨성대: 닿을 수 없는 조합과 없는 상태에서도 던지지 �
   assert.equal(none.ok, false);
   assert.ok(none.needs.every((n) => n.met === false));
   assert.equal(judgeDiscrete(cheom, 9, "B", "day").ok, false);
+});
+
+test("성산: 틀린 것을 고칠 다이얼이 함께 나온다", () => {
+  assert.equal(judge({ ...good, x: 0.1 }).dial, "x");
+  assert.equal(judge({ ...good, d: 0.9 }).dial, "d");
+  assert.equal(judge({ ...good, s: S(195) }).dial, "s");
+  for (const h of [2, 12, 17.5]) assert.equal(judge({ ...good, h }).dial, "h");
+  assert.equal(judge(good).dial, null);
 });

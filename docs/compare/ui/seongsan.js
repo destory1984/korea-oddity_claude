@@ -4,9 +4,14 @@ import { judgeContinuous, dayOfYear } from "../core/judge.js";
 import { renderScene, answerView, sunFor } from "./scene.js";
 import { createDial } from "./dial.js";
 import { shutter as shutterSound } from "./sound.js";
+import { showMiss } from "./miss.js";
 
 const MONTH_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const MID = [14.5, 104.5, 195.5, 287.5].map((d) => d / 365);   // 네 철의 가운데(1월, 4월, 7월, 10월의 15일)
+
+// 다이얼의 눈금 위에 적을 글: 달이 바뀌는 날과 정각.
+const MONTH_MARKS = MONTH_DAYS.map((_, m) => ({ at: MONTH_DAYS.slice(0, m).reduce((a, b) => a + b, 0) / 365, text: `${m + 1}월` }));
+const HOUR_MARKS = Array.from({ length: 24 }, (_, h) => ({ at: h, text: `${h}시` }));
 
 function dateText(s) {
   let day = dayOfYear(s), month = 0;
@@ -66,23 +71,32 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
     onRelease: (v) => { if (v !== p.dials[key]) store.setDials({ [key]: v }); },
   });
   const made = {
-    x: createDial(q("[data-dial=x]"), { ...common("x"), name: "왼쪽 ↔ 오른쪽", step: 0.02, wrap: false, major: 5 }),
-    s: createDial(q("[data-dial=s]"), { ...common("s"), name: "계절", step: 5 / 365, wrap: true, snaps: MID, major: 6, label: dateText }),
-    h: createDial(q("[data-dial=h]"), { ...common("h"), name: "시각", step: 1 / 6, wrap: true, major: 6, label: clockText }),
+    x: createDial(q("[data-dial=x]"), { ...common("x"), name: "좌우", step: 0.02, wrap: false, major: 5, ends: ["왼쪽", "오른쪽"] }),
+    s: createDial(q("[data-dial=s]"), { ...common("s"), name: "계절", step: 5 / 365, wrap: true, snaps: MID, major: 1000, marks: MONTH_MARKS, label: dateText }),
+    h: createDial(q("[data-dial=h]"), { ...common("h"), name: "시각", step: 1 / 6, wrap: true, major: 6, marks: HOUR_MARKS, label: clockText }),
   };
   if (place.fixDistance) q("[data-dial=d]").remove();
-  else made.d = createDial(q("[data-dial=d]"), { ...common("d"), name: "가까이 ↔ 멀리", step: 0.02, wrap: false, major: 5 });
+  else made.d = createDial(q("[data-dial=d]"), { ...common("d"), name: "거리", step: 0.02, wrap: false, major: 5, ends: ["가까이", "멀리"] });
 
   q("[data-do=back]").onclick = onBack;
-  oldButton.onclick = () => { store.setOverlay(!p.overlay); drawOverlay(); };
+  oldButton.onclick = () => { oldButton.classList.remove("pulse"); store.setOverlay(!p.overlay); drawOverlay(); };
   q("[data-do=shutter]").onclick = () => {
     const { verdict } = look();
     const shot = store.addShot(place.id, { ...dials, matched: verdict.matched });
     if (!shot) return;   // 연달아 누른 것은 한 장이다
     shutterSound();
-    onShot(shot, verdict);
+    if (verdict.matched) return onShot(shot, verdict);
+    // 틀렸으면 이 화면에 머문다. 소라가 보이는 사실 하나를 짚고, 고칠 다이얼에 금빛 테가 돈다.
+    showMiss(q(".stage"), { store, place, verdict, nudge: { can: !p.overlay, button: oldButton }, onLook: () => onShot(shot, verdict) });
+    for (const [key, dial] of Object.entries(made)) dial.hint(key === verdict.dial);
   };
 
   draw();
   drawOverlay();
+  // 처음 들어오면 옛 사진을 2.5초 겹쳐 보여 주고 걷는다. 무엇과 포개야 하는지를 먼저 본다(첨성대가 과제를 처음 볼 때와 같다).
+  if (!p.shots.length && !p.overlay) {
+    overlay.hidden = false;
+    renderScene(overlay, place, answerView(place), { faded: true, outline: true, still: true });
+    setTimeout(() => { if (overlay.isConnected && !p.overlay) overlay.hidden = true; }, 2500);
+  }
 }

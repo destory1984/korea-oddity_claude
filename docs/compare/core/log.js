@@ -2,6 +2,15 @@
 
 const succeeded = (line) => line.kind === "shutter" && Boolean(line.value?.matched || line.value?.ok);
 
+// 마지막 성공 뒤로 잇달아 틀린 셔터의 수. 셋이 되면 화면이 도움을 권한다. 첨성대는 과제가 바뀌면 다시 센다.
+export function missStreak(log, placeId) {
+  const shots = log.filter((l) => l.place === placeId && l.kind === "shutter");
+  const task = shots.at(-1)?.value?.task;
+  let n = 0;
+  for (let i = shots.length - 1; i >= 0 && !succeeded(shots[i]) && shots[i].value?.task === task; i--) n++;
+  return n;
+}
+
 // 그 장소에서 더 할 과제가 없는가. "한 번 더 찍기"를 누를 때 main.js 가 이 값을 retry 줄에 적는다.
 // 성산은 한 번 포개면, 첨성대는 마지막 과제를 채우면 참이다.
 export function allDone(log, place) {

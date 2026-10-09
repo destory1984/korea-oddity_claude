@@ -15,9 +15,8 @@ for (const place of [seongsan, cheom]) {
     for (const line of lines) assert.ok([...line].length <= 25, `${[...line].length}자: ${line}`);
   });
 
-  test(`${place.id}: 답장은 세 줄이고 소라의 말은 여섯 줄이다`, () => {
+  test(`${place.id}: 답장은 세 줄이다`, () => {
     assert.equal(place.reply.length, 3);
-    assert.equal(Object.keys(place.sora).length, 6);
   });
 }
 
@@ -39,4 +38,10 @@ test("성산: 목표값이 다이얼의 범위 안에 있고 처음 값은 구�
   for (const k of ["x", "d"]) assert.ok(target[k] >= dials[k][0] && target[k] <= dials[k][1]);
   assert.ok(Math.abs(start.x - target.x) > tolerance.x);
   assert.ok(Math.abs(start.d - target.d) > tolerance.d);
+});
+
+test("소라의 말: 첨성대는 여섯 줄, 성산은 구도를 네 갈래로 짚어 아홉 줄이다", () => {
+  assert.equal(Object.keys(cheom.sora).length, 6);
+  assert.deepEqual(Object.keys(seongsan.sora).sort(),
+    ["evening", "match", "night", "noon", "ridgeLeft", "ridgeRight", "season", "tooFar", "tooNear"]);
 });

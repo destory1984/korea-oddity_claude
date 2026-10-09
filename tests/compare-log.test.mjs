@@ -3,7 +3,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { metrics, exportText } from "../docs/compare/core/log.js";
+import { metrics, exportText, missStreak } from "../docs/compare/core/log.js";
 import { createStore } from "../docs/compare/core/store.js";
 
 const read = (id) => JSON.parse(fs.readFileSync(new URL(`../docs/compare/places/${id}.json`, import.meta.url), "utf8"));
@@ -64,4 +64,18 @@ test("다음 과제로 넘어가려고 누른 다시 찍기는 세지 않고 wen
   const log = played.slice(0, 8);   // 과제 1을 붙이고 다시 찍기를 누른 데까지
   const m = metrics(log, "cheomseongdae");
   assert.deepEqual([m.retried, m.wentOn], [false, true]);
+});
+
+test("missStreak: 마지막 성공 뒤로 잇달아 틀린 셔터를 센다", () => {
+  const miss = (t) => line("seongsan", t, "shutter", { matched: false });
+  assert.equal(missStreak([], "seongsan"), 0);
+  assert.equal(missStreak([miss(1), line("seongsan", 2, "dial", { x: 0 }), miss(3), miss(4)], "seongsan"), 3);
+  assert.equal(missStreak([miss(1), miss(2), line("seongsan", 3, "shutter", { matched: true }), miss(4)], "seongsan"), 1);
+  assert.equal(missStreak([miss(1), line("cheomseongdae", 2, "shutter", { ok: false, task: 1 })], "seongsan"), 1);
+});
+
+test("missStreak: 첨성대는 과제가 바뀌면 다시 센다", () => {
+  const shot = (t, task, ok) => line("cheomseongdae", t, "shutter", { task, ok });
+  assert.equal(missStreak([shot(1, 1, false), shot(2, 1, false), shot(3, 1, true), shot(4, 2, false)], "cheomseongdae"), 1);
+  assert.equal(missStreak([shot(1, 1, false), shot(2, 1, false), shot(3, 1, false)], "cheomseongdae"), 3);
 });

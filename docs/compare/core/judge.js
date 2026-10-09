@@ -17,13 +17,18 @@ export function stagedSun(h) {
 // 연속 판정(성산일출봉). sun: {alt, az} 도.
 export function judgeContinuous(place, dials, sun) {
   const { target, tolerance, seasonDays, lowSun } = place;
-  const composition = Math.abs(dials.x - target.x) <= tolerance.x + EPS && Math.abs(dials.d - target.d) <= tolerance.d + EPS;
+  const offX = dials.x - target.x, offD = dials.d - target.d;
+  const okX = Math.abs(offX) <= tolerance.x + EPS, okD = Math.abs(offD) <= tolerance.d + EPS;
+  const composition = okX && okD;
   const day = dayOfYear(dials.s);
   const season = day >= seasonDays[0] && day <= seasonDays[1];
   const time = sun.alt < lowSun[0] ? "night" : sun.alt > lowSun[1] ? "noon" : sun.az < 180 ? "morning" : "evening";
   const matched = composition && season && time === "morning";
-  const sora = !composition ? "composition" : !season ? "season" : matched ? "match" : time;
-  return { matched, composition, season, time, sora, line: place.sora[sora] };
+  // 눈에 보이는 사실 하나만 짚는다. 좌우 값이 작으면 겹이 덜 밀려 산이 사진보다 오른쪽에 있고, 거리 값이 작으면 가까워서 산이 크다.
+  const sora = !okX ? (offX < 0 ? "ridgeRight" : "ridgeLeft") : !okD ? (offD < 0 ? "tooNear" : "tooFar")
+    : !season ? "season" : matched ? "match" : time;
+  const dial = !okX ? "x" : !okD ? "d" : !season ? "s" : matched ? null : "h";   // 고칠 다이얼
+  return { matched, composition, season, time, sora, dial, line: place.sora[sora] };
 }
 
 // 이산 판정(첨성대). 상태의 태그를 과제의 need, forbid 에 대어 본다.

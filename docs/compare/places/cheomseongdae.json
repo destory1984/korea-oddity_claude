@@ -27,6 +27,7 @@
     "ok1": "탑이 다 들어왔다! 풀밭도.",
     "ok2": "탑이랑 별이랑 같이 있다!"
   },
+  "nudge": "도움을 눌러 볼까?",
   "soraRules": [
     { "ok": true, "task": 1, "say": "ok1" },
     { "ok": true, "task": 2, "say": "ok2" },

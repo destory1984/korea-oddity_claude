@@ -99,13 +99,32 @@ figcaption { text-align: center; font-size: 19px; }
 .answers button.main { width: 220px; }
 
 /* 성산의 다이얼 */
-.dials { margin-top: 10px; display: grid; gap: 6px; }
-.dial { position: relative; height: 44px; border-radius: 8px; overflow: hidden; background: #0d1546; border: 1px solid rgba(246, 185, 81, .5);
-  touch-action: none; cursor: ew-resize; }
+.dials { margin-top: 10px; display: grid; gap: 7px; }
+/* 유리 뒤에서 도는 통. 금빛 테 두 겹과 안쪽 그늘은 2권의 유리 다이얼에서 왔다. */
+.dial { position: relative; height: 58px; border-radius: 12px; overflow: hidden; background: #04061e; border: 1.5px solid #d8b866;
+  box-shadow: inset 0 0 0 1px #8a6f34, inset 0 6px 10px rgba(0, 0, 0, .55), 0 2px 6px rgba(0, 0, 0, .5);
+  touch-action: none; cursor: grab; }
+.dial:active { cursor: grabbing; }
 .dial canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.dial .needle { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--gold); pointer-events: none; }
-.dial .name { position: absolute; left: 8px; top: 3px; font-size: 11px; opacity: .75; pointer-events: none; }
-.dial .value { position: absolute; right: 8px; top: 3px; font-size: 12px; color: var(--gold); pointer-events: none; }
+.dial .name { position: absolute; left: 9px; top: 5px; padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; color: #f3dc9a;
+  background: rgba(13, 21, 70, .85); border: 1px solid rgba(216, 184, 102, .6); pointer-events: none; }
+.dial .value { position: absolute; right: 9px; top: 5px; font-size: 13px; font-weight: 600; color: #ffe9a8; text-shadow: 0 0 6px rgba(255, 233, 168, .5);
+  pointer-events: none; }
+.dial.hint { animation: hint 1.1s ease-in-out infinite; }
+@keyframes hint { 0%, 100% { box-shadow: inset 0 0 0 1px #8a6f34, 0 0 0 0 rgba(255, 233, 168, 0); } 50% { box-shadow: inset 0 0 0 1px #ffe9a8, 0 0 12px 3px rgba(255, 233, 168, .75); } }
 .dial.shake { animation: shake .3s; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-2px); } 40%, 80% { transform: translateX(2px); } }
 .stage .overlay { position: absolute; inset: 0; opacity: .4; pointer-events: none; }
+
+/* 틀린 사진을 찍었을 때 그 자리에서 뜨는 소라의 말 */
+.miss { position: absolute; left: 6px; top: 6px; max-width: 78%; display: grid; gap: 5px; justify-items: start; z-index: 3; }
+.miss .marks { margin: 0; }
+.miss .mark { background: rgba(5, 3, 48, .7); opacity: .85; }
+.miss .mark.on { background: var(--gold); opacity: 1; }
+.miss .sora { margin: 0; font-size: 18px; box-shadow: 0 2px 6px rgba(0, 0, 0, .4); }
+.miss .sora.nudge { background: var(--gold); }
+.miss button { background: rgba(5, 3, 48, .7); opacity: 1; }
+.pulse { animation: pulse 1s ease-in-out infinite; border-color: var(--gold); color: var(--gold); }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(246, 185, 81, 0); } 50% { box-shadow: 0 0 10px 3px rgba(246, 185, 81, .8); } }
+.stage.flash::after { content: ""; position: absolute; inset: 0; background: #fff; border-radius: 4px; pointer-events: none; animation: flash .35s ease-out forwards; z-index: 4; }
+@keyframes flash { from { opacity: .85; } to { opacity: 0; } }

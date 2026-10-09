@@ -3,6 +3,7 @@
 import { judgeDiscrete } from "../core/judge.js";
 import { renderScene, viewOf, answerView } from "./scene.js";
 import { shutter as shutterSound } from "./sound.js";
+import { showMiss, clearMiss } from "./miss.js";
 
 const MOVE_MS = 500;   // 지점을 옮기는 연출. 그동안 셔터가 잠긴다.
 
@@ -96,6 +97,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     b.onclick = () => {
       if (b.dataset.spot === c().spot) return;
       store.setSpot(b.dataset.spot);
+      clearMiss(q(".stage"));   // 자리를 옮기면 방금 한 말은 맞지 않는다
       // 옮기는 중에 다른 지점을 누르면 마지막에 누른 곳으로 간다. 다 옮길 때까지 셔터를 잠근다.
       shutterButton.disabled = true;
       clearTimeout(moving);
@@ -104,7 +106,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     };
   }
   for (const b of root.querySelectorAll("[data-time]")) {
-    b.onclick = () => { if (b.dataset.time !== c().time) { store.setTime(b.dataset.time); draw(); } };
+    b.onclick = () => { if (b.dataset.time !== c().time) { store.setTime(b.dataset.time); clearMiss(q(".stage")); draw(); } };
   }
 
   q("[data-do=back]").onclick = onBack;
@@ -113,7 +115,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     old.hidden = !old.hidden;
     if (!old.hidden) drawOld(c().help >= 1);
   };
-  q("[data-do=help]").onclick = () => { store.bumpHelp(); drawHelp(); };
+  q("[data-do=help]").onclick = () => { q("[data-do=help]").classList.remove("pulse"); store.bumpHelp(); drawHelp(); };
   q("[data-do=compare]").onclick = () => {
     const [before, after] = c().shots.slice(-2);
     renderScene(q(".before"), place, viewOf(place, before), { still: true });
@@ -129,7 +131,10 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     const shot = store.addShot(place.id, { spot: s.spot, time: s.time, task: s.task, ok: verdict.ok });
     if (!shot) return;   // 연달아 누른 것은 한 장이다
     shutterSound();
-    onShot(shot, verdict);
+    if (verdict.ok) return onShot(shot, verdict);
+    // 틀렸으면 이 화면에 머문다. 소라가 보이는 사실 하나를 짚는다.
+    showMiss(q(".stage"), { store, place, verdict, nudge: { can: s.help < 3, button: q("[data-do=help]") }, onLook: () => onShot(shot, verdict) });
+    q("[data-do=compare]").disabled = c().shots.length < 2;
   };
 
   draw();
