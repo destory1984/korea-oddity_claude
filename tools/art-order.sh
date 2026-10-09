@@ -27,6 +27,12 @@ codex=$(command -v codex || true)
 mkdir -p "$work"
 refs=()
 for ref in "$@"; do
+  # The output is cleared before the order runs. A reference with the same name would be deleted with it,
+  # and the order would then be drawn without its reference (2026-10-10: five of eight came back empty).
+  if [ "$(basename "$ref")" = "$out" ]; then
+    echo "the output name $out is also the name of a reference; give the output another name" >&2
+    exit 2
+  fi
   # A reference already in the work dir (an earlier result) stays where it is.
   [ "$ref" -ef "$work/$(basename "$ref")" ] || cp "$ref" "$work/"
   refs+=(-i "$(basename "$ref")")

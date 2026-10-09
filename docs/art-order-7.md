@@ -7,7 +7,7 @@
 - 주문한 것: 서울역 광장의 장면 5장. 모두 한 번에 받았다.
 - 견본: `docs/art/scene-style-sheet.jpg`. 맨 처음이 지금의 그림체(색종이 오리기)이고 P1 → P5가 시안이다. 장면마다 왼쪽 아래에 유이(픽셀 그림)를 게임에서처럼 세워 어울림을 함께 보게 했다.
 
-**이것은 시안이다. 어느 그림체로 할지는 사용자가 정한다. 정하기 전에는 장면을 더 주문하지 않는다.**
+**P4(색연필과 크레용의 그림일기)로 정했다.** 사용자의 말(2026.10.10): "P4로 하자. 자켓은 J1". 앞으로 장면은 모두 이 그림체로 받는다. 공항에서 서울역까지의 장면을 이 그림체로 다시 받은 것은 4절에 적었다.
 
 ## 1. 다섯 시안
 
@@ -30,7 +30,38 @@
 - P1과 P4는 "할머니의 수첩"이라는 손으로 적은 물건과 어울린다.
 - 지금까지 받은 장면 28장(둘째 판 7, 셋째 판 12, 공항 쪽 9)은 색종이 오리기다. 그림체를 바꾸면 새 기획에 쓰는 21장(성수동과 홍대 12, 공항 쪽 9)을 다시 받는다. 받은 그림을 참고로 넣으면 구도는 지켜진다.
 
-## 3. 다시 주문하는 법
+## 3. 그림체를 정한 뒤: 공항에서 서울역까지의 장면 9장을 다시 받았다
+
+P4로 정한 날(2026.10.10)에 새 기획의 첫 쪽에 쓰는 장면을 모두 이 그림체로 바꾸었다. `docs/trip/art/` 의 9장이 그것이다.
+
+| 파일 | 어떻게 |
+|---|---|
+| `seoul-station` | 시안 P4를 그대로 쓴다 |
+| `icn-arrivals`, `icn-store`, `icn-gates`, `arex-platform`, `arex-ride`, `seoul-a`, `seoul-c`, `photo-2004` | 발주서 6에서 받은 그림을 첫째 참고 그림(구도), 시안 P4를 둘째 참고 그림(그림체)으로 넣어 다시 받았다 |
+
+앞머리는 `assets/codex/order7/_head-p4.txt` 다. "첫째 참고 그림의 구도, 사물의 자리와 크기, 사람의 자리와 수를 그대로 두고 둘째 참고 그림의 그림체로 그린다"가 뼈대다. 장면마다 지킬 것을 한 줄씩 덧붙였다.
+
+- `icn-gates`: 왼쪽 절반은 파랑, 오른쪽 절반은 주황이 한눈에 보이게.
+- `arex-ride`: 소매를 노랑에서 하늘색으로(유이의 겉옷이 하늘색이 되었다).
+- `icn-arrivals`: 가게 차양의 초록, 주황, 빨강 줄무늬를 고른 초록으로(실제 편의점 상표의 색과 닮았던 것).
+- `photo-2004`: 다른 그림보다 조금 바랜 느낌으로.
+
+받고 확인한 것:
+
+| 확인 | 결과 |
+|---|---|
+| 구도가 먼저 받은 그림과 같은가 | 여덟 장 모두 같다. 화면이 그림의 자리에 기대는 개찰구(왼쪽 파랑, 오른쪽 주황)도 그대로다 |
+| 그림체가 한 식구인가 | 그렇다. 색연필의 비스듬한 결, 갈색 윤곽선, 밝은 색이 아홉 장에서 같다 |
+| 글자, 상표가 없는가 | 없다. 입국장의 줄무늬 차양은 고른 초록이 되었다 |
+| 소매가 하늘색인가 | 그렇다 |
+| 파일의 크기 | 한 장에 330 → 374KB. 색종이 오리기(103 → 204KB)의 두 배쯤이다. 색연필의 결이 잘게 들어가서다 |
+
+**한 번 헛돈 것.** 처음에는 받을 이름을 참고 그림의 이름과 같게 주었다(`icn-gates.png`). 주문 도구가 받을 자리를 비우며 참고 그림을 지워, 여덟 가운데 다섯이 "참고 그림이 없다"는 답만 하고 끝났다. 받을 이름을 `icn-gates-p4.png` 처럼 달리해 다시 넣어 다섯을 받았다. 도구(`tools/art-order.sh`)가 이제 이름이 겹치면 주문하지 않고 알린다.
+
+아직 P4로 받지 않은 것: 셋째 판의 성수동과 홍대 12장(`docs/assets/scenes/`). 새 기획의 "노는 쪽"을 지을 때 다시 받는다. 그 가운데 `seongsu-eat`, `hongdae-eat` 는 소매도 하늘색으로 바꾼다.
+
+## 4. 다시 주문하는 법
+
 
 주문 문장과 받은 원본은 `assets/codex/order7*/` 에 있다. 이 폴더들은 커밋하지 않는다.
 
@@ -42,4 +73,10 @@ bash tools/art-order.sh assets/codex/order7-scene-p2 assets/codex/order7/scene-p
 
 ```bash
 py tools/scene-sheet.py docs/art/scene-style-sheet.jpg docs/art/yui/yui-a5-192.png "NOW  paper cut-out=assets/codex/order6-seoul-station/seoul-station.png" "P1  watercolour picture book=assets/codex/order7-scene-p1/scene-p1.png" "P2  hand-painted animation background=assets/codex/order7-scene-p2/scene-p2.png" "P3  flat travel poster=assets/codex/order7-scene-p3/scene-p3.png" "P4  coloured pencil diary=assets/codex/order7-scene-p4/scene-p4.png" "P5  pixel art=assets/codex/order7-scene-p5/scene-p5.png"
+```
+
+그림체를 정한 뒤의 장면은 참고 그림을 둘 넣고, 받을 이름을 참고 그림과 다르게 준다.
+
+```bash
+bash tools/art-order.sh assets/codex/order7-p4-icn-gates assets/codex/order7/p4-icn-gates.txt icn-gates-p4.png assets/codex/order6-icn-gates/icn-gates.png assets/codex/order7-scene-p4/scene-p4.png
 ```
