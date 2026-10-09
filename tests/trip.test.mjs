@@ -125,6 +125,9 @@ test("글: 공항의 쪽은 지난봄의 길이라고 밝히고, 1988년에는 �
   assert.ok(TEXT.ja.gThenText.includes("金浦空港"));
   // 공항철도도 그때는 없었다(2007년에 열었고 서울역까지는 2010년이다).
   assert.ok(TEXT.ko.gThenText.includes("공항철도") && TEXT.ja.gThenText.includes("空港鉄道"));
+  // 교통카드도 그때는 없었다. 교통카드는 지난봄의 꾀로만 나온다.
+  assert.ok(TEXT.ko.gThenText.includes("교통카드") && TEXT.ja.gThenText.includes("交通カード"));
+  for (const lang of LANGS) assert.ok(!TEXT[lang].letter2.match(/카드|card|カード|卡/i), lang);
   assert.ok(TEXT.ko.gWhen.includes("지난봄"));
 });
 
