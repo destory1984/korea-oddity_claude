@@ -137,6 +137,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
   if (!c().shots.some((shot) => shot.task === c().task)) {
     q(".oldphoto").hidden = false;
     drawOld(true);
-    if (c().help < 1) setTimeout(() => { if (c().help < 1) drawOld(false); }, 2500);
+    // 2.5초 안에 다른 화면으로 가면 이 화면의 요소는 이미 없다.
+    if (c().help < 1) setTimeout(() => { if (q(".oldphoto") && c().help < 1) drawOld(false); }, 2500);
   }
 }

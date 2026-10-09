@@ -14,6 +14,7 @@
 - [번역 규칙](docs/번역-규칙.md), [이름표](docs/이름표.md)
 - 번역 시험 [1차(뜻)](translation-test/README.md), [2차(말씨)](translation-test/round2/README.md), [3차(이름표로 채우기)](translation-test/round3/README.md)
 - [사진 포개기 손맛 시험판](docs/overlay-proto.html)
+- [비교 시제품](docs/compare/index.html): [설계서](docs/superpowers/specs/2026-10-09-compare-prototype-design.md), [구현 계획](docs/superpowers/plans/2026-10-09-compare-prototype.md), [그래픽 발주서 2](docs/art-order-2.md)
 
 기획서는 뼈대다. 자리, 해, 대사는 처음 잡아 본 것이고, 만들기 전에 원 자료로 확인한다.
 
@@ -69,6 +70,29 @@
 - 수첩의 지도에 땅이 그려진다. Natural Earth의 바닷가 선이다(저작권 없음).
 
 시험판이라 게임 코드가 아니다. 땅 그림은 챗GPT의 그림 그리기로 받은 것이다([발주서 1](docs/art-order-1.md)). 한 자리를 앞뒤로 나눈 겹 석 장이고, 사진에만 있는 아이들은 한 장 더 받았다. 산과 고분은 실제로 보이는 모양이 아니고, 세부는 사진과 견주지 않았다. 그림이 보는 쪽(부석사는 남서, 첨성대는 서)도 어림이다. 절기 날짜는 어림이라 하루쯤 어긋날 수 있다. 화면의 일본어와 중국어는 1권의 사전과 번역 시험에서 가져온 것, 그리고 임시 번역이다. 원어민이 보지 않았다.
+
+## 비교 시제품
+
+2026.10.9에 지었다. 놀이의 두 안을 한 게임에 넣어 견주는 시제품이다. 장소는 둘이다.
+
+| | 성산일출봉 (A안) | 첨성대 (B안) |
+|---|---|---|
+| 놀이 | 다이얼 넷(좌우, 거리, 계절, 시각)을 굴려 할머니의 바랜 사진과 포갠다 | 촬영 지점 셋과 때 셋에서 골라 찍고, 결과를 보고 하나만 바꿔 다시 찍는다 |
+| 목표 | 포개짐 하나 | 과제 둘(탑과 풀밭, 탑과 별) |
+| 도움 | 옛 사진을 반투명으로 겹쳐 보기 | 3단계(단서 강조, 그림 설명, 해답 미리보기) |
+
+여는 법이다. 모듈과 JSON을 읽으므로 파일을 바로 열면 돌지 않는다.
+
+```bash
+py -m http.server 4319 --directory docs
+```
+
+브라우저에서 `http://localhost:4319/compare/` 를 연다. 같은 와이파이의 손전화에서는 `localhost` 자리에 PC의 주소를 넣는다.
+
+- 여섯 사람에게 시켜 보고 어느 쪽을 한 번 더 하고 싶어 하는지로 가른다. 한 사람이 끝나면 시작 화면의 "로그 내보내기"로 기록을 복사해 두고 "새 사람으로 시작"을 누른다.
+- 로그에는 장소마다 첫 성공까지의 시간, 셔터 횟수, 도움 횟수, 성공 뒤 "한 번 더 찍기"를 눌렀는지가 들어 있다. 기기 밖으로 보내지 않는다.
+- 그림은 챗GPT의 그림 그리기로 받았다([발주서 2](docs/art-order-2.md)). 성산일출봉에서 사진기가 서쪽을 보는 것, 첨성대의 촬영 지점과 나무는 규칙을 시험하려고 지은 연출이다. 현장과 견주지 않았다.
+- 시험은 `node --test tests/compare-data.test.mjs tests/compare-judge.test.mjs tests/compare-store.test.mjs tests/compare-log.test.mjs tests/compare-ui.test.mjs` 로 돌린다. 52개다.
 
 ## 번역 시험 1차
 
