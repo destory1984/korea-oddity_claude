@@ -2,7 +2,7 @@
 // 화면 쪽 코드 가운데 브라우저 없이 셈만 하는 것: 철의 섞임, 다이얼의 값 맞추기.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { seasonMix } from "../docs/compare/ui/scene.js";
+import { seasonMix, oldOpts, windowGlow } from "../docs/compare/ui/scene.js";
 import { settle } from "../docs/compare/ui/dial.js";
 
 const sum = (mix) => Object.values(mix).reduce((a, b) => a + b, 0);
@@ -59,4 +59,20 @@ test("settle: 걸림에서 한 눈금 안이면 그 값으로 끌려간다", () 
   assert.equal(settle(oct + 4 / 365, S), +oct.toFixed(4));
   assert.equal(settle(oct - 4 / 365, S), +oct.toFixed(4));
   assert.notEqual(settle(oct + 12 / 365, S), +oct.toFixed(4));
+});
+
+test("oldOpts: 할머니의 옛 사진은 바랜 빛, 손녀가 요즘 보낸 사진은 바래지 않은 빛이다", () => {
+  assert.equal(oldOpts({}).faded, true);
+  assert.equal(oldOpts({}).recent, false);
+  const recent = oldOpts({ photo: { look: "recent" } });
+  assert.equal(recent.faded, false);
+  assert.equal(recent.recent, true);
+});
+
+test("windowGlow: 해가 낮은 아침에 창의 불빛이 밝고, 한낮과 가게가 닫은 밤에는 꺼진다", () => {
+  const place = { lowSun: [-0.83, 10] };
+  assert.equal(windowGlow(place, { alt: 2.6 }), 1);
+  assert.equal(windowGlow(place, { alt: 30 }), 0);
+  assert.equal(windowGlow(place, { alt: -5 }), 0);
+  assert.ok(windowGlow(place, { alt: 9 }) > 0 && windowGlow(place, { alt: 9 }) < 1);
 });

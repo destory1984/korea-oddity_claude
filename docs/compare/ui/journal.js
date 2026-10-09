@@ -1,11 +1,18 @@
 // 시작 화면과 수첩 두 칸.
 
 import { renderScene, viewOf, answerView, shotOpts, oldOpts } from "./scene.js";
+import { replyPhoto } from "./result.js";
 
-export function mountStart(root, { onOpen, onExport, onStartOver }) {
+// 시작 화면의 쪽지. 판마다 이야기의 틀이 다르다. 셋째 판은 손녀가 다녀와 보낸 사진을 따라 찍는다.
+const NOTES = {
+  1: ["소라야, 이건 내가 다닌 데를", "적은 수첩이란다.", "사진이 다 바랬구나.", "네가 새로 찍어다 주련.", "두 군데만 먼저 가 보렴."],
+  3: ["소라야, 우리 손녀가 다녀와서", "사진을 보냈구나.", "좋다고 야단이더라.", "나도 가 보고 싶다만.", "네가 대신 가서", "똑같이 찍어다 주련."],
+};
+
+export function mountStart(root, { round, onOpen, onExport, onStartOver }) {
   root.innerHTML = `
     <h1>팔도 한량 <small>— 시제품</small></h1>
-    <p class="note hand">소라야, 이건 내가 다닌 데를<br>적은 수첩이란다.<br>사진이 다 바랬구나.<br>네가 새로 찍어다 주련.<br>두 군데만 먼저 가 보렴.</p>
+    <p class="note hand">${(NOTES[round] ?? NOTES[1]).join("<br>")}</p>
     <p class="sora">이번엔 땅이야? 그럼 걸어가도 되겠다.</p>
     <button class="main" data-do="open">수첩 펴기</button>
     <div class="foot">
@@ -33,6 +40,7 @@ export function mountJournal(root, { store, places, onOpen, onStart }) {
         <p class="hand memo">${place.memo}</p>
         <p class="marks">${marks.join("")}</p>
         <p class="hand reply"${p.memory ? "" : " hidden"}>${place.reply.join("<br>")}</p>
+        ${p.memory && place.replyImage ? replyPhoto(place) : ""}
         <p class="hand reply"${p.otherView && place.reply2 ? "" : " hidden"}>${(place.reply2 ?? []).join("<br>")}</p>
         <button class="main" data-go="${place.id}">가기</button>
       </article>`;
@@ -62,7 +70,7 @@ export function mountJournal(root, { store, places, onOpen, onStart }) {
   root.querySelector("[data-do=start]").onclick = onStart;
 }
 
-// 장소에 처음 들어갈 때의 장면: 바랜 사진, 그 뒷면의 연필 글씨, 소라의 한마디. 왜 찍으러 왔는지를 여기서 안다.
+// 장소에 처음 들어갈 때의 장면: 받은 사진, 그 뒷면의 글씨, 소라의 한마디. 왜 찍으러 왔는지를 여기서 안다.
 export function mountStory(root, { place, onGo }) {
   root.innerHTML = `
     <h1>${place.name}</h1>

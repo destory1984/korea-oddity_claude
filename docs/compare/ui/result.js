@@ -1,4 +1,4 @@
-// 결과 화면(할머니의 사진과 소라의 사진, 붙이기, 답장)과 마지막 물음.
+// 결과 화면(받은 사진과 소라의 사진, 붙이기, 답장)과 마지막 물음.
 
 import { renderScene, viewOf, answerView, shotOpts, oldOpts } from "./scene.js";
 
@@ -7,12 +7,12 @@ export function mountResult(root, { store, place, shot, verdict, onJournal, onRe
   root.innerHTML = `
     <h1>${place.name}</h1>
     <div class="pair">
-      <figure><div class="frame old"></div><figcaption class="hand">할머니</figcaption></figure>
+      <figure><div class="frame old"></div><figcaption class="hand">${place.photo?.by ?? "할머니"}</figcaption></figure>
       <figure><div class="frame new"></div><figcaption class="hand">소라</figcaption></figure>
     </div>
     <p class="marks">${needs}</p>
     <p class="sora"${verdict.line ? "" : " hidden"}>${verdict.line ?? ""}</p>
-    <p class="hand reply" hidden></p>
+    <div class="replybox" hidden><p class="hand reply"></p></div>
     <button class="main" data-do="paste">수첩에 붙이기</button>
     <div class="foot">
       <button data-do="journal">수첩으로</button>
@@ -35,12 +35,17 @@ export function mountResult(root, { store, place, shot, verdict, onJournal, onRe
     const reply = r.memoryNew ? place.reply : r.otherViewNew ? place.reply2 : null;
     if (reply) {
       root.querySelector(".reply").innerHTML = reply.join("<br>");
-      root.querySelector(".reply").hidden = false;
+      // 첫 답장 곁에 할머니가 같은 자리의 옛 사진을 붙여 보낸다(성수동: 구두 공장이던 1979년).
+      if (reply === place.reply && place.replyImage) root.querySelector(".replybox").insertAdjacentHTML("afterbegin", replyPhoto(place));
+      root.querySelector(".replybox").hidden = false;
     }
   };
   root.querySelector("[data-do=journal]").onclick = onJournal;
   root.querySelector("[data-do=retry]").onclick = onRetry;
 }
+
+// 답장에 붙어 오는 옛 사진 한 장. 받은 그림을 그대로 놓고 바랜 빛만 입힌다.
+export const replyPhoto = (place) => `<figure class="oldshot"><img src="../assets/scenes/${place.replyImage}.webp" alt=""><figcaption class="hand">${place.replyCaption ?? ""}</figcaption></figure>`;
 
 export function mountAsk(root, { places, onDone }) {
   const ANSWERS = [...Object.values(places).map((place) => [place.id, place.name]), ["both", "둘 다"], ["neither", "둘 다 아님"]];

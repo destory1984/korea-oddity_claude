@@ -11,9 +11,10 @@ import { mountContinuous } from "./ui/continuous.js";
 
 const load = async (id) => (await fetch(`places/${id}.json`)).json();
 // 판마다 두 장소를 견준다. 앞이 A안(링을 돌려 포개기), 뒤가 B안(골라 찍고 읽어 고치기)이다.
-// 둘째 판이 기본이고, 주소에 ?round=1 을 붙이면 첫 판이 열린다. 판마다 저장이 따로다.
-const ROUNDS = { 1: ["seongsan", "cheomseongdae"], 2: ["buseoksa", "sobaeksan"] };
-const round = ROUNDS[new URLSearchParams(location.search).get("round")] ? Number(new URLSearchParams(location.search).get("round")) : 2;
+// 셋째 판이 기본이고, 주소에 ?round=1, ?round=2 를 붙이면 앞의 판이 열린다. 판마다 저장이 따로다.
+const ROUNDS = { 1: ["seongsan", "cheomseongdae"], 2: ["buseoksa", "sobaeksan"], 3: ["seongsu", "hongdae"] };
+const LATEST = 3;
+const round = ROUNDS[new URLSearchParams(location.search).get("round")] ? Number(new URLSearchParams(location.search).get("round")) : LATEST;
 const ids = ROUNDS[round];
 const places = {};
 for (const id of ids) places[id] = await load(id);
@@ -109,6 +110,7 @@ function render() {
     return show("journal");
   }
   mountStart(sections.start, {
+    round,
     onOpen: () => go("journal"),
     onExport: exportLog,
     onStartOver: () => {

@@ -1,4 +1,5 @@
-// A안의 화면(성산일출봉, 부석사). 렌즈의 링을 돌려 할머니의 바랜 사진과 같은 때(와 자리)를 찾는다.
+// A안의 화면(성산일출봉, 부석사, 성수동 빵집). 렌즈의 링을 돌려 받은 사진과 같은 때(와 자리)를 찾는다.
+// 받은 사진은 할머니의 바랜 사진이거나(첫 판, 둘째 판) 손녀가 요즘 찍어 보낸 사진이다(셋째 판, place.photo).
 // 링은 장소마다 다르다. 성산은 좌우, 거리, 계절, 시각 넷이고 부석사는 계절과 시각 둘이다(place.rings).
 
 import { judgeContinuous, dayOfYear } from "../core/judge.js";
@@ -34,7 +35,7 @@ export function mountContinuous(root, { store, place, onShot, onBack }) {
   }
 
   root.innerHTML = `
-    <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">옛 사진</button></header>
+    <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">${place.photo?.name ?? "옛 사진"}</button></header>
     <div class="stage"><div class="frame"></div><div class="frame overlay" hidden></div><p class="hand memo task">${place.memoShort}</p></div>
     <div class="dials">${rings.map((key) => `<div data-dial="${key}"></div>`).join("")}</div>
     <div class="tools"><button class="shutter" data-do="shutter" aria-label="셔터"></button></div>`;

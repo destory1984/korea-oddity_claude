@@ -208,7 +208,7 @@ test("성수: 겨울 아침이면 포개진다. 계절의 범위가 해를 넘�
 test("홍대: 과제마다 성공하는 상태와 소라의 말", () => {
   const ok = (task) => Object.keys(hongdae.states).filter((k) => judgeDiscrete(hongdae, task, ...k.split("-")).ok).sort();
   assert.deepEqual(ok(1), ["B-day", "B-dusk", "B-night"]);
-  assert.deepEqual(ok(2), ["B-night"]);
+  assert.deepEqual(ok(2), ["A-night", "B-night"]);   // 가게 코앞의 밤에도 간판의 불과 가게가 다 보인다
   const table = [
     ["A", "dusk", 1, "shopOnly"], ["C", "dusk", 1, "crowd"], ["B", "dusk", 1, "ok1"],
     ["B", "dusk", 2, "noNeon"], ["A", "day", 2, "noNeon"], ["C", "night", 2, "neonNoShop"], ["C", "day", 2, "crowd"], ["B", "night", 2, "ok2"],

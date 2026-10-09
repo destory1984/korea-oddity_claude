@@ -32,6 +32,8 @@ button.on { border-color: var(--gold); color: var(--gold); background: rgba(246,
 .frame .sun { position: absolute; width: 9%; aspect-ratio: 1; border-radius: 50%; background: #fff1b8;
   box-shadow: 0 0 18px 8px rgba(255, 220, 150, .7); transform: translate(-50%, -50%); transition: opacity .2s; }
 .frame.faded { filter: sepia(.75) contrast(.78) brightness(1.12) saturate(.6); }
+/* 손녀가 요즘 손전화로 찍어 보낸 사진. 바래지 않았고 빛깔이 조금 진하다. */
+.frame.recent { filter: saturate(1.12) contrast(1.04); }
 .frame.gray { filter: grayscale(1) contrast(.9); }
 .frame.outline .layer.ridge, .frame.outline .layer.shadow {
   filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) !important; }
@@ -77,9 +79,19 @@ header button { padding: 6px 0; font-size: 13px; }
 .times button { border-radius: 8px; padding: 9px 20px; background: var(--paper); color: var(--ink); border-color: var(--paper); }
 .times button.on { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 700; }
 .tools { display: flex; justify-content: center; align-items: center; gap: 22px; margin-top: 14px; }
-.shutter { width: 64px; height: 64px; padding: 0; border-radius: 50%; background: var(--white); border: 4px solid var(--night);
-  outline: 3px solid var(--white); }
-.shutter:active { background: var(--gold); }
+/* 셔터. 렌즈의 링과 한 벌이다: 톱니를 새긴 검은 테, 금빛 가는 줄, 가운데가 오목한 은빛 단추. 누르면 단추가 들어간다. */
+.shutter { position: relative; width: 74px; height: 74px; padding: 0; border: 0; border-radius: 50%;
+  background: repeating-conic-gradient(#3a3e52 0 3deg, #0b0d18 3deg 6deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .65), inset 0 0 0 1px #000, inset 0 2px 2px rgba(255, 255, 255, .18); }
+.shutter::before { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: #06070f;
+  box-shadow: 0 0 0 1.5px var(--gold), inset 0 2px 5px rgba(0, 0, 0, .9); }
+.shutter::after { content: ""; position: absolute; inset: 15px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 62%, #f7f8fb 0, #d5d9e2 42%, #9aa1b2 78%, #6a7084 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .7), inset 0 2px 3px rgba(40, 44, 60, .55), inset 0 -2px 2px rgba(255, 255, 255, .9);
+  transition: transform .06s, filter .06s; }
+.shutter:active:not(:disabled)::after { transform: scale(.9); filter: brightness(.8);
+  box-shadow: 0 0 2px rgba(0, 0, 0, .8), inset 0 3px 6px rgba(20, 22, 34, .8); }
+.shutter:active:not(:disabled)::before { box-shadow: 0 0 0 1.5px var(--gold), 0 0 10px 2px rgba(246, 185, 81, .7), inset 0 2px 5px rgba(0, 0, 0, .9); }
 .sheet { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 15px; background: rgba(5, 3, 48, .88); }
 .sheet .pair { width: 100%; max-width: 450px; }
 
@@ -162,3 +174,20 @@ figcaption { text-align: center; font-size: 19px; }
   background: radial-gradient(ellipse at 14% 50%, rgba(255, 255, 255, .95) 0, rgba(235, 240, 255, .55) 14%, rgba(220, 230, 255, .18) 55%, rgba(220, 230, 255, 0) 100%); filter: blur(1px); }
 .frame .lampglow { inset: 0; mix-blend-mode: screen; }
 .frame.still .cometspot, .frame.still .comet, .frame.still .lampglow { transition: none; }
+
+/* 셋째 판: 창의 불빛(성수동), 간판의 네온(홍대), 답장에 붙어 오는 옛 사진 */
+.frame .windows, .frame .neon { position: absolute; inset: 0; pointer-events: none; transition: opacity .4s; }
+.frame.still .windows, .frame.still .neon { transition: none; }
+.frame .windows { mix-blend-mode: screen; }
+.frame .windows i { position: absolute; border-radius: 12%; filter: blur(3px);
+  background: radial-gradient(ellipse at 50% 45%, rgba(255, 214, 140, .9) 0, rgba(255, 190, 110, .5) 55%, rgba(255, 170, 90, 0) 100%); }
+.frame .neon i { position: absolute; }
+.frame .neon .spill { inset: 0; mix-blend-mode: screen; }
+.frame .neon .tube { border: 2px solid #ffe3d2; border-radius: 5px;
+  box-shadow: 0 0 4px 1px #ff7a5a, 0 0 12px 3px rgba(255, 90, 70, .85), inset 0 0 6px 1px rgba(255, 110, 90, .8), inset 0 0 22px 4px rgba(255, 200, 150, .35); }
+.oldshot { width: 62%; margin: 0 auto 10px; transform: rotate(-2deg); padding: 5px 5px 0; }
+.oldshot img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; filter: sepia(.8) contrast(.8) brightness(1.1) saturate(.6); }
+.oldshot figcaption { font-size: 17px; }
+.replybox { margin-top: 14px; }
+[data-screen=result] .replybox .reply { margin-top: 0; }
+.square .oldshot { width: 86%; margin: 8px auto 0; }

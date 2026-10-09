@@ -100,7 +100,7 @@ const SCENE = {
 };
 
 // 같은 frame 에 다시 부르면 겹을 새로 만들지 않고 놓는 값만 고친다.
-// opts: faded(할머니의 바랜 사진), gray(해답 미리보기), outline(윤곽선), still(옮기는 연출 없이 바로),
+// opts: faded(할머니의 바랜 사진), recent(손녀가 요즘 찍은 사진), gray(해답 미리보기), outline(윤곽선), still(옮기는 연출 없이 바로),
 //       people(첨성대: 사진에만 있는 아이들), comet(소백산: 사진에만 있는 혜성), shadow(성산: 찍는 사람의 그림자를 보인다), reveal(그림자가 천천히 드러난다)
 export function renderScene(frame, place, view, opts = {}) {
   let parts = built.get(frame);
@@ -111,6 +111,7 @@ export function renderScene(frame, place, view, opts = {}) {
     built.set(frame, parts);
   }
   frame.classList.toggle("faded", Boolean(opts.faded));
+  frame.classList.toggle("recent", Boolean(opts.recent));
   frame.classList.toggle("gray", Boolean(opts.gray));
   frame.classList.toggle("outline", Boolean(opts.outline));
   frame.classList.toggle("still", Boolean(opts.still));
@@ -120,8 +121,9 @@ export function renderScene(frame, place, view, opts = {}) {
 
 // 그 사진을 놓을 때의 opts. 포개진 사진에는 그림자가, 할머니의 첫 사진에는 아이들이 있다.
 export const shotOpts = (shot) => ({ still: true, shadow: Boolean(shot.matched) });
+// 맞춰 찍을 사진이 손녀가 요즘 보낸 것이면(place.photo.look 이 recent) 바랜 빛을 입히지 않는다.
 export const oldOpts = (place, taskId = 1) => ({
-  faded: true, still: true, shadow: true,
+  faded: place.photo?.look !== "recent", recent: place.photo?.look === "recent", still: true, shadow: true,
   people: Boolean(place.people) && taskId === 1,     // 첨성대: 수학여행의 아이들
   comet: Boolean(place.cometSpot) && taskId === 2,   // 소백산: 1986년의 희미한 혜성
 });
@@ -248,7 +250,18 @@ function buildSeasons(frame, place) {
     parts.imgs[season] = img;
   }
   parts.glow = el("div", "glow", frame);   // 해가 낮을 때 풍경에 도는 붉은 기운
+  // 창의 불빛(성수동 빵집). 자리는 틀에 대한 비율 [x, y, 너비, 높이]이고 장소 자료의 glows 에 있다.
+  parts.windows = el("div", "windows", frame);
+  for (const [x, y, w, h] of place.glows ?? []) {
+    const win = el("i", "", parts.windows);
+    win.style.cssText = `left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${h * 100}%`;
+  }
   return parts;
+}
+
+// 창의 불빛이 켜진 정도(0 → 1). 해가 낮을수록 밝다. 해가 진 밤에는 가게가 닫아 꺼진다(소라: "빵집도 닫았어").
+export function windowGlow(place, sun) {
+  return sun.alt < place.lowSun[0] ? 0 : clamp((14 - sun.alt) / 10, 0, 1);
 }
 
 function drawSeasons(parts, place, view) {
@@ -274,10 +287,12 @@ function drawSeasons(parts, place, view) {
   }
   parts.glow.style.opacity = String((near * 0.42).toFixed(3));
   parts.glow.style.background = `rgb(${low.join(",")})`;
+  parts.windows.style.opacity = windowGlow(place, sun).toFixed(3);
 }
 
 // ── 지점마다 한 장씩 받은 그림(소백산 천문대) ──────────────────────────────
 // 지점을 옮기면 그 자리에서 본 그림으로 넘어간다. 하늘, 별, 가로등의 불빛, 낮과 밤의 빛은 코드가 입힌다.
+// 혜성 자리와 가로등(소백산), 간판의 네온(홍대)은 장소 자료에 있을 때에만 놓는다.
 
 function buildSpots(frame, place) {
   const parts = { sky: el("div", "sky", frame), stars: el("div", "stars", frame), imgs: {} };
@@ -290,15 +305,16 @@ function buildSpots(frame, place) {
     if (rand() > 0.85) star.className = "big";
   }
   // 혜성이 떴던 자리: 하늘의 그 자리에 모인 별 몇 개. 옛 사진에는 거기에 희미한 혜성이 있다.
+  const at = place.cometSpot ?? { x: 0, y: 0 };
   parts.spot = el("div", "cometspot", frame);
   for (const [dx, dy] of [[0, 0], [-0.03, 0.035], [0.035, -0.02], [0.055, 0.03], [-0.045, -0.035]]) {
     const star = el("i", "", parts.spot);
-    star.style.left = `${(place.cometSpot.x + dx) * 100}%`;
-    star.style.top = `${(place.cometSpot.y + dy) * 100}%`;
+    star.style.left = `${(at.x + dx) * 100}%`;
+    star.style.top = `${(at.y + dy) * 100}%`;
   }
   parts.comet = el("div", "comet", frame);
-  parts.comet.style.left = `${place.cometSpot.x * 100}%`;
-  parts.comet.style.top = `${place.cometSpot.y * 100}%`;
+  parts.comet.style.left = `${at.x * 100}%`;
+  parts.comet.style.top = `${at.y * 100}%`;
   for (const spot of place.spots) {
     const img = el("img", "whole spot", frame);
     img.src = `${SCENES}${place.images[spot]}.webp`;
@@ -307,21 +323,32 @@ function buildSpots(frame, place) {
     parts.imgs[spot] = img;
   }
   parts.lamp = el("div", "lampglow", frame);
-  parts.lamp.style.background = `radial-gradient(circle at ${place.lamp.x * 100}% ${place.lamp.y * 100}%, rgba(255,240,190,.98) 0, rgba(255,226,150,.6) 7%, rgba(255,214,130,.22) 26%, rgba(255,210,120,0) 58%)`;
+  if (place.lamp) parts.lamp.style.background = `radial-gradient(circle at ${place.lamp.x * 100}% ${place.lamp.y * 100}%, rgba(255,240,190,.98) 0, rgba(255,226,150,.6) 7%, rgba(255,214,130,.22) 26%, rgba(255,210,120,0) 58%)`;
+  // 간판의 네온: 간판을 두른 관(tube)과 그 불이 가게 앞에 번지는 빛(spill). 자리는 지점마다 다르다.
+  parts.neon = el("div", "neon", frame);
+  parts.neonSpill = el("i", "spill", parts.neon);
+  parts.neonTube = el("i", "tube", parts.neon);
   return parts;
 }
 
 function drawSpots(parts, place, view, opts) {
   const tags = place.states[`${view.spot}-${view.time}`] ?? [];
-  const underLamp = place.lamp.spot === view.spot;
+  const underLamp = place.lamp?.spot === view.spot;
   parts.sky.style.background = place.skies[view.time] ?? place.skies.night;
   const starry = place.starsAt.includes(view.time);
   parts.stars.style.opacity = starry ? (underLamp ? "0.08" : "1") : "0";
-  parts.spot.style.opacity = tags.includes("cometSpot") ? "1" : "0";
-  parts.comet.style.opacity = opts.comet ? "1" : "0";
+  parts.spot.style.opacity = place.cometSpot && tags.includes("cometSpot") ? "1" : "0";
+  parts.comet.style.opacity = place.cometSpot && opts.comet ? "1" : "0";
   for (const spot of place.spots) {
     parts.imgs[spot].style.opacity = spot === view.spot ? "1" : "0";
     parts.imgs[spot].style.filter = place.lights[view.time] ?? "none";
   }
   parts.lamp.style.opacity = underLamp ? (starry ? "1" : "0.55") : "0";
+  const sign = place.neon?.[view.spot];   // [x, y, 너비, 높이]
+  parts.neon.style.opacity = sign && tags.includes("neon") ? "1" : "0";
+  if (sign) {
+    const [x, y, w, h] = sign;
+    parts.neonTube.style.cssText = `left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${h * 100}%`;
+    parts.neonSpill.style.background = `radial-gradient(ellipse ${w * 110}% ${h * 420}% at ${(x + w / 2) * 100}% ${(y + h * 1.6) * 100}%, rgba(255,196,140,.6) 0, rgba(255,150,110,.24) 45%, rgba(255,120,100,0) 100%)`;
+  }
 }

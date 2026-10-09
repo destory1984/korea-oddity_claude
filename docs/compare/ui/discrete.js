@@ -1,20 +1,22 @@
-// B안의 화면(첨성대, 소백산 천문대). 촬영 지점 셋과 때 셋에서 골라 찍고, 결과를 읽어 하나만 바꿔 다시 찍는다.
+// B안의 화면(첨성대, 소백산 천문대, 홍대 떡볶이 골목). 촬영 지점 셋과 때 셋에서 골라 찍고, 결과를 읽어 하나만 바꿔 다시 찍는다.
 // 장소마다 다른 것(지점과 때의 이름, 과제, 도움의 테두리와 선)은 모두 장소 자료에서 읽는다.
 
 import { judgeDiscrete } from "../core/judge.js";
 import { renderScene, viewOf, answerView, shotOpts, oldOpts } from "./scene.js";
-import { shutter as shutterSound } from "./sound.js";
+import { shutter as shutterSound, SHUTTER_S } from "./sound.js";
 import { createDial } from "./dial.js";
 import { showMiss, clearMiss } from "./miss.js";
 
 const MOVE_MS = 500;   // 지점을 옮기는 연출. 그동안 셔터가 잠긴다.
+// 맞게 찍은 뒤 결과 화면으로 넘어가기까지. 삐빅과 찰칵이 다 끝나고 2초를 쉰다(사용자, 2026.10.10: 처음에 1초, 곧 2초로).
+const AFTER_SHOT_MS = SHUTTER_S * 1000 + 2000;
 
 export function mountDiscrete(root, { store, place, onShot, onBack }) {
   const c = () => store.state[place.id];
   const task = () => place.tasks.find((t) => t.id === c().task);
 
   root.innerHTML = `
-    <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">옛 사진</button></header>
+    <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">${place.photo?.name ?? "옛 사진"}</button></header>
     <div class="oldphoto" hidden><div class="frame"></div><div class="boxes"></div></div>
     <div class="stage">
       <div class="frame"></div>
@@ -112,7 +114,17 @@ export function mountDiscrete(root, { store, place, onShot, onBack }) {
     const shot = store.addShot(place.id, { spot: s.spot, time: s.time, task: s.task, ok: verdict.ok });
     if (!shot) return;   // 연달아 누른 것은 한 장이다
     shutterSound();
-    if (verdict.ok) return onShot(shot, verdict);
+    if (verdict.ok) {
+      // 찍힌 사진을 2초 바라본 뒤에 넘어간다. 그동안 다시 찍거나 자리를 옮기지 못한다.
+      clearTimeout(moving);
+      shutterButton.disabled = true;
+      q(".dials").classList.add("locked");
+      const stage = q(".stage");
+      clearMiss(stage);
+      stage.classList.remove("flash"); void stage.offsetWidth; stage.classList.add("flash");
+      setTimeout(() => { if (frame.isConnected) onShot(shot, verdict); }, AFTER_SHOT_MS);
+      return;
+    }
     // 틀렸으면 이 화면에 머문다. 소라가 보이는 사실 하나를 짚는다.
     showMiss(q(".stage"), { store, place, verdict, nudge: { can: s.help < 3, button: q("[data-do=help]") }, onLook: () => onShot(shot, verdict) });
     q("[data-do=compare]").disabled = c().shots.length < 2;

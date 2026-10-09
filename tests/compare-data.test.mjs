@@ -100,3 +100,66 @@ test("첨성대: 도움의 테두리와 선이 장소 자료에 있다", () => {
   for (const task of cheom.tasks) for (const tag of task.need) assert.ok(cheom.helpBoxes[tag], tag);
   for (const key of Object.keys(cheom.sora)) if (!key.startsWith("ok")) assert.ok(cheom.diagrams[key], key);
 });
+
+// ── 셋째 판: 성수동 빵집(A안), 홍대 떡볶이 골목(B안) ──────────────────────
+const seongsu = read("seongsu");
+const hongdae = read("hongdae");
+
+for (const place of [seongsu, hongdae]) {
+  test(`${place.id}: 글 분량이 첫 판과 같고, 맞춰 찍을 사진은 손녀가 요즘 보낸 것이다`, () => {
+    const lines = [...Object.values(place.sora), ...(place.tasks ?? []).map((t) => t.memo), ...place.story.back, place.story.sora, place.nudge];
+    if (place.memoShort) lines.push(place.memoShort);
+    for (const line of lines) assert.ok([...line].length <= 25, `${[...line].length}자: ${line}`);
+    assert.equal(place.reply.length, 3);
+    assert.ok(place.story.back.length >= 2 && place.story.back.length <= 3);
+    assert.equal(place.photo.look, "recent");
+    assert.ok(place.photo.name && place.photo.by);
+  });
+}
+
+const scene = (name) => fs.existsSync(new URL(`../docs/assets/scenes/${name}.webp`, import.meta.url));
+
+test("성수: 링은 계절과 시각 둘이고, 처음 값은 계절이 틀린 자리다. 계절의 범위는 해를 넘긴다", () => {
+  assert.deepEqual(seongsu.rings, ["s", "h"]);
+  const [from, to] = seongsu.seasonDays;
+  assert.ok(from > to);
+  const day = Math.floor(seongsu.start.s * 365);
+  assert.ok(day < from && day > to);
+  assert.ok(seongsu.target.day >= from || seongsu.target.day <= to);
+});
+
+test("성수: 계절 넉 장과 답장의 옛 사진이 있고, 창의 불빛 자리는 틀 안에 있다", () => {
+  for (const season of ["spring", "summer", "autumn", "winter"]) assert.ok(scene(`${seongsu.image}-${season}`), season);
+  assert.ok(scene(seongsu.replyImage));
+  assert.ok(seongsu.replyCaption);
+  assert.ok(seongsu.glows.length > 0);
+  for (const [x, y, w, h] of seongsu.glows) assert.ok(x >= 0 && y >= 0 && x + w <= 1 && y + h <= 1);
+});
+
+test("홍대: 상태 아홉, 소라의 말 여섯, 도움의 테두리와 선, 지점마다의 그림과 간판 자리가 빠짐없이 있다", () => {
+  const keys = hongdae.spots.flatMap((s) => hongdae.times.map((t) => `${s}-${t}`));
+  assert.deepEqual(Object.keys(hongdae.states).sort(), keys.sort());
+  assert.equal(Object.keys(hongdae.sora).length, 6);
+  for (const rule of hongdae.soraRules) assert.ok(rule.say in hongdae.sora, rule.say);
+  for (const task of hongdae.tasks) for (const tag of task.need) { assert.ok(hongdae.labels[tag], tag); assert.ok(hongdae.helpBoxes[tag], tag); }
+  for (const key of Object.keys(hongdae.sora)) if (!key.startsWith("ok")) assert.ok(hongdae.diagrams[key], key);
+  for (const spot of hongdae.spots) {
+    assert.ok(scene(hongdae.images[spot]), spot);
+    const [x, y, w, h] = hongdae.neon[spot];
+    assert.ok(x >= 0 && y >= 0 && x + w <= 1 && y + h <= 1, spot);
+  }
+  assert.equal(hongdae.reply2.length, 3);
+});
+
+test("홍대: 닿을 수 있는 상태 가운데 과제의 답이 정해져 있고, 틀린 상태마다 소라가 할 말이 있다", async () => {
+  const { judgeDiscrete } = await import("../docs/compare/core/judge.js");
+  for (const task of hongdae.tasks) {
+    // 때가 잠긴 과제에서는 처음의 때에서만 본다.
+    const reach = Object.keys(hongdae.states).filter((key) => !task.timesLocked || key.endsWith(task.start.split("-")[1]));
+    const right = reach.filter((key) => judgeDiscrete(hongdae, task.id, ...key.split("-")).ok);
+    assert.ok(right.includes(task.answer));
+    // 과제 2는 가게 코앞의 밤도 맞다. 간판의 불과 가게가 다 보인다.
+    assert.deepEqual(right, task.id === 1 ? ["B-dusk"] : ["A-night", "B-night"]);
+    for (const key of reach) assert.ok(judgeDiscrete(hongdae, task.id, ...key.split("-")).line, `${task.id} ${key}`);
+  }
+});
