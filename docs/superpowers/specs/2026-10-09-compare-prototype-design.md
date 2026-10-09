@@ -104,15 +104,16 @@ localStorage 의 한 키 `paldo.compare.v1` 아래 JSON 하나다.
   "version": 1,
   "screen": "journal",
   "place": null,
-  "seongsan": {"visited": false, "dials": {"x": 0, "d": 0.5, "s": 0.5, "h": 12}, "overlay": false,
+  "seongsan": {"visited": false, "dials": {"x": -0.4, "d": 0.2, "s": 0.5, "h": 12}, "overlay": false,
                "shots": [], "pasted": null, "memory": false, "firstMatchAt": null},
   "cheomseongdae": {"visited": false, "spot": "A", "time": "day", "task": 1, "help": 0,
-                    "shots": [], "pasted": {"1": null, "2": null}, "memory": false, "otherView": false},
+                    "shots": [], "pasted": {"photo": null, "1": null, "2": null}, "memory": false, "otherView": false},
   "answer": null,
   "log": []
 }
 ```
 
+- 성산의 처음 값은 구도, 계절, 시각이 모두 틀린 자리다. 첨성대의 `pasted.photo` 는 마지막에 붙인 아무 사진이고 `"1"`, `"2"` 는 그 과제를 채운 사진이다.
 - 다이얼을 놓은 직후, 지점이나 때를 바꾼 직후, 셔터를 누른 직후, 수첩에 붙인 직후 저장한다.
 - 다시 들어오면 `screen` 과 `place` 로 같은 화면, 같은 상태로 돌아온다.
 - 수첩에 붙이기는 사진과 기억 기록을 한 번에 쓴다. 쓰기가 실패하면 성공 연출을 내지 않고 "다시 붙이기"를 보인다.
