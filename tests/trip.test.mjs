@@ -154,6 +154,9 @@ test("글: 고른 말이 없으면 기기의 말, 넷이 아니면 영어로 연
 });
 
 test("그림: 화면이 부르는 그림이 모두 있다", () => {
+  // 유이는 말풍선 곁에 얼굴이 보이게 선다. 그림은 style.css 가 부른다.
+  const sprite = read("style.css").match(/url\("\.\.\/(art\/yui\/[\w-]+\.png)"\)/)[1];
+  assert.ok(fs.existsSync(new URL(`../docs/${sprite}`, import.meta.url)), sprite);
   const source = read("main.js");
   for (const name of ["seoul-a", "seoul-station", "seoul-c"]) assert.ok(fs.existsSync(new URL(`../docs/trip/art/${name}.webp`, import.meta.url)), name);
   for (const [, name] of source.matchAll(/img\("([\w-]+)"\)/g)) assert.ok(fs.existsSync(new URL(`../docs/trip/art/${name}.webp`, import.meta.url)), name);
