@@ -37,7 +37,7 @@ test("성공 전의 다시 찍기는 세지 않는다", () => {
 });
 
 test("내보낸 글은 로그와 숫자와 답이 든 JSON이다", () => {
-  const out = JSON.parse(exportText({ log: played, answer: "cheomseongdae" }));
+  const out = JSON.parse(exportText({ log: played, answer: "cheomseongdae" }, ["seongsan", "cheomseongdae"]));
   assert.equal(out.log.length, played.length);
   assert.equal(out.metrics.cheomseongdae.firstSuccessMs, 8000);
   assert.equal(out.metrics.seongsan.shutters, 1);
@@ -50,7 +50,7 @@ test("store 가 하는 일이 차례대로 로그에 쌓인다", () => {
   let t = 0;
   const store = createStore(storage, places, () => (t += 500));
   store.go("place", "seongsan");
-  store.setDials({ x: 0.3 });
+  store.setDials("seongsan", { x: 0.3 });
   const shot = store.addShot("seongsan", { ...store.state.seongsan.dials, matched: false });
   store.paste("seongsan", shot.id);
   store.go("journal");

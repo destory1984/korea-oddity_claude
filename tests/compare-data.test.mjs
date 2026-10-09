@@ -64,3 +64,39 @@ test("성산: 그림자는 포개지기 전에 글로 미리 말하지 않는다
 test("첨성대: 과제 2에도 답장 세 줄이 있다", () => {
   assert.equal(cheom.reply2.length, 3);
 });
+
+// ── 둘째 판: 부석사(A안), 소백산 천문대(B안) ─────────────────────────────
+const buseoksa = read("buseoksa");
+const sobaek = read("sobaeksan");
+
+for (const place of [buseoksa, sobaek]) {
+  test(`${place.id}: 글 분량이 첫 판과 같다`, () => {
+    const lines = [...Object.values(place.sora), ...(place.tasks ?? []).map((t) => t.memo), ...place.story.back, place.story.sora, place.nudge];
+    if (place.memoShort) lines.push(place.memoShort);
+    for (const line of lines) assert.ok([...line].length <= 25, `${[...line].length}자: ${line}`);
+    assert.equal(place.reply.length, 3);
+  });
+}
+
+test("부석사: 링은 계절과 시각 둘이고, 처음 값은 계절과 시각이 모두 틀린 자리다", () => {
+  assert.deepEqual(buseoksa.rings, ["s", "h"]);
+  assert.deepEqual(Object.keys(buseoksa.start).sort(), ["h", "s"]);
+  const day = Math.floor(buseoksa.start.s * 365);
+  assert.ok(day < buseoksa.seasonDays[0] || day > buseoksa.seasonDays[1]);
+});
+
+test("소백산: 상태 아홉, 소라의 말 여섯, 도움의 테두리와 선이 빠짐없이 있다", () => {
+  const keys = sobaek.spots.flatMap((s) => sobaek.times.map((t) => `${s}-${t}`));
+  assert.deepEqual(Object.keys(sobaek.states).sort(), keys.sort());
+  assert.equal(Object.keys(sobaek.sora).length, 6);
+  for (const rule of sobaek.soraRules) assert.ok(rule.say in sobaek.sora, rule.say);
+  for (const task of sobaek.tasks) for (const tag of task.need) { assert.ok(sobaek.labels[tag], tag); assert.ok(sobaek.helpBoxes[tag], tag); }
+  for (const key of Object.keys(sobaek.sora)) if (!key.startsWith("ok")) assert.ok(sobaek.diagrams[key], key);
+  for (const spot of sobaek.spots) assert.ok(sobaek.images[spot], spot);
+  assert.equal(sobaek.reply2.length, 3);
+});
+
+test("첨성대: 도움의 테두리와 선이 장소 자료에 있다", () => {
+  for (const task of cheom.tasks) for (const tag of task.need) assert.ok(cheom.helpBoxes[tag], tag);
+  for (const key of Object.keys(cheom.sora)) if (!key.startsWith("ok")) assert.ok(cheom.diagrams[key], key);
+});

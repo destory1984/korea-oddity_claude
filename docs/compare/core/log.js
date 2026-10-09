@@ -35,11 +35,11 @@ export function metrics(log, placeId) {
 }
 
 // "로그 내보내기"가 클립보드에 넣는 글.
-export function exportText(state) {
+export function exportText(state, placeIds) {
   const log = state.log ?? [];
   return JSON.stringify({
     answer: state.answer ?? null,
-    metrics: { seongsan: metrics(log, "seongsan"), cheomseongdae: metrics(log, "cheomseongdae") },
+    metrics: Object.fromEntries(placeIds.map((id) => [id, metrics(log, id)])),
     log,
   }, null, 2);
 }

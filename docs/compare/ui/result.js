@@ -42,9 +42,8 @@ export function mountResult(root, { store, place, shot, verdict, onJournal, onRe
   root.querySelector("[data-do=retry]").onclick = onRetry;
 }
 
-const ANSWERS = [["seongsan", "성산일출봉"], ["cheomseongdae", "첨성대"], ["both", "둘 다"], ["neither", "둘 다 아님"]];
-
-export function mountAsk(root, { onDone }) {
+export function mountAsk(root, { places, onDone }) {
+  const ANSWERS = [...Object.values(places).map((place) => [place.id, place.name]), ["both", "둘 다"], ["neither", "둘 다 아님"]];
   root.innerHTML = `<h1>한 번 더 하고 싶은 곳은?</h1>
     <div class="answers">${ANSWERS.map(([id, name]) => `<button class="main" data-answer="${id}">${name}</button>`).join("")}</div>`;
   for (const button of root.querySelectorAll("[data-answer]")) button.onclick = () => onDone(button.dataset.answer);

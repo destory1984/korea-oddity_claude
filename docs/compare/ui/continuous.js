@@ -1,4 +1,5 @@
-// 성산일출봉 화면(A안). 다이얼 넷(좌우, 거리, 계절, 시각)으로 할머니의 바랜 사진과 포갠다.
+// A안의 화면(성산일출봉, 부석사). 렌즈의 링을 돌려 할머니의 바랜 사진과 같은 때(와 자리)를 찾는다.
+// 링은 장소마다 다르다. 성산은 좌우, 거리, 계절, 시각 넷이고 부석사는 계절과 시각 둘이다(place.rings).
 
 import { judgeContinuous, dayOfYear } from "../core/judge.js";
 import { renderScene, answerView, sunFor, oldOpts } from "./scene.js";
@@ -23,10 +24,11 @@ function clockText(h) {
   return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
 }
 
-export function mountSeongsan(root, { store, place, onShot, onBack }) {
-  const p = store.state.seongsan;
+export function mountContinuous(root, { store, place, onShot, onBack }) {
+  const p = store.state[place.id];
+  const rings = place.rings ?? ["x", "d", "s", "h"];
   const dials = { ...p.dials };
-  if (place.fixDistance) {
+  if (place.fixDistance && rings.includes("d")) {
     dials.d = place.target.d;
     if (!store.state.log.some((l) => l.kind === "config")) store.log(place.id, "config", { fixDistance: true });
   }
@@ -34,7 +36,7 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
   root.innerHTML = `
     <header><button data-do="back">수첩</button><h1>${place.name}</h1><button data-do="old">옛 사진</button></header>
     <div class="stage"><div class="frame"></div><div class="frame overlay" hidden></div><p class="hand memo task">${place.memoShort}</p></div>
-    <div class="dials"><div data-dial="x"></div><div data-dial="d"></div><div data-dial="s"></div><div data-dial="h"></div></div>
+    <div class="dials">${rings.map((key) => `<div data-dial="${key}"></div>`).join("")}</div>
     <div class="tools"><button class="shutter" data-do="shutter" aria-label="셔터"></button></div>`;
 
   const q = (sel) => root.querySelector(sel);
@@ -80,22 +82,26 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
   // 화면의 다이얼 값을 저장에 옮긴다. 다이얼이 아직 구르는 중에 셔터나 수첩을 눌러도 값이 남게, 화면을 떠나기 전에도 부른다.
   // (2026.10.10: 구르는 중에 찍고 돌아오면 다이얼이 옛 값으로 돌아가 있었다.)
   function keep() {
-    const now = store.state.seongsan.dials;
+    const now = store.state[place.id].dials;
     const changed = Object.fromEntries(Object.entries(dials).filter(([key, v]) => v !== now[key]));
-    if (Object.keys(changed).length) store.setDials(changed);
+    if (Object.keys(changed).length) store.setDials(place.id, changed);
   }
   const onHide = () => { if (root.isConnected && frame.isConnected && document.hidden) keep(); };
   document.addEventListener("visibilitychange", onHide);
-  const made = {
-    x: createDial(q("[data-dial=x]"), { ...common("x"), name: "좌우", step: 0.02, wrap: false, major: 5, ends: ["왼쪽", "오른쪽"] }),
-    s: createDial(q("[data-dial=s]"), { ...common("s"), name: "계절", step: 5 / 365, wrap: true, snaps: MID, major: 1000, marks: MONTH_MARKS, label: dateText }),
-    h: createDial(q("[data-dial=h]"), { ...common("h"), name: "시각", step: 1 / 6, wrap: true, major: 6, marks: HOUR_MARKS, label: clockText }),
+  const RING = {
+    x: { name: "좌우", step: 0.02, wrap: false, major: 5, ends: ["왼쪽", "오른쪽"] },
+    d: { name: "거리", step: 0.02, wrap: false, major: 5, ends: ["가까이", "멀리"] },
+    s: { name: "계절", step: 5 / 365, wrap: true, snaps: MID, major: 1000, marks: MONTH_MARKS, label: dateText },
+    h: { name: "시각", step: 1 / 6, wrap: true, major: 6, marks: HOUR_MARKS, label: clockText },
   };
-  if (place.fixDistance) q("[data-dial=d]").remove();
-  else made.d = createDial(q("[data-dial=d]"), { ...common("d"), name: "거리", step: 0.02, wrap: false, major: 5, ends: ["가까이", "멀리"] });
+  const made = {};
+  for (const key of rings) {
+    if (key === "d" && place.fixDistance) { q("[data-dial=d]").remove(); continue; }
+    made[key] = createDial(q(`[data-dial=${key}]`), { ...common(key), ...RING[key] });
+  }
 
   q("[data-do=back]").onclick = () => { keep(); onBack(); };
-  oldButton.onclick = () => { oldButton.classList.remove("pulse"); store.setOverlay(!p.overlay); drawOverlay(); };
+  oldButton.onclick = () => { oldButton.classList.remove("pulse"); store.setOverlay(place.id, !p.overlay); drawOverlay(); };
   q("[data-do=shutter]").onclick = () => {
     keep();
     const { verdict } = look();

@@ -1,22 +1,29 @@
 // 화면 옮기기. 자료를 읽고, 저장과 로그를 화면에 잇는다.
 
-import { createStore } from "./core/store.js";
+import { createStore, KEY } from "./core/store.js";
 import { exportText, allDone } from "./core/log.js";
 import { judgeContinuous, judgeDiscrete } from "./core/judge.js";
 import { sunFor } from "./ui/scene.js";
 import { mountStart, mountJournal, mountStory } from "./ui/journal.js";
 import { mountResult, mountAsk } from "./ui/result.js";
-import { mountCheomseongdae } from "./ui/cheomseongdae.js";
-import { mountSeongsan } from "./ui/seongsan.js";
+import { mountDiscrete } from "./ui/discrete.js";
+import { mountContinuous } from "./ui/continuous.js";
 
 const load = async (id) => (await fetch(`places/${id}.json`)).json();
-const places = { seongsan: await load("seongsan"), cheomseongdae: await load("cheomseongdae") };
+// 판마다 두 장소를 견준다. 앞이 A안(링을 돌려 포개기), 뒤가 B안(골라 찍고 읽어 고치기)이다.
+// 둘째 판이 기본이고, 주소에 ?round=1 을 붙이면 첫 판이 열린다. 판마다 저장이 따로다.
+const ROUNDS = { 1: ["seongsan", "cheomseongdae"], 2: ["buseoksa", "sobaeksan"] };
+const round = ROUNDS[new URLSearchParams(location.search).get("round")] ? Number(new URLSearchParams(location.search).get("round")) : 2;
+const ids = ROUNDS[round];
+const places = {};
+for (const id of ids) places[id] = await load(id);
+const key = round === 1 ? KEY : `paldo.compare.v${round}`;
 
 // localStorage 에 손대는 것조차 막힌 브라우저가 있다. 그때는 던지는 storage 를 넘겨 저장 없이 논다.
 const denied = { getItem() { throw new Error("denied"); }, setItem() { throw new Error("denied"); } };
 let storage = denied;
 try { storage = globalThis.localStorage ?? denied; } catch { /* denied 그대로 */ }
-const store = createStore(storage, places);
+const store = createStore(storage, places, Date.now, key);
 
 const sections = Object.fromEntries([...document.querySelectorAll("[data-screen]")].map((s) => [s.dataset.screen, s]));
 const notice = document.getElementById("notice");
@@ -48,11 +55,11 @@ function go(screen, placeId) {
 // 두 장소의 기억이 다 채워졌고 아직 답하지 않았으면 수첩 대신 마지막 물음으로 간다.
 function toJournal() {
   const s = store.state;
-  go(s.seongsan.memory && s.cheomseongdae.memory && s.answer === null ? "ask" : "journal");
+  go(ids.every((id) => s[id].memory) && s.answer === null ? "ask" : "journal");
 }
 
 async function exportLog(box) {
-  const text = exportText(store.state);
+  const text = exportText(store.state, ids);
   try {
     await navigator.clipboard.writeText(text);
     notice.textContent = "로그를 클립보드에 복사했어.";
@@ -79,7 +86,7 @@ function render() {
     return show("place");
   }
   if (screen === "place" && place) {
-    const mount = place.kind === "discrete" ? mountCheomseongdae : mountSeongsan;
+    const mount = place.kind === "discrete" ? mountDiscrete : mountContinuous;
     mount(sections.place, { store, place, onShot: () => go("result"), onBack: toJournal });
     return show("place");
   }
@@ -94,7 +101,7 @@ function render() {
     return show("result");
   }
   if (screen === "ask") {
-    mountAsk(sections.ask, { onDone: (answer) => { store.setAnswer(answer); go("journal"); } });
+    mountAsk(sections.ask, { places, onDone: (answer) => { store.setAnswer(answer); go("journal"); } });
     return show("ask");
   }
   if (screen === "journal") {

@@ -7,35 +7,42 @@ const KEEP_SHOTS = 3;      // 임시 사진은 장소마다 최근 3장
 const DOUBLE_TAP_MS = 150; // 이 안에 다시 누른 셔터는 같은 한 장으로 친다
 const MAX_HELP = 3;
 
-function fresh(places) {
-  const [spot, time] = places.cheomseongdae.tasks[0].start.split("-");
-  return {
-    version: VERSION, screen: "start", place: null, nextShotId: 1,
-    seongsan: { visited: false, dials: { ...places.seongsan.start }, overlay: false, shots: [], pasted: null, memory: false },
-    cheomseongdae: { visited: false, spot, time, task: 1, help: 0, shots: [], pasted: { photo: null, 1: null, 2: null }, memory: false, otherView: false },
-    answer: null,
-    log: [],
-  };
+// 장소 하나의 처음 꼴. 연속(A안)은 다이얼 값, 이산(B안)은 지점과 때와 과제를 가진다.
+function freshPlace(place) {
+  if (place.kind === "discrete") {
+    const [spot, time] = place.tasks[0].start.split("-");
+    return { visited: false, spot, time, task: 1, help: 0, shots: [], pasted: { photo: null, 1: null, 2: null }, memory: false, otherView: false };
+  }
+  return { visited: false, dials: { ...place.start }, overlay: false, shots: [], pasted: null, memory: false };
 }
 
-export function createStore(storage, places, now = Date.now) {
+function fresh(places) {
+  const state = { version: VERSION, screen: "start", place: null, nextShotId: 1, answer: null, log: [] };
+  for (const place of Object.values(places)) state[place.id] = freshPlace(place);
+  return state;
+}
+
+// key: 판마다 다른 저장 열쇠. 첫 판(성산, 첨성대)은 KEY, 둘째 판(부석사, 소백산)은 끝이 v2 다.
+export function createStore(storage, places, now = Date.now, key = KEY) {
   const store = { status: "fresh", state: null, unsaved: false };   // unsaved: 마지막 쓰기가 실패했는가
 
   let raw = null;
   try {
-    raw = storage.getItem(KEY);
+    raw = storage.getItem(key);
   } catch {
     store.status = "memory";
   }
   if (raw !== null) {
     let saved = null;
     try { saved = JSON.parse(raw); } catch { /* 아래에서 깨진 것으로 친다 */ }
-    if (saved && !Array.isArray(saved) && saved.version === VERSION) {
+    // 판 번호가 같아도 장소의 칸이 빠졌으면 깨진 것으로 친다.
+    const whole = saved && !Array.isArray(saved) && saved.version === VERSION && Array.isArray(saved.log) && Object.keys(places).every((id) => saved[id]);
+    if (whole) {
       store.state = saved;
       store.status = "ok";
     } else {
       store.status = "broken";
-      try { storage.setItem(KEY + ".broken", raw); } catch { /* 옮기지 못해도 원본은 그대로 있다 */ }
+      try { storage.setItem(key + ".broken", raw); } catch { /* 옮기지 못해도 원본은 그대로 있다 */ }
     }
   }
   if (store.status === "fresh" || store.status === "memory") store.state = fresh(places);
@@ -43,7 +50,7 @@ export function createStore(storage, places, now = Date.now) {
   const write = (state) => {
     if (store.status === "memory" || store.status === "broken") return false;
     try {
-      storage.setItem(KEY, JSON.stringify(state));
+      storage.setItem(key, JSON.stringify(state));
       store.unsaved = false;
       return true;
     } catch {
@@ -81,27 +88,27 @@ export function createStore(storage, places, now = Date.now) {
   // 장소에 들어갈 때의 장면(사진 뒷면의 글)은 장소마다 한 번만 보인다.
   store.seeStory = (placeId) => { store.state[placeId].storySeen = true; store.save(); };
 
-  store.setDials = (patch) => {
-    Object.assign(store.state.seongsan.dials, patch);
-    store.log("seongsan", "dial", patch);
+  store.setDials = (placeId, patch) => {
+    Object.assign(store.state[placeId].dials, patch);
+    store.log(placeId, "dial", patch);
     store.save();
   };
-  store.setOverlay = (on) => { store.state.seongsan.overlay = Boolean(on); store.save(); };
+  store.setOverlay = (placeId, on) => { store.state[placeId].overlay = Boolean(on); store.save(); };
 
-  const setState = (patch) => {
-    const c = store.state.cheomseongdae;
+  const setState = (placeId, patch) => {
+    const c = store.state[placeId];
     Object.assign(c, patch);
-    store.log("cheomseongdae", "state", { spot: c.spot, time: c.time });
+    store.log(placeId, "state", { spot: c.spot, time: c.time });
     store.save();
   };
-  store.setSpot = (spot) => setState({ spot });
-  store.setTime = (time) => setState({ time });
+  store.setSpot = (placeId, spot) => setState(placeId, { spot });
+  store.setTime = (placeId, time) => setState(placeId, { time });
 
-  store.bumpHelp = () => {
-    const c = store.state.cheomseongdae;
+  store.bumpHelp = (placeId) => {
+    const c = store.state[placeId];
     if (c.help >= MAX_HELP) return c.help;   // 더 오를 단계가 없으면 로그에도 쌓지 않는다
     c.help += 1;
-    store.log("cheomseongdae", "help", c.help);
+    store.log(placeId, "help", c.help);
     store.save();
     return c.help;
   };
@@ -125,7 +132,7 @@ export function createStore(storage, places, now = Date.now) {
     if (!shot) return result;
     const next = structuredClone(store.state);
     const p = next[placeId];
-    if (placeId === "seongsan") {
+    if (places[placeId].kind !== "discrete") {
       p.pasted = shot;
       if (shot.matched && !p.memory) { p.memory = true; result.memoryNew = true; }
     } else {

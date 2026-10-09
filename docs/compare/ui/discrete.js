@@ -1,4 +1,5 @@
-// 첨성대 화면(B안). 촬영 지점 셋과 때 셋에서 골라 찍고, 결과를 읽어 하나만 바꿔 다시 찍는다.
+// B안의 화면(첨성대, 소백산 천문대). 촬영 지점 셋과 때 셋에서 골라 찍고, 결과를 읽어 하나만 바꿔 다시 찍는다.
+// 장소마다 다른 것(지점과 때의 이름, 과제, 도움의 테두리와 선)은 모두 장소 자료에서 읽는다.
 
 import { judgeDiscrete } from "../core/judge.js";
 import { renderScene, viewOf, answerView, shotOpts, oldOpts } from "./scene.js";
@@ -8,33 +9,8 @@ import { showMiss, clearMiss } from "./miss.js";
 
 const MOVE_MS = 500;   // 지점을 옮기는 연출. 그동안 셔터가 잠긴다.
 
-// 도움 1단계: 옛 사진에서 필요한 요소에 두르는 테두리. 틀에 대한 비율 [x, y, 너비, 높이].
-const HIGHLIGHT = {
-  towerFull: { 1: [0.4, 0.12, 0.2, 0.26], 2: [0.4, 0.12, 0.2, 0.62] },
-  grass: { 1: [0.06, 0.74, 0.88, 0.22] },
-  stars: { 2: [0.05, 0.04, 0.3, 0.3] },
-};
-
-// 도움 2단계: 지금 풍경 위에 긋는 글 없는 선. viewBox 는 300 × 200.
-function diagram(place, c) {
-  const tags = place.states[`${c.spot}-${c.time}`] ?? [];
-  const lines = [];
-  if (tags.includes("topCut")) {
-    lines.push(`<polyline points="110,10 120,2 130,10 140,2 150,10 160,2 170,10 180,2 190,10"/>`, `<path d="M150 46 V16 M142 26 L150 16 L158 26"/>`);
-  }
-  if (tags.includes("towerHidden")) {
-    lines.push(`<circle cx="118" cy="70" r="26"/>`, `<path d="M118 70 H168 M158 62 L168 70 L158 78"/>`);
-  }
-  if (c.task === 2 && !tags.includes("stars")) {
-    for (const [x, y] of [[40, 30], [70, 18], [252, 34]]) {
-      lines.push(`<path class="dash" d="M${x} ${y - 8} L${x + 3} ${y - 3} L${x + 8} ${y} L${x + 3} ${y + 3} L${x} ${y + 8} L${x - 3} ${y + 3} L${x - 8} ${y} L${x - 3} ${y - 3} Z"/>`);
-    }
-  }
-  return lines.join("");
-}
-
-export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
-  const c = () => store.state.cheomseongdae;
+export function mountDiscrete(root, { store, place, onShot, onBack }) {
+  const c = () => store.state[place.id];
   const task = () => place.tasks.find((t) => t.id === c().task);
 
   root.innerHTML = `
@@ -75,7 +51,8 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     const old = q(".oldphoto");
     renderScene(old.querySelector(".frame"), place, answerView(place, c().task), oldOpts(place, c().task));
     old.querySelector(".boxes").innerHTML = !highlight ? "" : task().need.map((tag) => {
-      const [x, y, w, h] = HIGHLIGHT[tag][c().task] ?? HIGHLIGHT[tag][1];
+      // 도움 1단계의 테두리. 틀에 대한 비율 [x, y, 너비, 높이]이고 과제마다 다를 수 있다.
+      const [x, y, w, h] = place.helpBoxes[tag][c().task] ?? Object.values(place.helpBoxes[tag])[0];
       return `<i style="left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${h * 100}%"></i>`;
     }).join("");
   }
@@ -85,7 +62,8 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     if (level >= 1) { q(".oldphoto").hidden = false; drawOld(true); }
     const lines = q(".lines");
     lines.toggleAttribute("hidden", level < 2);   // SVG 요소에는 hidden 속성값이 없어 attribute 로 켜고 끈다
-    if (level >= 2) lines.innerHTML = diagram(place, c());
+    // 도움 2단계: 지금 찍으면 소라가 할 말에 맞는 글 없는 선. viewBox 는 300 × 200.
+    if (level >= 2) lines.innerHTML = place.diagrams[judgeDiscrete(place, c().task, c().spot, c().time).sora] ?? "";
     const preview = q(".preview");
     preview.hidden = level < 3;
     if (level >= 3) renderScene(preview.querySelector(".frame"), place, answerView(place, c().task), { gray: true, still: true });
@@ -97,7 +75,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     name: "자리", min: 0, max: place.spots.length - 1, step: 1, wrap: false, major: 1, tickPx: 84,
     value: place.spots.indexOf(c().spot), marks: stops(place.spots, place.spotNames),
     onInput: (v) => {
-      store.setSpot(place.spots[v]);
+      store.setSpot(place.id, place.spots[v]);
       clearMiss(q(".stage"));   // 자리를 옮기면 방금 한 말은 맞지 않는다
       // 옮기는 중에 또 돌리면 마지막에 고른 곳으로 간다. 다 옮길 때까지 셔터를 잠근다.
       shutterButton.disabled = true;
@@ -109,7 +87,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
   createDial(q("[data-dial=time]"), {
     name: "때", min: 0, max: place.times.length - 1, step: 1, wrap: false, major: 1, tickPx: 84,
     value: place.times.indexOf(c().time), marks: stops(place.times, place.timeNames),
-    onInput: (v) => { store.setTime(place.times[v]); clearMiss(q(".stage")); draw(); },
+    onInput: (v) => { store.setTime(place.id, place.times[v]); clearMiss(q(".stage")); draw(); },
   });
 
   q("[data-do=back]").onclick = onBack;
@@ -118,7 +96,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
     old.hidden = !old.hidden;
     if (!old.hidden) drawOld(c().help >= 1);
   };
-  q("[data-do=help]").onclick = () => { q("[data-do=help]").classList.remove("pulse"); store.bumpHelp(); drawHelp(); };
+  q("[data-do=help]").onclick = () => { q("[data-do=help]").classList.remove("pulse"); store.bumpHelp(place.id); drawHelp(); };
   q("[data-do=compare]").onclick = () => {
     const [before, after] = c().shots.slice(-2);
     renderScene(q(".before"), place, viewOf(place, before), shotOpts(before));

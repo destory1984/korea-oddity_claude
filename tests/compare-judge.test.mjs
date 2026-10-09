@@ -149,3 +149,43 @@ test("성산: 다이얼마다 제 값이 맞았는지가 따로 나온다", () =
   // 시각은 그 계절의 해로 본다. 한여름 06:40은 해가 이미 높다.
   assert.equal(judge({ ...good, s: S(195) }).ok.h, false);
 });
+
+// ── 둘째 판: 부석사(링은 계절과 시각 둘), 소백산 천문대 ──────────────────
+const buseoksa = read("buseoksa");
+const sobaek = read("sobaeksan");
+const judgeB = (dials) => judgeContinuous(buseoksa, dials, sunAt(buseoksa.latlon[0], buseoksa.latlon[1], dayOfYear(dials.s), dials.h * 60 - 540));
+const eve = { s: S(309), h: 17 };
+
+test("부석사: 가을 해 질 녘이면 포개진다. 자리는 고르지 않는다", () => {
+  const v = judgeB(eve);
+  assert.deepEqual([v.matched, v.time, v.sora, v.dial], [true, "evening", "match", null]);
+  assert.deepEqual(v.ok, { s: true, h: true });
+  assert.equal(v.line, buseoksa.sora.match);
+});
+
+test("부석사: 틀린 것을 하나만 짚는다(계절, 밤, 낮, 아침)", () => {
+  assert.deepEqual([judgeB({ s: S(171), h: 19.5 }).sora, judgeB({ s: S(171), h: 19.5 }).dial], ["season", "s"]);
+  assert.deepEqual([judgeB({ ...eve, h: 18.5 }).sora, judgeB({ ...eve, h: 18.5 }).dial], ["night", "h"]);
+  assert.equal(judgeB({ ...eve, h: 12 }).sora, "noon");
+  assert.equal(judgeB({ ...eve, h: 7.2 }).sora, "morning");
+  assert.equal(judgeB({ ...eve, h: 7.2 }).matched, false);
+  for (const key of ["season", "night", "noon", "morning", "match"]) assert.ok(buseoksa.sora[key], key);
+});
+
+test("부석사: 계절은 10월 15일 → 11월 30일이다", () => {
+  const dusk = (day) => (sunTimes(buseoksa.latlon[0], buseoksa.latlon[1], day).set + 540 - 20) / 60;
+  for (const day of [287, 333]) assert.equal(judgeB({ s: S(day), h: dusk(day) }).matched, true, String(day));
+  for (const day of [286, 334]) assert.equal(judgeB({ s: S(day), h: dusk(day) }).season, false, String(day));
+});
+
+test("소백산: 과제마다 성공하는 상태와 소라의 말", () => {
+  const ok = (task) => Object.keys(sobaek.states).filter((k) => judgeDiscrete(sobaek, task, ...k.split("-")).ok).sort();
+  assert.deepEqual(ok(1), ["B-dawn", "B-night"]);
+  assert.deepEqual(ok(2), ["B-dawn"]);
+  const table = [
+    ["A", "night", 1, "domeCut"], ["C", "night", 1, "washed"], ["B", "night", 1, "ok1"],
+    ["B", "dusk", 2, "tooBright"], ["B", "night", 2, "notYet"], ["A", "dawn", 2, "domeCut"], ["C", "dawn", 2, "washed"], ["B", "dawn", 2, "ok2"],
+  ];
+  for (const [spot, time, task, key] of table) assert.equal(judgeDiscrete(sobaek, task, spot, time).sora, key, `${spot}-${time} 과제 ${task}`);
+  assert.deepEqual(judgeDiscrete(sobaek, 2, "B", "night").needs.map((n) => [n.label, n.met]), [["돔", true], ["혜성 자리", false]]);
+});

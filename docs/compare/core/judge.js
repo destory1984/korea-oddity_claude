@@ -14,25 +14,31 @@ export function stagedSun(h) {
   return { alt: 48 * Math.sin(Math.PI * (t - 6.62) / 11.37), az: t < 12.3 ? 100 : 260 };
 }
 
-// 연속 판정(성산일출봉). sun: {alt, az} 도.
+// 연속 판정(A안). sun: {alt, az} 도.
+// 장소마다 맞출 것이 다르다. 성산은 좌우, 거리, 계절, 시각 넷이고 부석사는 계절과 시각 둘이다(place.rings).
+// 맞는 때는 해가 낮게 떠 있는 아침이나 저녁이다(place.target.when. 적지 않으면 아침).
 export function judgeContinuous(place, dials, sun) {
   const { target, tolerance, seasonDays, lowSun } = place;
-  const offX = dials.x - target.x, offD = dials.d - target.d;
-  const okX = Math.abs(offX) <= tolerance.x + EPS, okD = Math.abs(offD) <= tolerance.d + EPS;
+  const rings = place.rings ?? ["x", "d", "s", "h"];
+  const when = target.when ?? "morning";
+  const offX = rings.includes("x") ? dials.x - target.x : 0, offD = rings.includes("d") ? dials.d - target.d : 0;
+  const okX = Math.abs(offX) <= (tolerance?.x ?? 0) + EPS, okD = Math.abs(offD) <= (tolerance?.d ?? 0) + EPS;
   const composition = okX && okD;
   const day = dayOfYear(dials.s);
   const season = day >= seasonDays[0] && day <= seasonDays[1];
   const time = sun.alt < lowSun[0] ? "night" : sun.alt > lowSun[1] ? "noon" : sun.az < 180 ? "morning" : "evening";
-  const matched = composition && season && time === "morning";
+  const matched = composition && season && time === when;
   // 눈에 보이는 사실 하나만 짚는다. 좌우 값이 작으면 겹이 덜 밀려 산이 사진보다 오른쪽에 있고, 거리 값이 작으면 가까워서 산이 크다.
   const sora = !okX ? (offX < 0 ? "ridgeRight" : "ridgeLeft") : !okD ? (offD < 0 ? "tooNear" : "tooFar")
     : !season ? "season" : matched ? "match" : time;
   const dial = !okX ? "x" : !okD ? "d" : !season ? "s" : matched ? null : "h";   // 고칠 다이얼
-  const ok = { x: okX, d: okD, s: season, h: time === "morning" };   // 다이얼마다 제 값이 맞았는가. 돌리는 동안 화면이 알려 준다.
+  // 다이얼마다 제 값이 맞았는가. 돌리는 동안 화면이 알려 준다.
+  const all = { x: okX, d: okD, s: season, h: time === when };
+  const ok = Object.fromEntries(rings.map((key) => [key, all[key]]));
   return { matched, composition, season, time, sora, dial, ok, line: place.sora[sora] };
 }
 
-// 이산 판정(첨성대). 상태의 태그를 과제의 need, forbid 에 대어 본다.
+// 이산 판정(B안). 상태의 태그를 과제의 need, forbid 에 대어 본다.
 export function judgeDiscrete(place, taskId, spot, time) {
   const tags = place.states[`${spot}-${time}`] ?? [];
   const task = place.tasks.find((t) => t.id === taskId);

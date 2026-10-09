@@ -73,7 +73,7 @@
 
 ## 비교 시제품
 
-2026.10.9에 지었다. 놀이의 두 안을 한 게임에 넣어 견주는 시제품이다. 장소는 둘이다.
+2026.10.9에 지었다. 놀이의 두 안을 한 게임에 넣어 견주는 시제품이다. 판이 둘이고 판마다 장소가 둘이다. 주소가 `/compare/` 면 둘째 판(부석사는 A안, 소백산 천문대는 B안)이, `/compare/?round=1` 이면 아래 표의 첫 판이 열린다. 둘째 판의 그림은 한 장면을 통째로 그려 받았다([발주서 3](docs/art-order-3.md)).
 
 | | 성산일출봉 (A안) | 첨성대 (B안) |
 |---|---|---|
@@ -92,7 +92,7 @@ py -m http.server 4319 --directory docs
 - 여섯 사람에게 시켜 보고 어느 쪽을 한 번 더 하고 싶어 하는지로 가른다. 한 사람이 끝나면 시작 화면의 "로그 내보내기"로 기록을 복사해 두고 "새 사람으로 시작"을 누른다.
 - 로그에는 장소마다 첫 성공까지의 시간, 셔터 횟수, 도움 횟수, 더 할 과제가 없는데도 "한 번 더 찍기"를 눌렀는지(`retried`)가 들어 있다. 첨성대에서 과제 2로 넘어가려고 누른 것은 `wentOn` 으로 따로 센다. 기기 밖으로 보내지 않는다.
 - 그림은 챗GPT의 그림 그리기로 받았다([발주서 2](docs/art-order-2.md)). 성산일출봉에서 사진기가 서쪽을 보는 것, 첨성대의 촬영 지점과 나무는 규칙을 시험하려고 지은 연출이다. 현장과 견주지 않았다.
-- 시험은 `node --test tests/compare-data.test.mjs tests/compare-judge.test.mjs tests/compare-store.test.mjs tests/compare-log.test.mjs tests/compare-ui.test.mjs` 로 돌린다. 66개다.
+- 시험은 `node --test tests/compare-data.test.mjs tests/compare-judge.test.mjs tests/compare-store.test.mjs tests/compare-log.test.mjs tests/compare-ui.test.mjs` 로 돌린다. 77개다.
 
 ## 번역 시험 1차
 

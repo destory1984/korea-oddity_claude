@@ -35,8 +35,8 @@ test("처음 열면 성산은 처음 값, 첨성대는 A-낮의 과제 1이다",
 test("지점과 때를 바꾸고 나갔다 들어오면 그대로다", () => {
   const ctx = setup();
   ctx.store.go("place", "cheomseongdae");
-  ctx.store.setSpot("C");
-  ctx.store.setTime("night");
+  ctx.store.setSpot("cheomseongdae", "C");
+  ctx.store.setTime("cheomseongdae", "night");
   const again = ctx.open();
   assert.equal(again.status, "ok");
   const c = again.state.cheomseongdae;
@@ -45,7 +45,7 @@ test("지점과 때를 바꾸고 나갔다 들어오면 그대로다", () => {
 
 test("다이얼은 바꾼 것만 바뀌고 다시 열어도 남는다", () => {
   const ctx = setup();
-  ctx.store.setDials({ x: 0.3 });
+  ctx.store.setDials("seongsan", { x: 0.3 });
   assert.deepEqual(ctx.open().state.seongsan.dials, { ...places.seongsan.start, x: 0.3 });
 });
 
@@ -69,7 +69,7 @@ test("포개지지 않은 사진도 붙지만 기억은 채워지지 않는다",
 
 test("첨성대: 과제 1을 채운 사진을 붙이면 과제 2로 넘어간다", () => {
   const ctx = setup();
-  ctx.store.bumpHelp();
+  ctx.store.bumpHelp("cheomseongdae");
   const shot = shoot(ctx, "cheomseongdae", { spot: "B", time: "day", task: 1, ok: true });
   const r = ctx.store.paste("cheomseongdae", shot.id);
   const c = ctx.store.state.cheomseongdae;
@@ -123,7 +123,7 @@ test("storage 가 던져도 놀이는 이어지고 붙이기만 실패한다", (
   const ctx = setup(fakeStorage({ throwOnRead: true }));
   assert.equal(ctx.store.status, "memory");
   ctx.store.go("place", "seongsan");
-  ctx.store.setDials({ h: 7 });
+  ctx.store.setDials("seongsan", { h: 7 });
   const shot = shoot(ctx, "seongsan", { ...ctx.store.state.seongsan.dials, matched: true });
   assert.ok(shot);
   assert.equal(ctx.store.paste("seongsan", shot.id).saved, false);
@@ -162,7 +162,7 @@ test("붙인 사진은 임시 사진이 밀려나도 남는다", () => {
 
 test("도움은 3단계에서 멈춘다", () => {
   const { store } = setup();
-  assert.deepEqual([store.bumpHelp(), store.bumpHelp(), store.bumpHelp(), store.bumpHelp()], [1, 2, 3, 3]);
+  assert.deepEqual([store.bumpHelp("cheomseongdae"), store.bumpHelp("cheomseongdae"), store.bumpHelp("cheomseongdae"), store.bumpHelp("cheomseongdae")], [1, 2, 3, 3]);
 });
 
 test("마지막 물음의 답이 남는다", () => {
@@ -183,16 +183,16 @@ test("쓰기가 실패하면 저장이 안 된 것을 알 수 있고, 다시 되
   const ctx = setup();
   assert.equal(ctx.store.unsaved, false);
   ctx.storage.failWrites = true;
-  ctx.store.setSpot("B");
+  ctx.store.setSpot("cheomseongdae", "B");
   assert.equal(ctx.store.unsaved, true);
   ctx.storage.failWrites = false;
-  ctx.store.setSpot("C");
+  ctx.store.setSpot("cheomseongdae", "C");
   assert.equal(ctx.store.unsaved, false);
 });
 
 test("도움이 3단계에 닿은 뒤에 눌러도 로그에 더 쌓이지 않는다", () => {
   const { store } = setup();
-  for (let i = 0; i < 6; i++) store.bumpHelp();
+  for (let i = 0; i < 6; i++) store.bumpHelp("cheomseongdae");
   assert.equal(store.state.log.filter((l) => l.kind === "help").length, 3);
 });
 
@@ -203,4 +203,23 @@ test("들어갈 때의 장면은 장소마다 한 번 본 것으로 남는다", 
   const again = ctx.open();
   assert.equal(again.state.seongsan.storySeen, true);
   assert.equal(Boolean(again.state.cheomseongdae.storySeen), false);
+});
+
+test("장소가 달라도 같은 꼴로 저장한다(둘째 판의 두 장소)", () => {
+  const two = { buseoksa: read("buseoksa"), sobaeksan: read("sobaeksan") };
+  const storage = fakeStorage();
+  const store = createStore(storage, two, () => 1000, "paldo.compare.v2");
+  assert.deepEqual(store.state.buseoksa.dials, two.buseoksa.start);
+  const [spot, time] = two.sobaeksan.tasks[0].start.split("-");
+  assert.deepEqual([store.state.sobaeksan.spot, store.state.sobaeksan.time, store.state.sobaeksan.task], [spot, time, 1]);
+  store.setDials("buseoksa", { h: 17 });
+  store.setSpot("sobaeksan", "B");
+  assert.equal(JSON.parse(storage.map.get("paldo.compare.v2")).buseoksa.dials.h, 17);
+  assert.equal(storage.map.has(KEY), false);
+});
+
+test("장소의 칸이 빠진 저장은 깨진 것으로 친다", () => {
+  const storage = fakeStorage();
+  storage.map.set(KEY, '{"version": 1, "log": []}');
+  assert.equal(setup(storage).store.status, "broken");
 });

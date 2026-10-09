@@ -42,6 +42,17 @@
     { "has": ["towerFull"], "lacks": ["stars"], "task": 2, "say": "noStars" }
   ],
   "help": ["highlight", "diagram", "preview"],
+  "helpBoxes": {
+    "towerFull": { "1": [0.4, 0.12, 0.2, 0.26], "2": [0.4, 0.12, 0.2, 0.62] },
+    "grass": { "1": [0.06, 0.74, 0.88, 0.22] },
+    "stars": { "2": [0.05, 0.04, 0.3, 0.3] }
+  },
+  "diagrams": {
+    "topCut": "<polyline points=\"110,10 120,2 130,10 140,2 150,10 160,2 170,10 180,2 190,10\"/><path d=\"M150 46 V16 M142 26 L150 16 L158 26\"/>",
+    "towerHidden": "<circle cx=\"118\" cy=\"70\" r=\"26\"/><path d=\"M118 70 H168 M158 62 L168 70 L158 78\"/>",
+    "starsNoTower": "<circle cx=\"118\" cy=\"70\" r=\"26\"/><path d=\"M118 70 H168 M158 62 L168 70 L158 78\"/>",
+    "noStars": "<path class=\"dash\" d=\"M40 22 L43 27 L48 30 L43 33 L40 38 L37 33 L32 30 L37 27 Z\"/><path class=\"dash\" d=\"M70 10 L73 15 L78 18 L73 21 L70 26 L67 21 L62 18 L67 15 Z\"/><path class=\"dash\" d=\"M252 26 L255 31 L260 34 L255 37 L252 42 L249 37 L244 34 L249 31 Z\"/>"
+  },
   "camera": { "A": { "scale": 2.0 }, "B": { "scale": 1.0 }, "C": { "scale": 1.0, "tree": true } },
   "layers": [
     { "id": "far", "image": "cheom-far", "horizon": 0.498, "at": 0.6, "seasons": false },

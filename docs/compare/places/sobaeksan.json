@@ -1,0 +1,72 @@
+{
+  "id": "sobaeksan",
+  "kind": "discrete",
+  "scene": "spots",
+  "name": "소백산 천문대",
+  "memo": "1986.4. 소백산 천문대. 핼리 혜성. 희미했다.",
+  "story": {
+    "back": ["1986.4. 소백산 천문대.", "핼리 혜성. 희미했다."],
+    "sora": "할머니 1986년에 여기서 봤구나."
+  },
+  "staging": true,
+  "stagingNote": "임시 연출이다. 촬영 지점, 가로등, 혜성이 떴던 자리는 규칙을 시험하려고 지은 것이고 현장이나 1986년의 하늘과 견주지 않았다.",
+  "spots": ["A", "B", "C"],
+  "spotNames": { "A": "돔 앞", "B": "능선 위", "C": "가로등 밑" },
+  "times": ["dusk", "night", "dawn"],
+  "timeNames": { "dusk": "저녁", "night": "밤", "dawn": "새벽" },
+  "states": {
+    "A-dusk": ["domeCut", "sunset"], "A-night": ["domeCut", "stars"], "A-dawn": ["domeCut", "stars"],
+    "B-dusk": ["dome", "sunset"], "B-night": ["dome", "stars"], "B-dawn": ["dome", "stars", "cometSpot"],
+    "C-dusk": ["dome", "sunset"], "C-night": ["dome", "washed"], "C-dawn": ["dome", "washed"]
+  },
+  "labels": { "dome": "돔", "stars": "별", "cometSpot": "혜성 자리" },
+  "tasks": [
+    { "id": 1, "memo": "돔과 별을 함께 담아 주렴.", "need": ["dome", "stars"], "forbid": [], "start": "A-night", "timesLocked": true, "answer": "B-night" },
+    { "id": 2, "memo": "혜성이 떴던 자리를 담아 주렴.", "need": ["dome", "cometSpot"], "forbid": [], "timesLocked": false, "answer": "B-dawn" }
+  ],
+  "sora": {
+    "domeCut": "돔이 사진 밖으로 나갔어.",
+    "washed": "가로등이 밝아서 별이 안 보여.",
+    "tooBright": "아직 밝아. 별이 안 떴어.",
+    "notYet": "그 자리가 아직 산 아래야.",
+    "ok1": "돔이랑 별이 같이 들어왔다!",
+    "ok2": "혜성은 없어. 그 자리에 별만 있어."
+  },
+  "soraRules": [
+    { "ok": true, "task": 1, "say": "ok1" },
+    { "ok": true, "task": 2, "say": "ok2" },
+    { "has": ["domeCut"], "say": "domeCut" },
+    { "has": ["washed"], "say": "washed" },
+    { "has": ["sunset"], "say": "tooBright" },
+    { "has": ["stars"], "lacks": ["cometSpot"], "task": 2, "say": "notYet" }
+  ],
+  "nudge": "도움을 눌러 볼까?",
+  "help": ["highlight", "diagram", "preview"],
+  "images": { "A": "sobaek-a", "B": "sobaek-b", "C": "sobaek-c" },
+  "skies": {
+    "dusk": "linear-gradient(#3d3a78, #b8617a 55%, #f0925a)",
+    "night": "linear-gradient(#060b2c, #16205a)",
+    "dawn": "linear-gradient(#0d1646, #2a3a86 60%, #6f6aa8)"
+  },
+  "lights": {
+    "dusk": "brightness(0.8) sepia(0.25) hue-rotate(-12deg)",
+    "night": "brightness(0.36) saturate(0.55) hue-rotate(20deg)",
+    "dawn": "brightness(0.5) saturate(0.6) hue-rotate(14deg)"
+  },
+  "starsAt": ["night", "dawn"],
+  "cometSpot": { "x": 0.74, "y": 0.34 },
+  "lamp": { "spot": "C", "x": 0.41, "y": 0.125 },
+  "helpBoxes": {
+    "dome": { "1": [0.28, 0.34, 0.3, 0.34], "2": [0.28, 0.34, 0.3, 0.34] },
+    "stars": { "1": [0.55, 0.05, 0.38, 0.3] },
+    "cometSpot": { "2": [0.62, 0.22, 0.24, 0.24] }
+  },
+  "diagrams": {
+    "domeCut": "<polyline points=\"110,10 120,2 130,10 140,2 150,10 160,2 170,10 180,2 190,10\"/><path d=\"M150 46 V16 M142 26 L150 16 L158 26\"/>",
+    "washed": "<circle cx=\"90\" cy=\"40\" r=\"26\"/><path d=\"M116 40 H170 M160 32 L170 40 L160 48\"/>",
+    "tooBright": "<path class=\"dash\" d=\"M40 22 L43 27 L48 30 L43 33 L40 38 L37 33 L32 30 L37 27 Z\"/><path class=\"dash\" d=\"M250 26 L253 31 L258 34 L253 37 L250 42 L247 37 L242 34 L247 31 Z\"/>",
+    "notYet": "<circle class=\"dash\" cx=\"222\" cy=\"68\" r=\"20\"/><path d=\"M222 124 V96 M214 106 L222 96 L230 106\"/>"
+  },
+  "reply": ["돔이 그대로구나.", "그 밤엔 다들 목이 빠져라 올려다봤지.", "별은 그때 그 별이다."],
+  "reply2": ["희미했지. 그래도 봤단다.", "일흔여섯 해에 한 번 온다더라.", "다음 2061년 것은 네가 보렴."]
+}
