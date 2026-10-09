@@ -1,0 +1,34 @@
+{
+  "id": "seongsan",
+  "kind": "continuous",
+  "name": "성산일출봉",
+  "latlon": [33.458, 126.942],
+  "memo": "1978.10.15. 신혼여행. 해 뜰 때 찍음. 그림자가 길다.",
+  "memoShort": "해 뜰 때 찍었단다. 그림자가 길지.",
+  "staging": true,
+  "stagingNote": "임시 연출이다. 그림자가 능선 쪽으로 뻗으려면 해를 등져야 해서 사진기가 서쪽을 본다. 실제 일출봉은 뭍의 동쪽 끝이라 뭍에서는 동쪽을 본다.",
+  "view": { "azimuth": 270, "fov": 60 },
+  "layers": [
+    { "id": "sea", "image": "seong-sea", "parallax": 0.1, "horizon": 0.5, "at": 0.5, "seasons": false },
+    { "id": "ridge", "image": "seong-ridge", "parallax": 0.3, "horizon": 0.5, "at": 0.5, "seasons": false },
+    { "id": "field", "image": "seong-field", "parallax": 0.6, "horizon": 0.6, "at": 0.62, "seasons": true },
+    { "id": "grass", "image": "seong-grass", "parallax": 1.0, "horizon": 0.8, "at": 0.86, "seasons": true }
+  ],
+  "shadow": { "image": "seong-shadow" },
+  "dials": { "x": [-1, 1], "d": [0, 1], "s": [0, 1], "h": [0, 24] },
+  "start": { "x": -0.4, "d": 0.2, "s": 0.5, "h": 12 },
+  "target": { "x": 0.3, "d": 0.6, "day": 287, "h": 6.6667 },
+  "tolerance": { "x": 0.1, "d": 0.1 },
+  "seasonDays": [257, 318],
+  "lowSun": [-0.83, 10],
+  "fixDistance": false,
+  "sora": {
+    "composition": "산 모양이 사진이랑 달라.",
+    "season": "들판 색이 좀 다르다.",
+    "night": "할머니 사진은 아침인데.",
+    "noon": "그림자가 없어. 해가 너무 높다.",
+    "evening": "해가 앞에 있어. 그림자가 뒤로 가.",
+    "match": "겹쳤다! 이 그림자, 할머니야?"
+  },
+  "reply": ["해를 등지고 찍었더니 내가 들어갔구나.", "너도 들어갔네.", "그림자가 둘이면 됐다."]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "cheomseongdae",
+  "kind": "discrete",
+  "name": "첨성대",
+  "memo": "1971.5.12. 수학여행. 첨성대 앞에서 단체사진.",
+  "staging": true,
+  "stagingNote": "임시 연출이다. 촬영 지점, 나무, 보이는 것은 규칙을 시험하려고 지은 것이고 현장과 견주지 않았다.",
+  "spots": ["A", "B", "C"],
+  "spotNames": { "A": "가까이", "B": "뒤로", "C": "나무 뒤" },
+  "times": ["day", "dusk", "night"],
+  "timeNames": { "day": "낮", "dusk": "저녁", "night": "밤" },
+  "states": {
+    "A-day": ["grass", "topCut"], "A-dusk": ["grass", "topCut"], "A-night": ["stars", "topCut"],
+    "B-day": ["grass", "towerFull"], "B-dusk": ["grass", "towerFull", "sunset"], "B-night": ["towerFull", "stars"],
+    "C-day": ["grass", "towerHidden"], "C-dusk": ["grass", "towerHidden"], "C-night": ["stars", "towerHidden"]
+  },
+  "labels": { "towerFull": "탑", "grass": "풀밭", "stars": "별" },
+  "tasks": [
+    { "id": 1, "memo": "탑의 끝과 풀밭을 함께 담아 주렴.", "need": ["towerFull", "grass"], "forbid": [], "start": "A-day", "timesLocked": true, "answer": "B-day" },
+    { "id": 2, "memo": "이번엔 탑과 별을 함께 담아 주렴.", "need": ["towerFull", "stars"], "forbid": [], "timesLocked": false, "answer": "B-night" }
+  ],
+  "sora": {
+    "topCut": "탑 끝이 사진 밖이야.",
+    "towerHidden": "나무가 탑을 가렸어.",
+    "noStars": "탑은 됐는데 별이 없어.",
+    "starsNoTower": "별은 있는데 탑이 가려졌어.",
+    "ok1": "탑이 다 들어왔다! 풀밭도.",
+    "ok2": "탑이랑 별이랑 같이 있다!"
+  },
+  "soraRules": [
+    { "ok": true, "task": 1, "say": "ok1" },
+    { "ok": true, "task": 2, "say": "ok2" },
+    { "has": ["topCut"], "say": "topCut" },
+    { "has": ["towerHidden", "stars"], "task": 2, "say": "starsNoTower" },
+    { "has": ["towerHidden"], "say": "towerHidden" },
+    { "has": ["towerFull"], "lacks": ["stars"], "task": 2, "say": "noStars" }
+  ],
+  "help": ["highlight", "diagram", "preview"],
+  "camera": { "A": { "scale": 2.0 }, "B": { "scale": 1.0 }, "C": { "scale": 1.0, "tree": true } },
+  "layers": [
+    { "id": "far", "image": "cheom-far", "horizon": 0.498, "at": 0.6, "seasons": false },
+    { "id": "mid", "image": "cheom-mid", "horizon": 0.497, "at": 0.66, "seasons": false },
+    { "id": "front", "image": "cheom-front", "horizon": 0.604, "at": 0.72, "seasons": false }
+  ],
+  "tree": { "image": "cheom-tree" },
+  "reply": ["내가 보던 탑이 여기 있구나.", "작아서 천삼백 년을 견뎠단다.", "큰 것부터 무너지지."]
+}
