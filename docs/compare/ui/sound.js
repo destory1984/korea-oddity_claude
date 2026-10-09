@@ -31,6 +31,18 @@ export function click(big) {
   o.connect(og); og.connect(ac.destination); o.start(t0); o.stop(t0 + 0.06);
 }
 
+// 다이얼이 맞는 자리에 들어왔을 때의 맑은 두 음.
+export function ding() {
+  if (!ac) return;
+  const t0 = ac.currentTime;
+  for (const [freq, at] of [[880, 0], [1320, 0.07]]) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine"; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t0 + at); g.gain.exponentialRampToValueAtTime(0.16, t0 + at + 0.01); g.gain.exponentialRampToValueAtTime(0.001, t0 + at + 0.22);
+    o.connect(g); g.connect(ac.destination); o.start(t0 + at); o.stop(t0 + at + 0.25);
+  }
+}
+
 export function shutter() {
   if (!ac) return;
   burst(2400, 0.9);

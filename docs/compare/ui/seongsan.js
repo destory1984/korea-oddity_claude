@@ -3,7 +3,7 @@
 import { judgeContinuous, dayOfYear } from "../core/judge.js";
 import { renderScene, answerView, sunFor, oldOpts } from "./scene.js";
 import { createDial } from "./dial.js";
-import { shutter as shutterSound } from "./sound.js";
+import { shutter as shutterSound, ding } from "./sound.js";
 import { showMiss } from "./miss.js";
 
 const MONTH_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -43,6 +43,7 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
   const overlay = q(".overlay");
   const oldButton = q("[data-do=old]");
   let matched = null;
+  const wasOk = {};   // 다이얼마다 방금까지 맞았는가
 
   const look = () => {
     const sun = sunFor(place, dials);
@@ -56,6 +57,13 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
     // 포개지는 순간: 옛 사진을 켜 두었으면 겹친 윤곽선이 알리고, 꺼 두었으면 다이얼이 가볍게 떨린다.
     if (matched === false && verdict.matched && !p.overlay) for (const dial of Object.values(made)) dial.shake();
     matched = verdict.matched;
+    // 다이얼마다 맞는 자리에 들어오면 초록 테와 "맞아"가 뜬다. 막 들어온 순간에는 소리와 떨림으로도 알린다.
+    for (const [key, dial] of Object.entries(made)) {
+      const now = verdict.ok[key];
+      dial.good(now);
+      if (now && wasOk[key] === false) { ding(); try { navigator.vibrate?.(25); } catch { /* 떨림이 없는 기기 */ } }
+      wasOk[key] = now;
+    }
   }
 
   function drawOverlay() {

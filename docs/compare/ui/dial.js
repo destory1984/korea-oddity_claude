@@ -213,6 +213,7 @@ export function createDial(el, opts) {
   return {
     set(v) { value = raw = v; draw(); },
     shake() { el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); },
-    hint(on) { el.classList.toggle("hint", on); },   // 소라가 짚은 것을 고칠 다이얼에 금빛 테가 돈다
+    hint(on) { el.classList.toggle("hint", on); },
+    good(on) { el.classList.toggle("good", on); if (on) el.classList.remove("hint"); },   // 이 다이얼의 값이 맞는 자리에 있다   // 소라가 짚은 것을 고칠 다이얼에 금빛 테가 돈다
   };
 }

@@ -28,7 +28,8 @@ export function judgeContinuous(place, dials, sun) {
   const sora = !okX ? (offX < 0 ? "ridgeRight" : "ridgeLeft") : !okD ? (offD < 0 ? "tooNear" : "tooFar")
     : !season ? "season" : matched ? "match" : time;
   const dial = !okX ? "x" : !okD ? "d" : !season ? "s" : matched ? null : "h";   // 고칠 다이얼
-  return { matched, composition, season, time, sora, dial, line: place.sora[sora] };
+  const ok = { x: okX, d: okD, s: season, h: time === "morning" };   // 다이얼마다 제 값이 맞았는가. 돌리는 동안 화면이 알려 준다.
+  return { matched, composition, season, time, sora, dial, ok, line: place.sora[sora] };
 }
 
 // 이산 판정(첨성대). 상태의 태그를 과제의 need, forbid 에 대어 본다.

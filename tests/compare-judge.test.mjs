@@ -140,3 +140,12 @@ test("성산: 틀린 것을 고칠 다이얼이 함께 나온다", () => {
   for (const h of [2, 12, 17.5]) assert.equal(judge({ ...good, h }).dial, "h");
   assert.equal(judge(good).dial, null);
 });
+
+test("성산: 다이얼마다 제 값이 맞았는지가 따로 나온다", () => {
+  assert.deepEqual(judge(good).ok, { x: true, d: true, s: true, h: true });
+  assert.deepEqual(judge({ ...good, x: 0.1 }).ok, { x: false, d: true, s: true, h: true });
+  assert.deepEqual(judge({ ...good, d: 0.9, h: 12 }).ok, { x: true, d: false, s: true, h: false });
+  assert.deepEqual(judge(seongsan.start).ok, { x: false, d: false, s: false, h: false });
+  // 시각은 그 계절의 해로 본다. 한여름 06:40은 해가 이미 높다.
+  assert.equal(judge({ ...good, s: S(195) }).ok.h, false);
+});
