@@ -79,3 +79,13 @@ test("missStreak: 첨성대는 과제가 바뀌면 다시 센다", () => {
   assert.equal(missStreak([shot(1, 1, false), shot(2, 1, false), shot(3, 1, true), shot(4, 2, false)], "cheomseongdae"), 1);
   assert.equal(missStreak([shot(1, 1, false), shot(2, 1, false), shot(3, 1, false)], "cheomseongdae"), 3);
 });
+
+test("metrics: 가는 길이 있으면 첫 성공까지의 시간을 그 자리에 닿은 때부터 잰다", () => {
+  const log = [
+    { place: "seongsu", t: 0, kind: "enter", value: null },
+    { place: "seongsu", t: 4000, kind: "arrive", value: null },
+    { place: "seongsu", t: 9000, kind: "shutter", value: { matched: true } },
+    { place: "seongsu", t: 20000, kind: "arrive", value: null },
+  ];
+  assert.equal(metrics(log, "seongsu").firstSuccessMs, 5000);
+});

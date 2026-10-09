@@ -223,3 +223,17 @@ test("장소의 칸이 빠진 저장은 깨진 것으로 친다", () => {
   storage.map.set(KEY, '{"version": 1, "log": []}');
   assert.equal(setup(storage).store.status, "broken");
 });
+
+test("arrive, eat: 닿은 것과 먹은 것이 저장되고 로그에 남는다. 그 값이 없는 옛 저장도 그대로 읽는다", () => {
+  const storage = { map: new Map(), getItem(k) { return this.map.has(k) ? this.map.get(k) : null; }, setItem(k, v) { this.map.set(k, v); } };
+  const place = { id: "seongsu", kind: "continuous", start: { s: 0.5, h: 14 } };
+  const first = createStore(storage, { seongsu: place }, () => 1000, "paldo.compare.v3");
+  assert.equal(first.state.seongsu.traveled, undefined);
+  first.arrive("seongsu");
+  first.eat("seongsu");
+  const again = createStore(storage, { seongsu: place }, () => 2000, "paldo.compare.v3");
+  assert.equal(again.status, "ok");
+  assert.equal(again.state.seongsu.traveled, true);
+  assert.equal(again.state.seongsu.ate, true);
+  assert.deepEqual(again.state.log.map((l) => l.kind), ["arrive", "eat"]);
+});

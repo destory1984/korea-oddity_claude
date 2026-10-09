@@ -18,12 +18,13 @@ export function allDone(log, place) {
   return log.some((l) => l.place === place.id && l.kind === "shutter" && (l.value?.matched || (l.value?.ok && l.value.task === last)));
 }
 
-// 장소 하나의 숫자: 첫 진입에서 첫 성공까지(ms), 셔터 횟수, 도움 횟수,
+// 장소 하나의 숫자: 첫 진입(가는 길이 있으면 처음 닿은 때)에서 첫 성공까지(ms), 셔터 횟수, 도움 횟수,
 // retried(더 할 과제가 없는데도 다시 찍기를 눌렀는가), wentOn(첫 성공 뒤 다음 과제를 하러 다시 찍기를 눌렀는가).
 // 두 장소의 retried 가 같은 뜻이 되게 둘을 가른다. 첨성대에서 과제 2로 넘어가는 길도 같은 단추라서다.
 export function metrics(log, placeId) {
   const lines = log.filter((l) => l.place === placeId);
-  const enter = lines.find((l) => l.kind === "enter");
+  // 가는 길이 있는 판에서는 그 자리에 닿은 때(arrive)부터 잰다. 지하철과 걷는 장면의 시간이 섞이지 않는다.
+  const enter = lines.find((l) => l.kind === "arrive") ?? lines.find((l) => l.kind === "enter");
   const success = lines.find(succeeded);
   return {
     firstSuccessMs: enter && success ? success.t - enter.t : null,

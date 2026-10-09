@@ -2,6 +2,7 @@
 
 import { renderScene, viewOf, answerView, shotOpts, oldOpts } from "./scene.js";
 import { replyPhoto } from "./result.js";
+import { keepsake } from "./there.js";
 
 // 시작 화면의 쪽지. 판마다 이야기의 틀이 다르다. 셋째 판은 손녀가 다녀와 보낸 사진을 따라 찍는다.
 const NOTES = {
@@ -33,9 +34,10 @@ export function mountJournal(root, { store, places, onOpen, onStart }) {
     const photo = place.kind === "discrete" ? p.pasted.photo : p.pasted;
     const marks = [mark("자리", p.visited), mark("사진", Boolean(photo)), mark("기억", p.memory)];
     if (place.kind === "discrete") marks.push(mark("다른 시선", p.otherView));
+    if (place.there) marks.push(mark(place.there.name, Boolean(p.ate)));
     return `
       <article class="square" data-place="${place.id}">
-        <div class="photos"><div class="frame"></div><div class="frame second" hidden></div></div>
+        <div class="photos"><div class="frame"></div><div class="frame second" hidden></div>${p.ate && place.there ? keepsake(place) : ""}</div>
         <h2>${place.name}</h2>
         <p class="hand memo">${place.memo}</p>
         <p class="marks">${marks.join("")}</p>

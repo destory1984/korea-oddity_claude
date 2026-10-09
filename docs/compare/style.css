@@ -191,3 +191,32 @@ figcaption { text-align: center; font-size: 19px; }
 .replybox { margin-top: 14px; }
 [data-screen=result] .replybox .reply { margin-top: 0; }
 .square .oldshot { width: 86%; margin: 8px auto 0; }
+
+/* 가는 길: 지하철 노선의 줄 위로 점이 달려 역에 멎고, 출구에서 본 골목이 다가온다 */
+.travel { padding-top: 6vh; text-align: center; cursor: pointer; }
+.travel .lineName b { display: inline-block; padding: 3px 12px; border-radius: 999px; background: var(--line); color: #fff; font-size: 14px; }
+.travel .rail { position: relative; height: 62px; margin: 6px 4px 0; }
+.travel .track { position: absolute; left: 0; right: 0; top: 14px; height: 6px; border-radius: 3px; background: var(--line); }
+.travel .station { position: absolute; top: 0; width: 90px; margin-left: -45px; padding-top: 34px; font-size: 13px; opacity: .65; }
+.travel .station i { position: absolute; left: 50%; top: 8px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: var(--night); border: 4px solid var(--line); }
+.travel .s0 { left: 12%; } .travel .s1 { left: 50%; } .travel .s2 { left: 88%; }
+.travel .s1 { opacity: 1; font-weight: 700; font-size: 15px; }
+.travel .train { position: absolute; top: 5px; left: 50%; width: 24px; height: 24px; margin-left: -12px; border-radius: 50%; background: var(--white);
+  border: 4px solid var(--gold); box-shadow: 0 0 10px 2px rgba(246, 185, 81, .7); animation: ride 2s cubic-bezier(.3, .1, .2, 1) both; }
+@keyframes ride { from { left: -8%; } to { left: 50%; } }
+.travel.short .train { animation: none; }
+.travel .exit { margin: 8px 0 12px; font-size: 15px; opacity: 0; transition: opacity .3s; }
+.travel .exit b { color: var(--gold); }
+.travel .way { opacity: 0; transition: opacity .4s; }
+.travel .way img { transform: scale(1); transition: transform 2.2s ease-out; }
+.travel .sora { opacity: 0; transition: opacity .4s .3s; }
+.travel.walking .exit, .travel.walking .way, .travel.walking .sora { opacity: 1; }
+.travel.walking .way img { transform: scale(1.14); }
+.travel .skip { margin-top: 18px; font-size: 11px; opacity: .4; }
+
+/* 거기서 한 일, 수첩에 남는 딱지 */
+.there { max-width: 320px; margin: 8px auto 0; }
+.there figure { transform: rotate(-1.2deg); padding: 6px 6px 2px; }
+.square .photos { position: relative; }
+.keepsake { position: absolute; right: -5px; bottom: -9px; width: 40%; aspect-ratio: 1; object-fit: cover; border: 3px solid var(--white); border-radius: 3px;
+  transform: rotate(6deg); box-shadow: 1px 2px 0 rgba(0, 0, 0, .35); }

@@ -88,6 +88,20 @@ export function createStore(storage, places, now = Date.now, key = KEY) {
   // 장소에 들어갈 때의 장면(사진 뒷면의 글)은 장소마다 한 번만 보인다.
   store.seeStory = (placeId) => { store.state[placeId].storySeen = true; store.save(); };
 
+  // 가는 길을 다 보고 그 자리에 닿았다. 첫 성공까지의 시간은 여기서부터 잰다(core/log.js).
+  store.arrive = (placeId) => {
+    store.state[placeId].traveled = true;
+    store.log(placeId, "arrive");
+    store.save();
+  };
+
+  // 거기서 먹었다. 수첩의 칸에 딱지가 붙는다.
+  store.eat = (placeId) => {
+    store.state[placeId].ate = true;
+    store.log(placeId, "eat");
+    store.save();
+  };
+
   store.setDials = (placeId, patch) => {
     Object.assign(store.state[placeId].dials, patch);
     store.log(placeId, "dial", patch);

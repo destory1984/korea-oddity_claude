@@ -8,6 +8,8 @@ import { mountStart, mountJournal, mountStory } from "./ui/journal.js";
 import { mountResult, mountAsk } from "./ui/result.js";
 import { mountDiscrete } from "./ui/discrete.js";
 import { mountContinuous } from "./ui/continuous.js";
+import { mountTravel } from "./ui/travel.js";
+import { mountThere } from "./ui/there.js";
 
 const load = async (id) => (await fetch(`places/${id}.json`)).json();
 // 판마다 두 장소를 견준다. 앞이 A안(링을 돌려 포개기), 뒤가 B안(골라 찍고 읽어 고치기)이다.
@@ -43,6 +45,11 @@ function showNotice() {
   if (text) notice.textContent = text;
 }
 
+// 이번에 수첩에서 나서서 닿아 있는 장소. 수첩으로 돌아가면 비운다. 다시 찍으러 갈 때는 길을 또 보이지 않는다.
+let arrivedAt = null;
+// 맞게 찍고 "거기서 한 일"을 볼 차례인 사진의 번호.
+let thereFor = null;
+
 function show(name) {
   for (const [key, section] of Object.entries(sections)) section.hidden = key !== name;
   scrollTo(0, 0);
@@ -56,6 +63,7 @@ function go(screen, placeId) {
 // 두 장소의 기억이 다 채워졌고 아직 답하지 않았으면 수첩 대신 마지막 물음으로 간다.
 function toJournal() {
   const s = store.state;
+  arrivedAt = null;
   go(ids.every((id) => s[id].memory) && s.answer === null ? "ask" : "journal");
 }
 
@@ -86,12 +94,28 @@ function render() {
     mountStory(sections.place, { place, onGo: () => { store.seeStory(placeId); render(); } });
     return show("place");
   }
+  if (screen === "place" && place?.travel && arrivedAt !== placeId) {
+    mountTravel(sections.place, {
+      place, short: Boolean(store.state[placeId].traveled),
+      onArrive: () => { arrivedAt = placeId; store.arrive(placeId); render(); },
+    });
+    return show("place");
+  }
   if (screen === "place" && place) {
     const mount = place.kind === "discrete" ? mountDiscrete : mountContinuous;
-    mount(sections.place, { store, place, onShot: () => go("result"), onBack: toJournal });
+    const onShot = (shot) => {
+      // 장소마다 처음 맞게 찍었을 때, 결과를 보기 전에 거기서 먹는다.
+      if (place.there && (shot?.matched || shot?.ok) && !store.state[placeId].ate) thereFor = shot.id;
+      go("result");
+    };
+    mount(sections.place, { store, place, onShot, onBack: toJournal });
     return show("place");
   }
   const shot = place ? store.state[placeId].shots.at(-1) : null;
+  if (screen === "result" && shot && thereFor === shot.id) {
+    mountThere(sections.result, { place, onNext: () => { thereFor = null; store.eat(placeId); render(); } });
+    return show("result");
+  }
   if (screen === "result" && shot) {
     mountResult(sections.result, {
       store, place, shot, verdict: verdictOf(place, shot),

@@ -163,3 +163,16 @@ test("홍대: 닿을 수 있는 상태 가운데 과제의 답이 정해져 있�
     for (const key of reach) assert.ok(judgeDiscrete(hongdae, task.id, ...key.split("-")).line, `${task.id} ${key}`);
   }
 });
+
+for (const place of [seongsu, hongdae]) {
+  test(`${place.id}: 가는 길과 거기서 한 일이 빠짐없이 있고 글은 25자 안이다`, () => {
+    const { travel, there } = place;
+    assert.equal(travel.stations.length, 3);
+    assert.match(travel.color, /^#[0-9a-f]{6}$/);
+    assert.ok(travel.line && travel.exit);
+    for (const line of [travel.sora, there.sora]) assert.ok([...line].length <= 25, line);
+    assert.ok(there.name);
+    assert.ok(scene(travel.image), travel.image);
+    assert.ok(scene(there.image), there.image);
+  });
+}
