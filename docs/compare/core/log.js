@@ -2,7 +2,16 @@
 
 const succeeded = (line) => line.kind === "shutter" && Boolean(line.value?.matched || line.value?.ok);
 
-// 장소 하나의 숫자 넷: 첫 진입에서 첫 성공까지(ms), 셔터 횟수, 도움 횟수, 성공 뒤 다시 찍기를 눌렀는가.
+// 그 장소에서 더 할 과제가 없는가. "한 번 더 찍기"를 누를 때 main.js 가 이 값을 retry 줄에 적는다.
+// 성산은 한 번 포개면, 첨성대는 마지막 과제를 채우면 참이다.
+export function allDone(log, place) {
+  const last = place.tasks?.at(-1).id;
+  return log.some((l) => l.place === place.id && l.kind === "shutter" && (l.value?.matched || (l.value?.ok && l.value.task === last)));
+}
+
+// 장소 하나의 숫자: 첫 진입에서 첫 성공까지(ms), 셔터 횟수, 도움 횟수,
+// retried(더 할 과제가 없는데도 다시 찍기를 눌렀는가), wentOn(첫 성공 뒤 다음 과제를 하러 다시 찍기를 눌렀는가).
+// 두 장소의 retried 가 같은 뜻이 되게 둘을 가른다. 첨성대에서 과제 2로 넘어가는 길도 같은 단추라서다.
 export function metrics(log, placeId) {
   const lines = log.filter((l) => l.place === placeId);
   const enter = lines.find((l) => l.kind === "enter");
@@ -11,7 +20,8 @@ export function metrics(log, placeId) {
     firstSuccessMs: enter && success ? success.t - enter.t : null,
     shutters: lines.filter((l) => l.kind === "shutter").length,
     helps: lines.filter((l) => l.kind === "help").length,
-    retried: Boolean(success) && lines.some((l) => l.kind === "retry" && l.t >= success.t),
+    retried: lines.some((l) => l.kind === "retry" && l.value?.afterAll === true),
+    wentOn: Boolean(success) && lines.some((l) => l.kind === "retry" && l.value?.afterAll === false && l.t >= success.t),
   };
 }
 

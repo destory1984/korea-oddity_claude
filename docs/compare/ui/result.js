@@ -2,7 +2,7 @@
 
 import { renderScene, viewOf, answerView } from "./scene.js";
 
-export function mountResult(root, { store, place, shot, verdict, onJournal, onRetry }) {
+export function mountResult(root, { store, place, shot, verdict, onJournal, onRetry, onPasted }) {
   const needs = (verdict.needs ?? []).map((n) => `<span class="mark${n.met ? " on" : ""}">${n.label}</span>`).join("");
   root.innerHTML = `
     <h1>${place.name}</h1>
@@ -27,6 +27,7 @@ export function mountResult(root, { store, place, shot, verdict, onJournal, onRe
   if (stuck?.id === shot.id) { paste.textContent = "붙였어"; paste.disabled = true; }
   paste.onclick = () => {
     const r = store.paste(place.id, shot.id);
+    onPasted?.(r);   // 저장이 안 됐으면 화면 위의 안내가 뜬다
     if (!r.saved) { paste.textContent = "다시 붙이기"; return; }   // 저장이 안 되면 성공 연출을 내지 않는다
     paste.textContent = "붙였어";
     paste.disabled = true;

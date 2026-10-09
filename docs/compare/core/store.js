@@ -19,7 +19,7 @@ function fresh(places) {
 }
 
 export function createStore(storage, places, now = Date.now) {
-  const store = { status: "fresh", state: null };
+  const store = { status: "fresh", state: null, unsaved: false };   // unsaved: 마지막 쓰기가 실패했는가
 
   let raw = null;
   try {
@@ -42,7 +42,14 @@ export function createStore(storage, places, now = Date.now) {
 
   const write = (state) => {
     if (store.status === "memory" || store.status === "broken") return false;
-    try { storage.setItem(KEY, JSON.stringify(state)); return true; } catch { return false; }
+    try {
+      storage.setItem(KEY, JSON.stringify(state));
+      store.unsaved = false;
+      return true;
+    } catch {
+      store.unsaved = true;   // 가득 찼거나 막혔다. 화면이 알린다.
+      return false;
+    }
   };
 
   store.save = () => write(store.state);
@@ -89,7 +96,8 @@ export function createStore(storage, places, now = Date.now) {
 
   store.bumpHelp = () => {
     const c = store.state.cheomseongdae;
-    c.help = Math.min(MAX_HELP, c.help + 1);
+    if (c.help >= MAX_HELP) return c.help;   // 더 오를 단계가 없으면 로그에도 쌓지 않는다
+    c.help += 1;
     store.log("cheomseongdae", "help", c.help);
     store.save();
     return c.help;

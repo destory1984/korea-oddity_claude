@@ -178,3 +178,20 @@ test("storage 가 던질 때 새로 시작해도 저장이 안 되는 것을 숨
   assert.equal(ctx.store.status, "memory");
   assert.equal(ctx.store.state.screen, "start");
 });
+
+test("쓰기가 실패하면 저장이 안 된 것을 알 수 있고, 다시 되면 풀린다", () => {
+  const ctx = setup();
+  assert.equal(ctx.store.unsaved, false);
+  ctx.storage.failWrites = true;
+  ctx.store.setSpot("B");
+  assert.equal(ctx.store.unsaved, true);
+  ctx.storage.failWrites = false;
+  ctx.store.setSpot("C");
+  assert.equal(ctx.store.unsaved, false);
+});
+
+test("도움이 3단계에 닿은 뒤에 눌러도 로그에 더 쌓이지 않는다", () => {
+  const { store } = setup();
+  for (let i = 0; i < 6; i++) store.bumpHelp();
+  assert.equal(store.state.log.filter((l) => l.kind === "help").length, 3);
+});

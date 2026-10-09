@@ -90,9 +90,9 @@ py -m http.server 4319 --directory docs
 브라우저에서 `http://localhost:4319/compare/` 를 연다. 같은 와이파이의 손전화에서는 `localhost` 자리에 PC의 주소를 넣는다.
 
 - 여섯 사람에게 시켜 보고 어느 쪽을 한 번 더 하고 싶어 하는지로 가른다. 한 사람이 끝나면 시작 화면의 "로그 내보내기"로 기록을 복사해 두고 "새 사람으로 시작"을 누른다.
-- 로그에는 장소마다 첫 성공까지의 시간, 셔터 횟수, 도움 횟수, 성공 뒤 "한 번 더 찍기"를 눌렀는지가 들어 있다. 기기 밖으로 보내지 않는다.
+- 로그에는 장소마다 첫 성공까지의 시간, 셔터 횟수, 도움 횟수, 더 할 과제가 없는데도 "한 번 더 찍기"를 눌렀는지(`retried`)가 들어 있다. 첨성대에서 과제 2로 넘어가려고 누른 것은 `wentOn` 으로 따로 센다. 기기 밖으로 보내지 않는다.
 - 그림은 챗GPT의 그림 그리기로 받았다([발주서 2](docs/art-order-2.md)). 성산일출봉에서 사진기가 서쪽을 보는 것, 첨성대의 촬영 지점과 나무는 규칙을 시험하려고 지은 연출이다. 현장과 견주지 않았다.
-- 시험은 `node --test tests/compare-data.test.mjs tests/compare-judge.test.mjs tests/compare-store.test.mjs tests/compare-log.test.mjs tests/compare-ui.test.mjs` 로 돌린다. 52개다.
+- 시험은 `node --test tests/compare-data.test.mjs tests/compare-judge.test.mjs tests/compare-store.test.mjs tests/compare-log.test.mjs tests/compare-ui.test.mjs` 로 돌린다. 55개다.
 
 ## 번역 시험 1차
 

@@ -1,7 +1,7 @@
 // 화면 옮기기. 자료를 읽고, 저장과 로그를 화면에 잇는다.
 
 import { createStore } from "./core/store.js";
-import { exportText } from "./core/log.js";
+import { exportText, allDone } from "./core/log.js";
 import { judgeContinuous, judgeDiscrete } from "./core/judge.js";
 import { sunFor } from "./ui/scene.js";
 import { mountStart, mountJournal } from "./ui/journal.js";
@@ -25,6 +25,14 @@ function verdictOf(place, shot) {
   return place.kind === "discrete"
     ? judgeDiscrete(place, shot.task, shot.spot, shot.time)
     : judgeContinuous(place, shot, sunFor(place, shot));
+}
+
+// 저장이 안 되는 것을 숨기지 않는다. 처음부터 막힌 기기(memory)와, 쓰다가 실패한 때(가득 찼다) 둘 다 알린다.
+function showNotice() {
+  const text = store.status === "memory" ? "이 기기에는 저장이 안 돼. 붙이기가 되지 않을 수 있어."
+    : store.unsaved ? "저장이 안 됐어. 기기에 빈 자리가 있는지 봐 줘." : "";
+  notice.hidden = !text;
+  if (text) notice.textContent = text;
 }
 
 function show(name) {
@@ -62,8 +70,7 @@ function render() {
     sections.broken.querySelector("button").onclick = () => { store.startOver(); render(); };
     return show("broken");
   }
-  notice.hidden = store.status !== "memory";
-  if (store.status === "memory") notice.textContent = "이 기기에는 저장이 안 돼. 붙이기가 되지 않을 수 있어.";
+  showNotice();
 
   const { screen, place: placeId } = store.state;
   const place = places[placeId];
@@ -77,7 +84,8 @@ function render() {
     mountResult(sections.result, {
       store, place, shot, verdict: verdictOf(place, shot),
       onJournal: toJournal,
-      onRetry: () => { store.log(placeId, "retry"); go("place", placeId); },
+      onRetry: () => { store.log(placeId, "retry", { afterAll: allDone(store.state.log, place) }); go("place", placeId); },
+      onPasted: showNotice,
     });
     return show("result");
   }

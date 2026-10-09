@@ -18,20 +18,22 @@ const played = [
   line("seongsan", 6000, "shutter", { x: 0, d: 0, s: 0, h: 0, matched: false }),
   line("cheomseongdae", 9000, "shutter", { spot: "B", time: "day", task: 1, ok: true }),
   line("cheomseongdae", 10000, "paste", 2),
-  line("cheomseongdae", 12000, "retry"),
+  line("cheomseongdae", 12000, "retry", { afterAll: false }),
+  line("cheomseongdae", 15000, "shutter", { spot: "B", time: "night", task: 2, ok: true }),
+  line("cheomseongdae", 17000, "retry", { afterAll: true }),
 ];
 
 test("첫 성공까지의 시간, 셔터, 도움, 다시 찍기가 나온다", () => {
-  assert.deepEqual(metrics(played, "cheomseongdae"), { firstSuccessMs: 8000, shutters: 2, helps: 1, retried: true });
+  assert.deepEqual(metrics(played, "cheomseongdae"), { firstSuccessMs: 8000, shutters: 3, helps: 1, retried: true, wentOn: true });
 });
 
 test("성공이 없으면 시간이 비고, 다른 장소의 줄은 세지 않는다", () => {
-  assert.deepEqual(metrics(played, "seongsan"), { firstSuccessMs: null, shutters: 1, helps: 0, retried: false });
+  assert.deepEqual(metrics(played, "seongsan"), { firstSuccessMs: null, shutters: 1, helps: 0, retried: false, wentOn: false });
 });
 
 test("성공 전의 다시 찍기는 세지 않는다", () => {
-  const log = [line("seongsan", 0, "enter"), line("seongsan", 10, "retry"), line("seongsan", 50, "shutter", { matched: true })];
-  assert.deepEqual(metrics(log, "seongsan"), { firstSuccessMs: 50, shutters: 1, helps: 0, retried: false });
+  const log = [line("seongsan", 0, "enter"), line("seongsan", 10, "retry", { afterAll: false }), line("seongsan", 50, "shutter", { matched: true })];
+  assert.deepEqual(metrics(log, "seongsan"), { firstSuccessMs: 50, shutters: 1, helps: 0, retried: false, wentOn: false });
 });
 
 test("내보낸 글은 로그와 숫자와 답이 든 JSON이다", () => {
@@ -56,4 +58,10 @@ test("store 가 하는 일이 차례대로 로그에 쌓인다", () => {
   assert.deepEqual(kinds, ["enter", "dial", "shutter", "paste", "leave"]);
   assert.deepEqual(store.state.log[1].value, { x: 0.3 });
   assert.ok(store.state.log.every((l) => l.place === "seongsan" && typeof l.t === "number"));
+});
+
+test("다음 과제로 넘어가려고 누른 다시 찍기는 세지 않고 wentOn 으로 따로 남는다", () => {
+  const log = played.slice(0, 8);   // 과제 1을 붙이고 다시 찍기를 누른 데까지
+  const m = metrics(log, "cheomseongdae");
+  assert.deepEqual([m.retried, m.wentOn], [false, true]);
 });
