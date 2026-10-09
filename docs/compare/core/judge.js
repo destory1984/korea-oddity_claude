@@ -25,7 +25,9 @@ export function judgeContinuous(place, dials, sun) {
   const okX = Math.abs(offX) <= (tolerance?.x ?? 0) + EPS, okD = Math.abs(offD) <= (tolerance?.d ?? 0) + EPS;
   const composition = okX && okD;
   const day = dayOfYear(dials.s);
-  const season = day >= seasonDays[0] && day <= seasonDays[1];
+  // 계절의 범위가 해를 넘길 수 있다(성수동: 12월 1일 → 2월 20일).
+  const [from, to] = seasonDays;
+  const season = from <= to ? day >= from && day <= to : day >= from || day <= to;
   const time = sun.alt < lowSun[0] ? "night" : sun.alt > lowSun[1] ? "noon" : sun.az < 180 ? "morning" : "evening";
   const matched = composition && season && time === when;
   // 눈에 보이는 사실 하나만 짚는다. 좌우 값이 작으면 겹이 덜 밀려 산이 사진보다 오른쪽에 있고, 거리 값이 작으면 가까워서 산이 크다.

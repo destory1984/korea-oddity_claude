@@ -1,0 +1,36 @@
+{
+  "id": "seongsu",
+  "kind": "continuous",
+  "scene": "seasons",
+  "name": "성수동 빵집",
+  "latlon": [37.544, 127.056],
+  "photo": { "name": "언니 사진", "by": "언니", "look": "recent" },
+  "memo": "2025.12. 성수동 빵집. 눈 오는 아침.",
+  "memoShort": "나도 가 보고 싶구나. 찍어다 주련.",
+  "story": {
+    "back": ["할머니, 여기 진짜 좋아요!", "눈 오는 아침에 소금빵 줄 30분.", "2025.12. 성수동"],
+    "sora": "할머니도 가 보고 싶대. 내가 갈게."
+  },
+  "staging": true,
+  "stagingNote": "임시 연출이다. 실제 가게가 아니라 지어낸 빵집이다. 옛 공장을 고친 붉은 벽돌 건물이라는 것만 성수동에서 가져왔다.",
+  "view": { "azimuth": 150, "fov": 60 },
+  "image": "seongsu",
+  "skyline": 0.3,
+  "rings": ["s", "h"],
+  "dials": { "s": [0, 1], "h": [0, 24] },
+  "start": { "s": 0.5, "h": 14 },
+  "target": { "day": 349, "h": 8, "when": "morning" },
+  "seasonDays": [334, 50],
+  "lowSun": [-0.83, 10],
+  "glows": [],
+  "sora": {
+    "season": "언니 사진엔 눈이 쌓였어.",
+    "night": "아직 깜깜해. 빵집도 닫았어.",
+    "noon": "해가 너무 높아. 사진은 아침이야.",
+    "evening": "저녁이야. 언니 사진은 아침이야.",
+    "match": "언니 사진이랑 똑같다! 빵 냄새 나."
+  },
+  "nudge": "언니 사진을 겹쳐 볼까?",
+  "reply": ["거기가 구두 공장이었단다.", "내 친구 순이가 다녔지.", "벽돌은 그대로구나."],
+  "replyImage": "seongsu-old"
+}

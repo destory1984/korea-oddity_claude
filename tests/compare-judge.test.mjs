@@ -189,3 +189,29 @@ test("소백산: 과제마다 성공하는 상태와 소라의 말", () => {
   for (const [spot, time, task, key] of table) assert.equal(judgeDiscrete(sobaek, task, spot, time).sora, key, `${spot}-${time} 과제 ${task}`);
   assert.deepEqual(judgeDiscrete(sobaek, 2, "B", "night").needs.map((n) => [n.label, n.met]), [["돔", true], ["혜성 자리", false]]);
 });
+
+// ── 셋째 판: 성수동 빵집(겨울 아침), 홍대 떡볶이 골목 ────────────────────
+const seongsu = read("seongsu");
+const hongdae = read("hongdae");
+const judgeS = (dials) => judgeContinuous(seongsu, dials, sunAt(seongsu.latlon[0], seongsu.latlon[1], dayOfYear(dials.s), dials.h * 60 - 540));
+
+test("성수: 겨울 아침이면 포개진다. 계절의 범위가 해를 넘겨도 된다(12월 → 2월)", () => {
+  assert.equal(judgeS({ s: S(349), h: 8 }).matched, true);
+  const dawn = (day) => (sunTimes(seongsu.latlon[0], seongsu.latlon[1], day).rise + 540 + 20) / 60;
+  for (const day of [334, 364, 0, 50]) assert.equal(judgeS({ s: S(day), h: dawn(day) }).matched, true, String(day));
+  for (const day of [333, 51, 195]) assert.equal(judgeS({ s: S(day), h: dawn(day) }).season, false, String(day));
+  assert.equal(judgeS({ s: S(195), h: 8 }).sora, "season");
+  assert.equal(judgeS({ s: S(349), h: 17 }).sora, "evening");
+  for (const key of ["season", "night", "noon", "evening", "match"]) assert.ok(seongsu.sora[key], key);
+});
+
+test("홍대: 과제마다 성공하는 상태와 소라의 말", () => {
+  const ok = (task) => Object.keys(hongdae.states).filter((k) => judgeDiscrete(hongdae, task, ...k.split("-")).ok).sort();
+  assert.deepEqual(ok(1), ["B-day", "B-dusk", "B-night"]);
+  assert.deepEqual(ok(2), ["B-night"]);
+  const table = [
+    ["A", "dusk", 1, "shopOnly"], ["C", "dusk", 1, "crowd"], ["B", "dusk", 1, "ok1"],
+    ["B", "dusk", 2, "noNeon"], ["A", "day", 2, "noNeon"], ["C", "night", 2, "neonNoShop"], ["C", "day", 2, "crowd"], ["B", "night", 2, "ok2"],
+  ];
+  for (const [spot, time, task, key] of table) assert.equal(judgeDiscrete(hongdae, task, spot, time).sora, key, `${spot}-${time} 과제 ${task}`);
+});

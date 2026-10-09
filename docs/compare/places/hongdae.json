@@ -1,0 +1,73 @@
+{
+  "id": "hongdae",
+  "kind": "discrete",
+  "scene": "spots",
+  "name": "홍대 떡볶이 골목",
+  "photo": { "name": "언니 사진", "by": "언니", "look": "recent" },
+  "memo": "2026.5. 홍대 앞 떡볶이. 버스킹 보다가 들어감.",
+  "story": {
+    "back": ["할머니, 여기 떡볶이 최고예요!", "버스킹 보다가 들어갔어요. 매워요.", "2026.5. 홍대 앞"],
+    "sora": "할머니도 먹고 싶대. 내가 가 볼게."
+  },
+  "staging": true,
+  "stagingNote": "임시 연출이다. 실제 가게가 아니라 지어낸 분식집과 골목이다.",
+  "spots": ["A", "B", "C"],
+  "spotNames": { "A": "가게 코앞", "B": "길 건너", "C": "구경꾼 뒤" },
+  "times": ["day", "dusk", "night"],
+  "timeNames": { "day": "낮", "dusk": "저녁", "night": "밤" },
+  "states": {
+    "A-day": ["shopOnly"], "A-dusk": ["shopOnly", "sunset"], "A-night": ["shopOnly", "neon"],
+    "B-day": ["shop", "street"], "B-dusk": ["shop", "street", "sunset"], "B-night": ["shop", "street", "neon"],
+    "C-day": ["crowd", "street"], "C-dusk": ["crowd", "street", "sunset"], "C-night": ["crowd", "street", "neon"]
+  },
+  "labels": { "shop": "가게", "street": "거리", "neon": "간판 불" },
+  "tasks": [
+    { "id": 1, "memo": "가게랑 거리를 함께 담아 주렴.", "need": ["shop", "street"], "forbid": [], "start": "A-dusk", "timesLocked": true, "answer": "B-dusk" },
+    { "id": 2, "memo": "간판에 불 들어온 걸 담아 주렴.", "need": ["shop", "neon"], "forbid": [], "timesLocked": false, "answer": "B-night" }
+  ],
+  "sora": {
+    "shopOnly": "가게만 가득 찼어. 거리가 없어.",
+    "crowd": "사람들이 가게를 가렸어.",
+    "noNeon": "간판 불이 아직 안 켜졌어.",
+    "neonNoShop": "불은 켜졌는데 가게가 가렸어.",
+    "ok1": "가게랑 거리가 같이 들어왔다!",
+    "ok2": "간판에 불 들어왔다! 떡볶이 먹자."
+  },
+  "soraRules": [
+    { "ok": true, "task": 1, "say": "ok1" },
+    { "ok": true, "task": 2, "say": "ok2" },
+    { "has": ["crowd", "neon"], "task": 2, "say": "neonNoShop" },
+    { "has": ["crowd"], "say": "crowd" },
+    { "has": ["shopOnly"], "task": 1, "say": "shopOnly" },
+    { "has": ["shop"], "lacks": ["neon"], "task": 2, "say": "noNeon" },
+    { "has": ["shopOnly"], "lacks": ["neon"], "task": 2, "say": "noNeon" }
+  ],
+  "nudge": "도움을 눌러 볼까?",
+  "help": ["highlight", "diagram", "preview"],
+  "images": { "A": "hongdae-a", "B": "hongdae-b", "C": "hongdae-c" },
+  "skies": {
+    "day": "linear-gradient(#8fc1e8, #cfe6f5)",
+    "dusk": "linear-gradient(#3d3a78, #b8617a 55%, #f0925a)",
+    "night": "linear-gradient(#070b2a, #1a2260)"
+  },
+  "lights": {
+    "day": "none",
+    "dusk": "brightness(0.82) sepia(0.25) hue-rotate(-12deg)",
+    "night": "brightness(0.42) saturate(0.7) hue-rotate(18deg)"
+  },
+  "starsAt": [],
+  "neon": {},
+  "helpBoxes": {
+    "shop": { "1": [0.2, 0.3, 0.35, 0.45], "2": [0.2, 0.3, 0.35, 0.45] },
+    "street": { "1": [0.05, 0.76, 0.9, 0.2] },
+    "neon": { "2": [0.2, 0.26, 0.35, 0.14] }
+  },
+  "diagrams": {
+    "shopOnly": "<path d=\"M40 100 H12 M22 92 L12 100 L22 108\"/><path d=\"M260 100 H288 M278 92 L288 100 L278 108\"/>",
+    "crowd": "<circle cx=\"150\" cy=\"120\" r=\"30\"/><path d=\"M150 86 V52 M142 62 L150 52 L158 62\"/>",
+    "neonNoShop": "<circle cx=\"150\" cy=\"120\" r=\"30\"/><path d=\"M150 86 V52 M142 62 L150 52 L158 62\"/>",
+    "noNeon": "<rect class=\"dash\" x=\"70\" y=\"52\" width=\"110\" height=\"26\" rx=\"4\"/>"
+  },
+  "reply": ["그 골목에 떡볶이집이 아직 있구나.", "나도 언니 따라가서 먹었단다.", "맵다고 물을 석 잔 마셨지."],
+  "reply2": ["밤에는 저렇게 환하구나.", "우리 땐 해 지면 집에 갔지.", "너는 좀 더 놀다 오렴."]
+}
