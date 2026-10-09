@@ -1,7 +1,7 @@
 // 성산일출봉 화면(A안). 다이얼 넷(좌우, 거리, 계절, 시각)으로 할머니의 바랜 사진과 포갠다.
 
 import { judgeContinuous, dayOfYear } from "../core/judge.js";
-import { renderScene, answerView, sunFor } from "./scene.js";
+import { renderScene, answerView, sunFor, oldOpts } from "./scene.js";
 import { createDial } from "./dial.js";
 import { shutter as shutterSound } from "./sound.js";
 import { showMiss } from "./miss.js";
@@ -61,7 +61,7 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
   function drawOverlay() {
     overlay.hidden = !p.overlay;
     oldButton.classList.toggle("on", p.overlay);
-    if (p.overlay) renderScene(overlay, place, answerView(place), { faded: true, outline: true, still: true });
+    if (p.overlay) renderScene(overlay, place, answerView(place), { ...oldOpts(place), outline: true });
   }
 
   const common = (key) => ({
@@ -95,18 +95,38 @@ export function mountSeongsan(root, { store, place, onShot, onBack }) {
     const shot = store.addShot(place.id, { ...dials, matched: verdict.matched });
     if (!shot) return;   // 연달아 누른 것은 한 장이다
     shutterSound();
-    if (verdict.matched) return onShot(shot, verdict);
+    if (verdict.matched) return reveal(shot, verdict);
     // 틀렸으면 이 화면에 머문다. 소라가 보이는 사실 하나를 짚고, 고칠 다이얼에 금빛 테가 돈다.
     showMiss(q(".stage"), { store, place, verdict, nudge: { can: !p.overlay, button: oldButton }, onLook: () => onShot(shot, verdict) });
     for (const [key, dial] of Object.entries(made)) dial.hint(key === verdict.dial);
   };
+
+  // 할머니가 섰던 자리와 때에 서서 찍었다. 소라의 그림자가 할머니의 그림자가 있던 자리로 천천히 드러난다.
+  // 수첩에서 할머니가 모습을 보이는 단 한 번이라, 바로 결과 화면으로 넘기지 않고 3초 머문다.
+  function reveal(shot, verdict) {
+    const stage = q(".stage");
+    q(".dials").classList.add("locked");
+    q("[data-do=shutter]").disabled = true;
+    stage.querySelector(".miss")?.remove();
+    for (const dial of Object.values(made)) dial.hint(false);
+    stage.classList.remove("flash"); void stage.offsetWidth; stage.classList.add("flash");
+    renderScene(frame, place, { ...dials, sun: sunFor(place, dials) }, { still: true, reveal: true, shadow: true });
+    setTimeout(() => {
+      if (!frame.isConnected) return;
+      const box = document.createElement("div");
+      box.className = "miss";
+      box.innerHTML = `<p class="sora">${verdict.line}</p>`;
+      stage.appendChild(box);
+    }, 1700);
+    setTimeout(() => { if (frame.isConnected) onShot(shot, verdict); }, 3600);
+  }
 
   draw();
   drawOverlay();
   // 처음 들어오면 옛 사진을 2.5초 겹쳐 보여 주고 걷는다. 무엇과 포개야 하는지를 먼저 본다(첨성대가 과제를 처음 볼 때와 같다).
   if (!p.shots.length && !p.overlay) {
     overlay.hidden = false;
-    renderScene(overlay, place, answerView(place), { faded: true, outline: true, still: true });
+    renderScene(overlay, place, answerView(place), { ...oldOpts(place), outline: true });
     setTimeout(() => { if (overlay.isConnected && !p.overlay) overlay.hidden = true; }, 2500);
   }
 }

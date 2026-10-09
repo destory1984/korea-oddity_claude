@@ -195,3 +195,12 @@ test("도움이 3단계에 닿은 뒤에 눌러도 로그에 더 쌓이지 않�
   for (let i = 0; i < 6; i++) store.bumpHelp();
   assert.equal(store.state.log.filter((l) => l.kind === "help").length, 3);
 });
+
+test("들어갈 때의 장면은 장소마다 한 번 본 것으로 남는다", () => {
+  const ctx = setup();
+  assert.equal(Boolean(ctx.store.state.seongsan.storySeen), false);
+  ctx.store.seeStory("seongsan");
+  const again = ctx.open();
+  assert.equal(again.state.seongsan.storySeen, true);
+  assert.equal(Boolean(again.state.cheomseongdae.storySeen), false);
+});

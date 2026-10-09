@@ -1,7 +1,7 @@
 // 첨성대 화면(B안). 촬영 지점 셋과 때 셋에서 골라 찍고, 결과를 읽어 하나만 바꿔 다시 찍는다.
 
 import { judgeDiscrete } from "../core/judge.js";
-import { renderScene, viewOf, answerView } from "./scene.js";
+import { renderScene, viewOf, answerView, shotOpts, oldOpts } from "./scene.js";
 import { shutter as shutterSound } from "./sound.js";
 import { showMiss, clearMiss } from "./miss.js";
 
@@ -75,7 +75,7 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
 
   function drawOld(highlight) {
     const old = q(".oldphoto");
-    renderScene(old.querySelector(".frame"), place, answerView(place, c().task), { faded: true, still: true });
+    renderScene(old.querySelector(".frame"), place, answerView(place, c().task), oldOpts(place, c().task));
     old.querySelector(".boxes").innerHTML = !highlight ? "" : task().need.map((tag) => {
       const [x, y, w, h] = HIGHLIGHT[tag][c().task] ?? HIGHLIGHT[tag][1];
       return `<i style="left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${h * 100}%"></i>`;
@@ -118,8 +118,8 @@ export function mountCheomseongdae(root, { store, place, onShot, onBack }) {
   q("[data-do=help]").onclick = () => { q("[data-do=help]").classList.remove("pulse"); store.bumpHelp(); drawHelp(); };
   q("[data-do=compare]").onclick = () => {
     const [before, after] = c().shots.slice(-2);
-    renderScene(q(".before"), place, viewOf(place, before), { still: true });
-    renderScene(q(".after"), place, viewOf(place, after), { still: true });
+    renderScene(q(".before"), place, viewOf(place, before), shotOpts(before));
+    renderScene(q(".after"), place, viewOf(place, after), shotOpts(after));
     q(".sheet").hidden = false;
   };
   q(".sheet").onclick = () => { q(".sheet").hidden = true; };

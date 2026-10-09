@@ -78,6 +78,9 @@ export function createStore(storage, places, now = Date.now) {
     store.save();
   };
 
+  // 장소에 들어갈 때의 장면(사진 뒷면의 글)은 장소마다 한 번만 보인다.
+  store.seeStory = (placeId) => { store.state[placeId].storySeen = true; store.save(); };
+
   store.setDials = (patch) => {
     Object.assign(store.state.seongsan.dials, patch);
     store.log("seongsan", "dial", patch);

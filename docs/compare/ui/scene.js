@@ -63,10 +63,13 @@ function buildCheom(frame, place) {
   }
   for (const layer of place.layers) parts.layers[layer.id] = layerImg(frame, place, layer.id, layer.image, layer.horizon, layer.at);
   parts.tree = layerImg(frame, place, "tree", place.tree.image, place.tree.horizon, place.tree.at);
+  // 사진에만 있는 것: 1971년 수학여행의 아이들. 할머니의 사진에서만 보인다.
+  parts.people = layerImg(frame, place, "people", place.people.image, place.people.horizon, place.people.at);
   return parts;
 }
 
-function drawCheom(parts, place, view) {
+function drawCheom(parts, place, view, opts) {
+  parts.people.style.opacity = opts.people ? "1" : "0";
   const cam = place.camera[view.spot] ?? place.camera.B;
   parts.sky.style.background = CHEOM_SKY[view.time] ?? CHEOM_SKY.day;
   parts.stars.style.opacity = view.time === "night" ? "1" : "0";
@@ -88,7 +91,8 @@ function drawCheom(parts, place, view) {
 const built = new WeakMap();
 
 // 같은 frame 에 다시 부르면 겹을 새로 만들지 않고 놓는 값만 고친다.
-// opts: faded(할머니의 바랜 사진), gray(해답 미리보기), outline(윤곽선), still(옮기는 연출 없이 바로)
+// opts: faded(할머니의 바랜 사진), gray(해답 미리보기), outline(윤곽선), still(옮기는 연출 없이 바로),
+//       people(첨성대: 사진에만 있는 아이들), shadow(성산: 찍는 사람의 그림자를 보인다), reveal(그림자가 천천히 드러난다)
 export function renderScene(frame, place, view, opts = {}) {
   let parts = built.get(frame);
   if (!parts || parts.placeId !== place.id) {
@@ -101,9 +105,14 @@ export function renderScene(frame, place, view, opts = {}) {
   frame.classList.toggle("gray", Boolean(opts.gray));
   frame.classList.toggle("outline", Boolean(opts.outline));
   frame.classList.toggle("still", Boolean(opts.still));
-  if (place.kind === "discrete") drawCheom(parts, place, view);
-  else drawSeongsan(parts, place, view);
+  frame.classList.toggle("reveal", Boolean(opts.reveal));
+  if (place.kind === "discrete") drawCheom(parts, place, view, opts);
+  else drawSeongsan(parts, place, view, opts);
 }
+
+// 그 사진을 놓을 때의 opts. 포개진 사진에는 그림자가, 할머니의 첫 사진에는 아이들이 있다.
+export const shotOpts = (shot) => ({ still: true, shadow: Boolean(shot.matched) });
+export const oldOpts = (place, taskId = 1) => ({ faded: true, still: true, shadow: true, people: place.kind === "discrete" && taskId === 1 });
 
 // 저장한 사진(상태값)을 풍경으로 놓을 값으로.
 export function viewOf(place, shot) {
@@ -181,7 +190,7 @@ function buildSeongsan(frame, place) {
   return parts;
 }
 
-function drawSeongsan(parts, place, view) {
+function drawSeongsan(parts, place, view, opts) {
   const sun = view.sun ?? sunFor(place, view);
   const [lowFrom, lowTo] = place.lowSun;
   parts.sky.style.background = skyColor(sun);
@@ -206,8 +215,9 @@ function drawSeongsan(parts, place, view) {
   }
 
   // 그림자: 해가 낮게 떠 있는 아침에만. 찍는 사람의 것이라 좌우와 거리에 따라 움직이지 않는다.
+  // 다이얼을 돌리는 동안에는 보이지 않는다. 할머니가 섰던 자리와 때에 서서 찍은 뒤에야 드러난다(opts.shadow).
   const morning = sun.alt >= lowFrom && sun.alt <= lowTo && sun.az < 180;
   const long = 1 - clamp(sun.alt / lowTo, 0, 1) * 0.5;
-  parts.shadow.style.opacity = morning ? "0.55" : "0";
+  parts.shadow.style.opacity = morning && opts.shadow ? "0.55" : "0";
   parts.shadow.style.transform = `scaleY(${long.toFixed(3)})`;
 }

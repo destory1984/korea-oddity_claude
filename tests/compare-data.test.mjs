@@ -45,3 +45,22 @@ test("소라의 말: 첨성대는 여섯 줄, 성산은 구도를 네 갈래로 
   assert.deepEqual(Object.keys(seongsan.sora).sort(),
     ["evening", "match", "night", "noon", "ridgeLeft", "ridgeRight", "season", "tooFar", "tooNear"]);
 });
+
+for (const place of [seongsan, cheom]) {
+  test(`${place.id}: 들어갈 때의 장면이 있다(사진 뒷면의 글과 소라의 한마디)`, () => {
+    assert.ok(place.story.back.length >= 2 && place.story.back.length <= 3);
+    assert.ok([...place.story.sora].length <= 25, place.story.sora);
+    for (const line of place.story.back) assert.ok([...line].length <= 25, line);
+  });
+}
+
+test("성산: 그림자는 포개지기 전에 글로 미리 말하지 않는다", () => {
+  const before = [seongsan.memo, seongsan.memoShort, ...seongsan.story.back, seongsan.story.sora,
+    ...Object.entries(seongsan.sora).filter(([key]) => key !== "match").map(([, line]) => line)];
+  for (const line of before) assert.ok(!line.includes("그림자"), line);
+  assert.ok(seongsan.sora.match.includes("그림자"));
+});
+
+test("첨성대: 과제 2에도 답장 세 줄이 있다", () => {
+  assert.equal(cheom.reply2.length, 3);
+});

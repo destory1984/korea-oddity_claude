@@ -4,7 +4,7 @@ import { createStore } from "./core/store.js";
 import { exportText, allDone } from "./core/log.js";
 import { judgeContinuous, judgeDiscrete } from "./core/judge.js";
 import { sunFor } from "./ui/scene.js";
-import { mountStart, mountJournal } from "./ui/journal.js";
+import { mountStart, mountJournal, mountStory } from "./ui/journal.js";
 import { mountResult, mountAsk } from "./ui/result.js";
 import { mountCheomseongdae } from "./ui/cheomseongdae.js";
 import { mountSeongsan } from "./ui/seongsan.js";
@@ -74,6 +74,10 @@ function render() {
 
   const { screen, place: placeId } = store.state;
   const place = places[placeId];
+  if (screen === "place" && place && !store.state[placeId].storySeen) {
+    mountStory(sections.place, { place, onGo: () => { store.seeStory(placeId); render(); } });
+    return show("place");
+  }
   if (screen === "place" && place) {
     const mount = place.kind === "discrete" ? mountCheomseongdae : mountSeongsan;
     mount(sections.place, { store, place, onShot: () => go("result"), onBack: toJournal });
