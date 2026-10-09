@@ -1,30 +1,16 @@
-// 가로 다이얼 하나. 2권(시간 한량)의 유리 다이얼의 윗머리만 보이는 낮은 띠다.
+// 가로 다이얼 하나. 카메라 렌즈의 링처럼 생겼고 그렇게 돈다.
 // 끌면 눈금이 흐르고, 놓으면 굴리던 힘으로 더 돌다가 눈금에 딱 멎는다. PC에서는 휠로도 굴린다.
 
 import { click } from "./sound.js";
 
 const TICK_PX = 12;        // 가운데에서 한 눈금의 너비. opts.tickPx 로 바꿀 수 있다(자리가 셋뿐인 다이얼은 넓게).
-const FRICTION = 0.94;     // 놓은 뒤 한 장면(1/60초)마다 남는 빠르기
+const FRICTION = 0.9;      // 놓은 뒤 한 장면(1/60초)마다 남는 빠르기. 렌즈의 링은 기름을 먹어 묵직하다: 조금만 더 돌고 멎는다.
 const STOP = 0.02;         // 이보다 느려지면(눈금/장면) 멎을 자리를 찾는다
 const MAX_SPEED = 1.5;     // 눈금/장면
 const OVER = 1.5;          // 끝이 있는 다이얼이 끝을 넘어 늘어나는 눈금 수
-const GLASS_TOP = "#0c1442", GLASS_FOOT = "#04061e";
-const GOLD = "#d8b866", GOLD_LIT = "#f3dc9a", GOLD_SHADE = "#8a6f34", GOLD_BRIGHT = "#ffe9a8";
-const KICK_MS = 80;          // 눈금이 지나갈 때 바늘이 이만큼 동안 1픽셀 내려앉는다
-const SPARK_MS = 340, BEVEL = 6;
-// 북두칠성. 별마다 실제 자리다: 꼴의 가운데에서 동쪽(왼쪽)과 북쪽으로 몇 도인가. 2권에서 적경과 적위로 셈한 값이다.
-const DIPPER = [
-  { east: -11.5, north: 6.75, bright: true }, { east: -11.8, north: 1.38, bright: true }, { east: -4.3, north: -1.31, bright: true },
-  { east: -1.2, north: 2.03, bright: false }, { east: 4.3, north: 0.96, bright: true }, { east: 8.6, north: -0.07, bright: true }, { east: 12.0, north: -5.69, bright: true },
-];
-const DIPPER_LINES = [[0, 1], [1, 2], [2, 3], [3, 0], [3, 4], [4, 5], [5, 6]];
-const DIPPER_PX_PER_DEG = 1.7, DIPPER_DEPTH = 46, DIPPER_EVERY = 22;   // 264픽셀마다 하나. 띠가 낮아 2권의 절반 크기다.
-// 같은 두 정수에는 늘 같은 0 → 1의 수(별가루의 자리)
-function chance(a, b) {
-  let x = (a * 374761393 + b * 668265263) | 0;
-  x = Math.imul(x ^ (x >>> 13), 1274126177);
-  return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
-}
+const GOLD_LIT = "#f3dc9a", GOLD_BRIGHT = "#ffe9a8";
+const KICK_MS = 80;          // 눈금이 지나갈 때 기준선이 이만큼 동안 밝아진다
+
 const FONT = '"Pretendard Variable", Pretendard, "Malgun Gothic", sans-serif';
 
 const round4 = (v) => Math.round(v * 1e4) / 1e4;   // 눈금을 여러 번 더해 생기는 부동소수의 밀림을 지운다
@@ -56,14 +42,13 @@ export function createDial(el, opts) {
   let value = opts.value;
   let raw = value;        // 지금 바늘 아래의 값(눈금에 맞추기 전). 끝이 있는 다이얼은 끝을 조금 넘을 수 있다.
   let lastIndex = Math.round((value - min) / step);
-  let speed = 0, frame = 0, dragging = null, kickedAt = -1000;
+  let speed = 0, frame = 0, dragging = null, kickedAt = -1000, kickFrame = 0;
 
   // ── 그리기 ──────────────────────────────────────────────────────────
-  // 생김새는 시간 한량(2권)의 유리 다이얼이다(시험판 overlay-proto.html 의 drawDial 을 옮겼다). 별자리판 같은 짙은 남색의
-  // 두꺼운 유리, 은은하게 빛나는 금빛 테, 유리 속에서 함께 도는 북두칠성과 별가루, 굴릴 때 유리 위의 반짝임.
-  // 2권은 화면 아래에 큰 원반 하나를 두지만 여기는 한 화면에 넷이라, 원반의 윗머리만 보이는 낮은 띠로 놓았다.
-  let sparks = [], lastCenter = null, owed = 0, sparkFrame = 0;
-
+  // 카메라 렌즈의 링이다(사용자, 2026.10.10: "카메라 렌즈 돌리는 것처럼 하자"). 렌즈 경통을 옆에서 본 모습으로,
+  // 위쪽은 눈금과 글이 새겨진 띠, 아래쪽은 손에 잡히는 톱니 띠다. 둘이 함께 돌고, 둥근 통이라 가장자리로 갈수록
+  // 눈금이 촘촘해지고 어두워진다. 가운데 위의 금빛 표시는 움직이지 않는 기준선이다.
+  // 색은 시리즈의 남색과 금빛을 지켰다: 검푸른 경통, 흰 새김, 금빛 강조.
   function draw() {
     const w = el.clientWidth, h = el.clientHeight;
     if (!w) return;   // 아직 화면에 없다. 보이게 되면 다시 그린다(아래의 ResizeObserver).
@@ -73,156 +58,99 @@ export function createDial(el, opts) {
     c.setTransform(ratio, 0, 0, ratio, 0, 0);
     c.clearRect(0, 0, w, h);
 
-    const now = performance.now();
-    const good = el.classList.contains("good");   // 값이 맞는 자리에 있으면 테가 초록으로 빛난다
-    const RIM = good ? "#8fe39a" : GOLD, RIM_LIT = good ? "#d6ffdc" : GOLD_LIT, RIM_SHADE = good ? "#3f9a52" : GOLD_SHADE;
-    const GLOW = good ? "150,240,165" : "255,236,180";
-    const radius = w * 1.6, cx = w / 2, apex = 13, cy = apex + radius;
-    const center = (raw - min) / step;   // 바늘 아래에 있는 눈금의 번호
-    const disc = () => { c.beginPath(); c.arc(cx, cy, radius, 0, Math.PI * 2); };
-    // 눈금 u 가 테에서 depth 픽셀 안쪽에 놓이는 자리
-    const at = (u, depth) => { const a = ((u - center) * tickPx) / radius; return { x: cx + Math.sin(a) * (radius - depth), y: cy - Math.cos(a) * (radius - depth) }; };
-    const ring = (r, colour, width, alpha = 1, dash = null) => {
-      c.globalAlpha = alpha; c.strokeStyle = colour; c.lineWidth = width;
-      if (dash) c.setLineDash(dash);
-      c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
-      c.setLineDash([]); c.globalAlpha = 1;
+    const good = el.classList.contains("good");   // 값이 맞는 자리에 있으면 기준선이 초록으로 켜진다
+    const MARK = good ? "#8fe39a" : GOLD_BRIGHT;
+    const cx = w / 2, radius = w * 0.62;
+    const band = Math.round(h * 0.6);    // 눈금 띠의 높이. 그 아래는 톱니 띠다.
+    const center = (raw - min) / step;   // 기준선 아래에 있는 눈금의 번호
+    // 링 위의 자리 u(눈금 번호)가 화면에서 보이는 곳. face 는 그 자리가 이쪽을 얼마나 바라보는가(가운데 1, 가장자리 0).
+    const at = (u) => {
+      const a = ((u - center) * tickPx) / radius;
+      return Math.abs(a) < Math.PI / 2 ? { x: cx + Math.sin(a) * radius, face: Math.cos(a) } : null;
     };
-    const arc = (r, from, to, colour, width, blur = 0) => {
-      c.save(); c.strokeStyle = colour; c.lineWidth = width; c.lineCap = "round";
-      if (blur) { c.shadowColor = colour; c.shadowBlur = blur; }
-      c.beginPath(); c.arc(cx, cy, r, -Math.PI / 2 + from, -Math.PI / 2 + to); c.stroke(); c.restore();
-    };
-    const star = (x, y, size) => {   // 네 갈래 별
-      c.beginPath();
-      for (let i = 0; i < 8; i++) { const r = i % 2 === 0 ? size : size * 0.3, a = (i * Math.PI) / 4 - Math.PI / 2; c.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); }
-      c.closePath();
-    };
-    const span = Math.ceil((w / 2 + 24) / tickPx);   // 화면에 들어오는 눈금 수의 절반
+    const reach = Math.ceil((radius * Math.PI / 2) / tickPx) + 1;
     const seen = (i) => wrap || (i >= 0 && i <= count);
 
-    // 유리. 테 위에 옅은 그림자가 진다.
-    c.save(); c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 9; c.shadowOffsetY = -1;
-    const glass = c.createLinearGradient(0, apex, 0, h);
-    glass.addColorStop(0, GLASS_TOP); glass.addColorStop(1, GLASS_FOOT);
-    c.fillStyle = glass; disc(); c.fill(); c.restore();
+    // 눈금 띠: 매끈한 검푸른 경통
+    const barrel = c.createLinearGradient(0, 0, 0, band);
+    barrel.addColorStop(0, "#1b2140"); barrel.addColorStop(0.5, "#101531"); barrel.addColorStop(1, "#0a0d22");
+    c.fillStyle = barrel; c.fillRect(0, 0, w, band);
 
-    // 유리 속의 별자리판. 다이얼과 함께 돈다: 점선 동그라미, 별가루, 북두칠성. 꾸밈이지 계산한 하늘이 아니다.
-    c.save(); disc(); c.clip();
-    ring(radius - 46, GOLD, 0.8, 0.45, [5, 6]);
-    const unit = 12 / tickPx;   // 12픽셀을 눈금 수로. 별가루와 북두칠성은 눈금의 너비와 상관없이 같은 촘촘함으로 놓는다.
-    const first = Math.floor((center - span) / unit), last = Math.ceil((center + span) / unit);
-    c.fillStyle = "#ffffff";
-    for (let i = first; i <= last; i++) for (let k = 0; k < 2; k++) {
-      if (chance(i, 20 + k) > 0.55) continue;
-      const p = at((i + chance(i, 30 + k) - 0.5) * unit, 28 + chance(i, 40 + k) * 30);
-      c.globalAlpha = 0.18 + chance(i, 50 + k) * 0.3;
-      c.beginPath(); c.arc(p.x, p.y, 0.7, 0, Math.PI * 2); c.fill();
-    }
-    for (let n = Math.floor(first / DIPPER_EVERY) - 1; n <= Math.floor(last / DIPPER_EVERY) + 1; n++) {
-      const middle = (n * DIPPER_EVERY + DIPPER_EVERY / 2) * unit;
-      const spot = ({ east, north }) => at(middle - (east * DIPPER_PX_PER_DEG) / tickPx, DIPPER_DEPTH - north * DIPPER_PX_PER_DEG);
-      const stars = DIPPER.map(spot);
-      c.strokeStyle = GOLD_BRIGHT; c.lineWidth = 0.8; c.globalAlpha = 0.32;   // 글 뒤에 깔리는 바탕이라 옅게
-      c.beginPath();
-      for (const [from, to] of DIPPER_LINES) { c.moveTo(stars[from].x, stars[from].y); c.lineTo(stars[to].x, stars[to].y); }
-      c.stroke();
-      c.fillStyle = GOLD_BRIGHT;
-      DIPPER.forEach((one, k) => {
-        c.save(); c.globalAlpha = 0.5;
-        if (one.bright) { c.shadowColor = GOLD_BRIGHT; c.shadowBlur = 3; star(stars[k].x, stars[k].y, 3); c.fill(); }
-        else { c.beginPath(); c.arc(stars[k].x, stars[k].y, 1.2, 0, Math.PI * 2); c.fill(); }
-        c.restore();
-      });
-    }
-    c.globalAlpha = 1;
-    // 유리 윗부분을 가로지르는 윤기
-    const sheen = c.createLinearGradient(0, apex, 0, apex + 34);
-    sheen.addColorStop(0, "rgba(160,180,255,.16)"); sheen.addColorStop(1, "rgba(160,180,255,0)");
-    c.fillStyle = sheen; c.fillRect(0, apex, w, 34);
-    // 유리의 두께: 테 바로 안의 빛 띠, 깎인 면이 끝나는 어두운 줄, 그 아래 가는 빛, 짧은 되비침 둘
-    ring(radius - 8 - BEVEL / 2, "rgba(190,210,255,1)", BEVEL, 0.15);
-    ring(radius - 9 - BEVEL, "rgba(0,0,16,1)", 2, 0.55);
-    ring(radius - 11 - BEVEL, "rgba(170,195,255,1)", 1, 0.3);
-    arc(radius - 8 - BEVEL / 2, -0.16, -0.05, "rgba(255,255,255,.5)", 2, 6);
-    arc(radius - 8 - BEVEL / 2, 0.08, 0.12, "rgba(255,255,255,.35)", 1.6, 4);
-    // 굴릴 때의 반짝임: 지난 장면보다 많이 돌았을수록 많이 켜진다. 유리에 붙어 함께 돌고 3분의 1초에 사라진다.
-    const turned = lastCenter === null ? 0 : Math.abs(center - lastCenter) / unit;
-    owed = Math.min(5, owed + turned * 1.2);
-    while (owed >= 1 && sparks.length < 24) {
-      owed -= 1;
-      sparks.push({ u: center + (Math.random() - 0.5) * (w / tickPx), depth: 6 + Math.random() * 46, size: 2 + Math.random() * 3, born: now });
-    }
-    sparks = sparks.filter((spark) => now - spark.born < SPARK_MS);
-    for (const spark of sparks) {
-      const p = at(spark.u, spark.depth), life = (now - spark.born) / SPARK_MS;
-      c.save(); c.globalAlpha = Math.sin(life * Math.PI); c.shadowColor = "rgba(255,255,255,.95)"; c.shadowBlur = 8; c.fillStyle = "#ffffff";
-      star(p.x, p.y, spark.size * (0.6 + 0.4 * Math.sin(life * Math.PI))); c.fill(); c.restore();
-    }
-    lastCenter = center;
-    // 테가 빛을 받는 곳에 맺힌 빛
-    for (const [angle, size] of [[-0.13, 4.5], [0.06, 3.2], [0.16, 3.8]]) {
-      c.save(); c.globalAlpha = 0.8; c.shadowColor = "rgba(255,255,255,.95)"; c.shadowBlur = 8; c.fillStyle = "#ffffff";
-      star(cx + Math.sin(angle) * (radius - 3), cy - Math.cos(angle) * (radius - 3), size); c.fill(); c.restore();
-    }
-    // 가장자리에 빛이 모인다
-    ring(radius - 7, `rgba(${GLOW},1)`, 12, good ? 0.3 : 0.18);
-    c.restore();
-    // 그 빛이 테 밖으로 조금 넘친다
-    c.save(); c.shadowColor = `rgba(${GLOW},.85)`; c.shadowBlur = good ? 14 : 10; ring(radius - 1, `rgba(${GLOW},.9)`, 1.5); c.restore();
-    // 금빛 테 둘, 그 사이가 유리다
-    ring(radius - 1.2, RIM, 2.4); ring(radius - 0.3, RIM_LIT, 0.7, 0.9); ring(radius - 6, RIM, 1.2, 0.9); ring(radius - 7, RIM_SHADE, 0.6, 0.8);
-
-    // 눈금: 가는 금빛. 큰 눈금은 길고 굵다.
-    c.strokeStyle = GOLD_LIT; c.lineCap = "butt";
-    for (let i = Math.floor(center) - span; i <= Math.ceil(center) + span; i++) {
+    // 새긴 눈금. 큰 눈금은 길고 금빛이다.
+    for (let i = Math.floor(center) - reach; i <= Math.ceil(center) + reach; i++) {
       if (!seen(i)) continue;
-      const big = mod(i, major) === 0, long = big ? 15 : 7;
-      const from = at(i, 11), to = at(i, 11 + long);
-      c.globalAlpha = big ? 1 : 0.5; c.lineWidth = big ? 2 : 1;
-      c.beginPath(); c.moveTo(from.x, from.y); c.lineTo(to.x, to.y); c.stroke();
+      const p = at(i);
+      if (!p) continue;
+      const big = mod(i, major) === 0, tall = big ? 9 : 5;
+      c.globalAlpha = (big ? 1 : 0.65) * p.face;
+      c.fillStyle = big ? GOLD_LIT : "#e9e6dc";
+      const thick = (big ? 2 : 1.2) * Math.max(0.4, p.face);
+      c.fillRect(p.x - thick / 2, band - 3 - tall, thick, tall);
     }
-    // 눈금 아래의 글(달 이름, 정각, 자리의 이름, 양 끝). 바로 선 글씨.
-    c.fillStyle = GOLD_LIT; c.textAlign = "center"; c.textBaseline = "middle";
-    c.font = `600 ${wide ? 15 : 12}px ${FONT}`;
-    const write = (u, text, alpha = 1) => {
-      const p = at(u, 11 + 15 + 12);
-      if (p.x < -20 || p.x > w + 20) return;
-      // 바늘 아래에 온 글이 가장 밝다(자리가 몇 안 되는 다이얼에서 지금 고른 것이 보이게).
-      const near = Math.max(0, 1 - Math.abs(u - center) * (wide ? 1 : 0));
-      // 가장자리로 갈수록 글이 띠 아래로 내려가 잘리므로, 그 전에 흐려지게 한다.
-      const edge = Math.min(1, Math.max(0, (1 - Math.abs(p.x - cx) / (w / 2)) / 0.3));
-      c.globalAlpha = alpha * edge * (wide ? 0.55 + 0.45 * near : 1);
-      c.fillText(text, p.x, p.y);
+    // 새긴 글(달 이름, 정각, 자리의 이름, 양 끝). 통이 둥글어 가장자리의 글은 옆으로 눌려 보인다.
+    c.textAlign = "center"; c.textBaseline = "middle"; c.font = `700 ${wide ? 15 : 12}px ${FONT}`;
+    const write = (u, text, colour) => {
+      const p = at(u);
+      if (!p || p.face < 0.2) return;
+      const here = Math.abs(u - center) < 0.5;   // 기준선 아래에 온 글
+      c.save();
+      c.translate(p.x, wide ? band / 2 - 3 : band - 21);
+      c.scale(p.face, 1);
+      // 링의 이름(왼쪽)과 지금 값(오른쪽)이 적힌 자리에서는 새긴 글이 비켜 준다.
+      const clear = wide ? 1 : Math.min(1, Math.max(0, Math.min(p.x - 58, w - 76 - p.x) / 18));
+      c.globalAlpha = p.face * p.face * clear * (wide && !here ? 0.6 : 1);
+      c.fillStyle = wide && here ? GOLD_BRIGHT : colour;
+      c.fillText(text, 0, 0);
+      c.restore();
     };
-    for (const mark of marks) for (const turn of wrap ? [-1, 0, 1] : [0]) write((mark.at - min) / step + turn * count, mark.text);
-    if (ends) { write(0, ends[0], 0.85); write(count, ends[1], 0.85); }
-    c.globalAlpha = 1;
-    // 걸림의 표시: 테 위에서 빛나는 작은 별. 넷이 똑같이 생겼다.
+    for (const mark of marks) for (const turn of wrap ? [-1, 0, 1] : [0]) write((mark.at - min) / step + turn * count, mark.text, "#f1eee4");
+    if (ends) { write(0, ends[0], GOLD_LIT); write(count, ends[1], GOLD_LIT); }
+    // 걸림의 표시: 눈금 위의 금빛 점. 넷이 똑같이 생겼다.
     for (const snap of snaps) for (const turn of wrap ? [-1, 0, 1] : [0]) {
-      const u = (snap - min) / step + turn * count;
-      const p = at(u, 3.5);
-      if (p.x < -10 || p.x > w + 10) continue;
-      c.save(); c.shadowColor = "rgba(255,233,168,.95)"; c.shadowBlur = 8; c.fillStyle = GOLD_BRIGHT; star(p.x, p.y, 5.5); c.fill(); c.restore();
+      const p = at((snap - min) / step + turn * count);
+      if (!p) continue;
+      c.globalAlpha = p.face; c.fillStyle = "#f6b951";
+      c.beginPath(); c.ellipse(p.x, band - 15.5, 2.6 * Math.max(0.4, p.face), 2.6, 0, 0, Math.PI * 2); c.fill();
     }
+    c.globalAlpha = 1;
 
-    // 띠의 아래 끝에서 유리가 어둠 속으로 잦아든다.
-    const foot = c.createLinearGradient(0, h - 14, 0, h);
-    foot.addColorStop(0, "rgba(5,3,48,0)"); foot.addColorStop(1, "rgba(5,3,48,1)");
-    c.fillStyle = foot; c.fillRect(0, h - 14, w, 14);
+    // 톱니 띠: 손에 잡히는 골. 6픽셀마다 한 줄이고 링과 함께 돈다.
+    c.fillStyle = "#07091a"; c.fillRect(0, band, w, h - band);
+    const pitch = 6 / tickPx;   // 골 하나의 너비를 눈금 수로
+    const firstRidge = Math.floor((center - reach) / pitch), lastRidge = Math.ceil((center + reach) / pitch);
+    for (let k = firstRidge; k <= lastRidge; k++) {
+      const p = at(k * pitch), q = at((k + 0.5) * pitch);
+      if (!p || !q) continue;
+      const wide2 = Math.max(0.6, q.x - p.x);
+      c.globalAlpha = 0.25 + 0.75 * p.face;
+      const ridge = c.createLinearGradient(p.x, 0, p.x + wide2, 0);
+      ridge.addColorStop(0, "#4a5170"); ridge.addColorStop(1, "#1d2138");
+      c.fillStyle = ridge; c.fillRect(p.x, band + 2, wide2, h - band - 4);
+    }
+    c.globalAlpha = 1;
+    // 띠의 모서리: 눈금 띠와 톱니 띠 사이의 깎인 면, 링의 위아래 끝
+    c.fillStyle = "rgba(255,255,255,.22)"; c.fillRect(0, 0, w, 1);
+    c.fillStyle = "rgba(0,0,0,.7)"; c.fillRect(0, band - 1, w, 1.5);
+    c.fillStyle = "rgba(255,255,255,.12)"; c.fillRect(0, band + 0.5, w, 1);
+    c.fillStyle = "rgba(0,0,0,.85)"; c.fillRect(0, h - 2, w, 2);
 
-    // 바늘: 테 위에 박힌 금빛 화살촉. 눈금이 지나갈 때 1픽셀 내려앉는다.
-    const tip = apex + 3 + (now - kickedAt < KICK_MS ? 1 : 0);
-    const head = () => { c.beginPath(); c.moveTo(cx - 7, tip - 13); c.lineTo(cx + 7, tip - 13); c.lineTo(cx, tip); c.closePath(); };
-    c.save(); c.shadowColor = "rgba(0,0,0,.5)"; c.shadowBlur = 4; c.shadowOffsetY = 1;
-    const gold = c.createLinearGradient(cx - 7, 0, cx + 7, 0);
-    gold.addColorStop(0, RIM_LIT); gold.addColorStop(0.5, RIM); gold.addColorStop(1, RIM_SHADE);
-    c.fillStyle = gold; head(); c.fill(); c.restore();
-    c.strokeStyle = RIM_SHADE; c.lineWidth = 0.8; head(); c.stroke();
+    // 둥근 통의 빛: 양 끝은 어둡고, 가운데에서 조금 비낀 곳에 빛줄기가 선다.
+    const shade = c.createLinearGradient(0, 0, w, 0);
+    shade.addColorStop(0, "rgba(2,3,14,.95)"); shade.addColorStop(0.2, "rgba(2,3,14,.35)"); shade.addColorStop(0.38, "rgba(255,255,255,.07)");
+    shade.addColorStop(0.5, "rgba(255,255,255,0)"); shade.addColorStop(0.8, "rgba(2,3,14,.4)"); shade.addColorStop(1, "rgba(2,3,14,.95)");
+    c.fillStyle = shade; c.fillRect(0, 0, w, h);
+
+    // 기준선: 경통에 찍힌 금빛 세모와 줄. 움직이지 않는다. 눈금이 지나갈 때 잠깐 밝아진다.
+    const lit = performance.now() - kickedAt < KICK_MS;
+    c.save();
+    c.shadowColor = MARK; c.shadowBlur = good ? 10 : lit ? 8 : 4;
+    c.fillStyle = MARK;
+    c.beginPath(); c.moveTo(cx - 5, 0); c.lineTo(cx + 5, 0); c.lineTo(cx, 7); c.closePath(); c.fill();
+    c.fillRect(cx - 0.75, band - 3 - 11, 1.5, 11);
+    c.restore();
 
     valueText.textContent = opts.label ? opts.label(value) : "";
-    // 반짝임이 남아 있거나 바늘이 내려앉아 있으면 한 장면 더 그린다.
-    if ((sparks.length || now - kickedAt < KICK_MS) && !sparkFrame) sparkFrame = requestAnimationFrame(() => { sparkFrame = 0; if (el.isConnected) draw(); });
+    if (lit && !kickFrame) kickFrame = requestAnimationFrame(() => { kickFrame = 0; if (el.isConnected) setTimeout(() => el.isConnected && draw(), KICK_MS); });
   }
 
   // 바늘 아래의 값을 옮긴다. 눈금을 넘을 때마다 소리와 떨림이 난다. 굴리는 동안에는 걸리지 않는다.

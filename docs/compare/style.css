@@ -101,18 +101,20 @@ figcaption { text-align: center; font-size: 19px; }
 .answers button.main { width: 220px; }
 
 /* 성산의 다이얼 */
-.dials { margin-top: 10px; display: grid; gap: 7px; }
-/* 2권의 유리 다이얼. 금빛 테의 둥근 유리 윗머리가 띠 안에 솟아 있다. 유리, 테, 눈금, 별자리판은 모두 캔버스가 그린다(ui/dial.js). */
-.dial { position: relative; height: 68px; overflow: hidden; touch-action: none; cursor: grab; }
+.dials { margin-top: 10px; display: grid; gap: 2px; padding: 3px; border-radius: 12px; background: #02030c; box-shadow: 0 3px 10px rgba(0, 0, 0, .6); }
+/* 카메라 렌즈의 링. 경통, 눈금, 톱니, 기준선은 모두 캔버스가 그린다(ui/dial.js). 링 넷이 붙어 렌즈 하나가 된다. */
+.dial { position: relative; height: 60px; overflow: hidden; touch-action: none; cursor: grab; background: #0a0d22; }
+.dial:first-child { border-radius: 9px 9px 0 0; }
+.dial:last-child { border-radius: 0 0 9px 9px; }
 .dial:active { cursor: grabbing; }
 .dial canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.dial .name, .dial .value { position: absolute; top: 0; height: 20px; line-height: 18px; padding: 0 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
-  color: #f3dc9a; background: #0d1546; border: 1px solid #d8b866; box-shadow: 0 1px 4px rgba(0, 0, 0, .4); pointer-events: none; }
-.dial .name { left: 0; }
-.dial .value { right: 0; }
-.dial .value:empty { display: none; }
+/* 링의 이름과 지금 값. 경통에 새긴 글처럼 상자 없이 쓴다. */
+.dial .name, .dial .value { position: absolute; top: 4px; font-size: 11px; font-weight: 700; letter-spacing: .04em; pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .9); }
+.dial .name { left: 9px; color: #f6b951; }
+.dial .value { right: 9px; color: #ffe9a8; font-size: 13px; }
 .dial.hint canvas { animation: hint 1.1s ease-in-out infinite; }
-@keyframes hint { 0%, 100% { filter: none; } 50% { filter: drop-shadow(0 0 7px rgba(255, 233, 168, .95)) brightness(1.25); } }
+@keyframes hint { 0%, 100% { filter: none; } 50% { filter: brightness(1.7); } }
 .dial.shake { animation: shake .3s; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-2px); } 40%, 80% { transform: translateX(2px); } }
 .stage .overlay { position: absolute; inset: 0; opacity: .4; pointer-events: none; }
@@ -143,5 +145,5 @@ figcaption { text-align: center; font-size: 19px; }
 .dials.locked { pointer-events: none; opacity: .5; transition: opacity .4s; }
 
 /* 다이얼의 값이 맞는 자리에 있다. 테의 초록빛은 캔버스가 그린다. */
-.dial.good .name { color: #0b2a12; background: #8fe39a; border-color: #8fe39a; }
+.dial.good .name { color: #8fe39a; }
 .dial.good .name::after { content: " ✓ 맞아"; }
