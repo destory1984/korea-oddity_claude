@@ -64,3 +64,20 @@ bash tools/art-order.sh assets/codex/order5-yui-a assets/codex/order5/yui-a.txt 
 ```bash
 py tools/char-sheet.py docs/art/yui-drafts-sheet.jpg docs/art/yui docs/mock/sora.png assets/codex/order5-yui-a/yui-a.png assets/codex/order5-yui-b/yui-b.png assets/codex/order5-yui-c/yui-c.png assets/codex/order5-yui-d/yui-d.png assets/codex/order5-yui-e/yui-e.png
 ```
+
+## 6. A로 정하고 머리 색을 바꾼 시안 5장 (2026.10.10)
+
+사용자가 시안을 보고 정했다: "A로 하자. 머리 색깔 바꾼 시안 5개". A의 그림을 참고로 넣고 머리카락의 색만 바꿔 다섯 장을 받았다. 모두 한 번에 왔다. 견본은 `docs/art/yui-hair-sheet.jpg` 다. 맨 왼쪽이 처음의 A(검은 갈색)이고 그 옆으로 A1 → A5다.
+
+| 시안 | 머리 색 |
+|---|---|
+| A (처음) | 검은 갈색 |
+| A1 | 칠흑 같은 검정. 윤기는 푸르스름한 회색 |
+| A2 | 밝은 밤색 |
+| A3 | 붉은 갈색 |
+| A4 | 남색이 도는 검정 |
+| A5 | 꿀빛 금갈색 |
+
+다섯 모두 옷, 자세, 카메라, 수첩이 A와 같고 머리 색만 다르다. 어느 색으로 할지는 사용자가 아직 정하지 않았다.
+
+**기획서와 어긋나는 것이 둘 있다.** 사용자가 A를 고른 뒤에 가져온 기획서(`docs/기획서-일본-할머니의-수첩.md`)는 유이를 열여덟 살로 적었고(시안은 열두 살쯤으로 주문했다), "얼굴은 그리지 않는다. 유이도 뒷모습과 손만 나온다"고 적었다(시안은 얼굴이 있는 정면이다). 어느 쪽을 따를지는 사용자가 정한다. 공항 쪽 시제품은 기획서를 따라 유이의 손만 나온다.

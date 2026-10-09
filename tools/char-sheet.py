@@ -5,7 +5,7 @@ trims each figure, and makes two rows: the drafts as they came (scaled to one he
 and the same drafts brought down to the game's sprite size (192 x 256, nearest
 neighbour, then shown at 2x) so that one sees what survives at that size.
 
-    python tools/char-sheet.py <out.jpg> <sprites out dir> <sora.png> <draft.png> ...
+    python tools/char-sheet.py <out.jpg> <sprites out dir> <compare.png> <draft.png> ...
 
 Each draft is also written to <sprites out dir>/<name>-192.png (192 x 256, transparent).
 The full-size originals stay in the order's work folder, which is not committed.
@@ -69,7 +69,7 @@ def main(out, sprites, sora_path, drafts):
 
     sora_figure = sora.crop(sora.getbbox())
     place(sora_figure, 0, PAD + 30, ROW)
-    draw.text((PAD + 4, PAD), 'SORA (vol. 1, 2)', fill=(60, 50, 40))
+    draw.text((PAD + 4, PAD), os.path.splitext(os.path.basename(sora_path))[0].upper() + ' (for comparison)', fill=(60, 50, 40))
     place(sora, 0, PAD * 3 + ROW + 30, SPRITE[1] * 2)
     for i, (name, figure, small) in enumerate(figures, start=1):
         draw.text((PAD + i * (cell + PAD) + 4, PAD), name.upper(), fill=(60, 50, 40))

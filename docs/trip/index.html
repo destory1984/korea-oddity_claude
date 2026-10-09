@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Korea Oddity — 할머니의 수첩</title>
+<link rel="stylesheet" href="../assets/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="../assets/fonts/nanum-pen-script/400.css">
+<link rel="stylesheet" href="../assets/fonts/gaegu/400.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+  <!-- 위쪽 단추 줄: 우주 한량(1권)의 유리 단추와 아이콘. 왼쪽은 유이의 지갑이다. -->
+  <header id="top">
+    <div id="wallet" class="glass"></div>
+    <nav id="nav">
+      <button id="journalButton"></button>
+      <button id="soundButton"></button>
+      <button id="settingsButton"></button>
+    </nav>
+  </header>
+  <section id="screen"></section>
+</main>
+
+<div id="journal" class="sheet"><div>
+  <h1 id="journalTitle"></h1>
+  <section id="journalBody"></section>
+  <button id="closeJournal" class="closer"></button>
+</div></div>
+
+<!-- 설정: 1권의 설정 창과 같은 꼴. 갈래는 Options, Help, About 이다. -->
+<div id="settings" class="sheet"><div>
+  <h1 id="settingsTitle"></h1>
+  <div id="settingsTabs" role="tablist"><button role="tab" data-tab="options">Options</button><button role="tab" data-tab="help">Help</button><button role="tab" data-tab="about">About</button></div>
+  <section data-tab="options"><dl>
+    <dt>언어 · Language</dt><dd id="langRow"><button data-lang="ko" lang="ko">한국어</button><button data-lang="en" lang="en">English</button><button data-lang="ja" lang="ja">日本語</button><button data-lang="zh" lang="zh-Hans">中文</button></dd>
+    <dt id="soundTerm"></dt><dd><button id="soundSwitch"></button></dd>
+    <dt id="testTerm"></dt><dd><button id="restartButton"></button></dd>
+  </dl></section>
+  <section data-tab="help" hidden><p id="helpLead"></p><dl id="helpList"></dl></section>
+  <section data-tab="about" hidden><dl id="aboutList"></dl></section>
+  <button id="closeSettings" class="closer"></button>
+</div></div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

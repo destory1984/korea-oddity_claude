@@ -1,0 +1,92 @@
+{
+  "note": "요금과 시간은 여기 한곳에만 적는다. 화면과 글은 이 파일에서 읽는다. 바뀌면 여기만 고친다.",
+  "checked": "2026-10-10",
+  "currency": "KRW",
+  "allstop": {
+    "from": "icn1",
+    "to": {
+      "seoul": 4750,
+      "gongdeok": 4650,
+      "hongik": 4650,
+      "gimpo": 4350
+    },
+    "card": 4750,
+    "singleExtra": 100,
+    "deposit": 500,
+    "minutes": 59,
+    "source": "https://www.airportrailroad.com/train/normal/fare",
+    "verified": {
+      "card": true,
+      "singleExtra": true,
+      "deposit": true,
+      "minutes": false
+    },
+    "unverifiedNote": "59분은 여행 안내 글(지구를 걷는 법, 2025.12.15 고침)의 값이다. 공항철도의 시각표와 견주지 않았다.",
+    "toNote": "인천공항1터미널에서 그 역까지의 어른 운임(선후불 교통카드). 공항철도의 역간 기준운임 표에서 옮겼다."
+  },
+  "express": {
+    "adult": 13000,
+    "regular": 18500,
+    "minutes": 43,
+    "source": "https://www.airportrailroad.com/train/express/introduce",
+    "verified": {
+      "adult": true,
+      "regular": true,
+      "minutes": true
+    }
+  },
+  "card": {
+    "price": 3000,
+    "charges": [
+      10000,
+      20000
+    ],
+    "verified": {
+      "price": false
+    },
+    "unverifiedNote": "카드값 3,000원은 여행 안내 글들의 값(3,000 → 5,000원)에서 가장 낮은 것을 임시로 적었다. 티머니의 공식 안내와 견주지 않았다. 파는 곳(각 역의 편의점, 교통카드 자판기)과 충전하는 곳(각 역의 승차권 자동발매기)은 공항철도의 일반열차 승차권 안내에서 보았다.",
+    "source": "https://www.airportrailroad.com/train/normal/ticket"
+  },
+  "stations": {
+    "allstop": [
+      "icn1",
+      "cargo",
+      "unseo",
+      "yeongjong",
+      "cheongna",
+      "geomam",
+      "gyeyang",
+      "gimpo",
+      "magok",
+      "dmc",
+      "hongik",
+      "gongdeok",
+      "seoul"
+    ],
+    "express": [
+      "icn1",
+      "seoul"
+    ],
+    "source": "https://www.airportrailroad.com/train/express/introduce"
+  },
+  "machine": {
+    "languages": [
+      "ko",
+      "en",
+      "ja",
+      "zh"
+    ],
+    "verified": {
+      "languages": false
+    },
+    "unverifiedNote": "발매기에서 일본어와 중국어를 고를 수 있다는 것은 기억으로 적었다. 역의 기계 사진이나 공식 안내로 보지 않았다."
+  },
+  "gates": {
+    "allstop": "blue",
+    "express": "orange",
+    "verified": {
+      "colours": false
+    },
+    "unverifiedNote": "직통열차의 표지가 주황색이라는 것은 여행 상품 안내 글(WAUG)에서 보았다. 일반열차가 파란색이라는 것은 기억으로 적었다. 개찰구가 나뉘어 있다는 것은 공항철도 누리집의 직통열차 안내(전용 승차권, 타는 곳 따로)에서 보았다."
+  }
+}
