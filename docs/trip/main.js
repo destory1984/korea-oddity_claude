@@ -54,6 +54,7 @@ const SCREENS = {
       <div class="frame">${img("icn-arrivals")}</div>
       <div class="paper letter hand">
         <figure class="old">${img("photo-1988")}<figcaption class="hand">典子, 1988.10</figcaption></figure>
+        <p class="then">${t("photoThen")}</p>
         <p>${t("letter1")}</p><p>${t("letter2")}</p><p>${t("letter3")}</p><p>${t("letter4")}</p>
         <p class="sign">${t("sign")}</p>
       </div>
@@ -330,7 +331,7 @@ const SCREENS = {
       <h1>${t("pasteTitle")}</h1>
       <div class="spread">
         <article class="paper">
-          <h2>${t("grandma")}</h2>
+          <h2>${t("grandmaSpring")}</h2>
           <div class="frame faded">${img("seoul-station")}</div>
           <p class="hand">${t("gHowText")}</p>
           <p class="hand lost">${t("gLostText")}</p>
@@ -361,11 +362,13 @@ function grandmaPage() {
   return `
     <div class="paper">
       <h2>${t("pageTitle")}</h2>
+      <p class="when">${t("gWhen")}</p>
       <dl class="hand">
         <dt>${t("gHow")}</dt><dd>${t("gHowText")}</dd>
         <dt>${t("gTicket")}</dt><dd>${t("gTicketText", { express: W(fares.express.adult) })}</dd>
         <dt>${t("gLost")}</dt><dd class="lost">${t("gLostText")}</dd>
         <dt>${t("gTip")}</dt><dd>${t("gTipText")}</dd>
+        <dt>${t("gThen")}</dt><dd>${t("gThenText")}</dd>
       </dl>
       <p class="sign hand">${t("sign")}</p>
     </div>`;
@@ -395,7 +398,7 @@ function showJournal() {
   $("journalTitle").textContent = t("title");
   $("journalBody").innerHTML = `
     <figure class="old" style="float:none;width:70%;margin:0 auto 8px">${img("photo-1988")}<figcaption class="hand">典子, 1988.10</figcaption></figure>
-    <p><b>${t("clueTitle")}</b><br>${t("clueText")}</p>
+    <p><b>${t("clueTitle")}</b> · ${t("photoThen")}<br>${t("clueText")}</p>
     ${state.step === "intro" ? `<p>${t("pageLocked")}</p>` : grandmaPage()}`;
   $("journal").classList.add("on");
 }

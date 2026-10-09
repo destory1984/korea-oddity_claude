@@ -182,3 +182,7 @@ figure { margin: 0; }
 .reply { margin: 14px auto 0; max-width: 330px; transform: rotate(.8deg); }
 .reply h2 { border: 0; padding: 0; font-size: 12px; opacity: .6; text-align: left; }
 .reply p { margin: 2px 0 0; }
+
+/* 그 쪽이 언제의 길인지. 1988년의 사진과 지난봄의 길을 헷갈리지 않게 한다(사용자, 2026.10.10: "88년에 인천공항 없었는데"). */
+.paper .when { margin: 5px 0 0; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: .04em; opacity: .7; }
+.letter .then { font-family: "Pretendard Variable", Pretendard, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .04em; opacity: .65; margin: 0 0 6px; }

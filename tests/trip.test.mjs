@@ -117,6 +117,17 @@ test("글: 화면이 쓰는 열쇠가 모두 사전에 있다", () => {
   for (const id of fares.stations.allstop) for (const lang of LANGS) assert.ok(TEXT[lang][`st_${id}`], `${lang} st_${id}`);
 });
 
+test("글: 공항의 쪽은 지난봄의 길이라고 밝히고, 1988년에는 김포공항이었다고 적는다", () => {
+  // 인천공항은 2001년에 열었다. 1988년의 사진과 공항의 쪽이 한 화면에 놓여 1988년에 인천공항에 내린 것처럼 읽혔다.
+  const source = read("main.js");
+  for (const key of ["gWhen", "gThenText", "grandmaSpring", "photoThen"]) assert.ok(source.includes(`t("${key}")`), key);
+  assert.ok(TEXT.ko.gThenText.includes("김포공항") && TEXT.ko.gThenText.includes("1988"));
+  assert.ok(TEXT.ja.gThenText.includes("金浦空港"));
+  // 공항철도도 그때는 없었다(2007년에 열었고 서울역까지는 2010년이다).
+  assert.ok(TEXT.ko.gThenText.includes("공항철도") && TEXT.ja.gThenText.includes("空港鉄道"));
+  assert.ok(TEXT.ko.gWhen.includes("지난봄"));
+});
+
 test("글: 고른 말이 없으면 기기의 말, 넷이 아니면 영어로 연다", () => {
   const none = { getItem: () => null };
   assert.equal(pickLang(none, "ja-JP"), "ja");
