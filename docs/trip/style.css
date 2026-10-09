@@ -201,9 +201,9 @@ figure { margin: 0; }
 .spots button.on { border-color: var(--gold); color: var(--gold); background: rgba(246, 185, 81, .14); }
 .spread p b { font-size: 10px; letter-spacing: .05em; opacity: .65; display: block; }
 
-/* 유이. 말풍선의 왼쪽에 선다(사용자, 2026.10.10: "얼굴 그려"). 그림은 시안 A를 캐릭터 크기로 줄인 것이고,
-   머리 색을 정하면 바꾼다. 1권과 2권에서 소라가 말풍선 곁에 서던 자리다. */
+/* 유이. 말풍선의 왼쪽에 선다(사용자, 2026.10.10: "얼굴 그려"). 그림은 시안 A5(꿀빛 금갈색 머리)를 캐릭터 크기로 줄인 임시 그림이다.
+   색을 다듬고 동작을 받으면 바꾼다. 1권과 2권에서 소라가 말풍선 곁에 서던 자리다. */
 /* 말풍선이 한 줄일 때에도 유이의 머리가 위의 그림을 가리지 않게 위쪽을 띄운다. */
 .yui { position: relative; margin: 50px 0 0 72px; max-width: calc(100% - 72px); min-height: 40px; }
 .yui::before { content: ""; position: absolute; left: -70px; bottom: -8px; width: 60px; height: 80px;
-  background: url("../art/yui/yui-a-192.png") center bottom / contain no-repeat; image-rendering: pixelated; pointer-events: none; }
+  background: url("../art/yui/yui-a5-192.png") center bottom / contain no-repeat; image-rendering: pixelated; pointer-events: none; }
