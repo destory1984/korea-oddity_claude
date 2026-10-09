@@ -1,0 +1,111 @@
+/* 비교 시제품. 너비 375의 세로 화면이 기준이고, 넓은 화면에서는 가운데 480 기둥에 둔다. */
+:root { --night: #050330; --navy: #1a2894; --gold: #f6b951; --white: #fbf8f9; --paper: #f2e6c8; --ink: #3b2a1a; }
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--night); }
+body { font-family: "Pretendard Variable", Pretendard, "Segoe UI", "Malgun Gothic", sans-serif; color: var(--white);
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+#app { max-width: 480px; margin: 0 auto; padding: 12px 15px 24px; }
+[hidden] { display: none !important; }
+
+h1 { font-size: 20px; margin: 6px 0 12px; text-align: center; }
+h1 small { font-size: 14px; font-weight: 400; opacity: .7; }
+h2 { font-size: 17px; margin: 8px 0 2px; }
+.hand { font-family: "Nanum Pen Script", cursive; font-size: 22px; line-height: 1.2; }
+#notice { margin: 0 0 8px; padding: 6px 10px; border-radius: 6px; background: #5a2030; font-size: 13px; }
+
+button { font: inherit; color: var(--white); background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 999px; padding: 8px 14px; cursor: pointer; touch-action: manipulation; }
+button:disabled { opacity: .35; cursor: default; }
+button.main { display: block; margin: 12px auto 0; padding: 11px 26px; border-color: var(--gold); color: var(--gold); font-weight: 600; }
+button.small { font-size: 12px; padding: 5px 10px; opacity: .7; }
+button.on { border-color: var(--gold); color: var(--gold); background: rgba(246, 185, 81, .14); }
+.foot { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+
+/* 풍경의 틀. 가로 3, 세로 2. 겹은 틀 너비의 1.45배로 놓인다. */
+.frame { position: relative; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; border-radius: 4px; background: #8fc1e8; isolation: isolate; }
+.frame .sky, .frame .stars { position: absolute; inset: 0; }
+.frame .stars { transition: opacity .4s; }
+.frame .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; }
+.frame .layer { position: absolute; left: -22.5%; width: 145%; height: 145%; max-width: none; pointer-events: none;
+  transition: transform .5s ease, filter .4s; }
+.frame.still .layer, .frame.still .stars { transition: none; }
+.frame .sun { position: absolute; width: 9%; aspect-ratio: 1; border-radius: 50%; background: #fff1b8;
+  box-shadow: 0 0 18px 8px rgba(255, 220, 150, .7); transform: translate(-50%, -50%); transition: opacity .2s; }
+.frame.faded { filter: sepia(.75) contrast(.78) brightness(1.12) saturate(.6); }
+.frame.gray { filter: grayscale(1) contrast(.9); }
+.frame.outline .layer.ridge, .frame.outline .layer.shadow {
+  filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff) !important; }
+
+/* 시작 */
+[data-screen=start] { text-align: center; padding-top: 12vh; }
+.note { background: var(--paper); color: var(--ink); max-width: 300px; margin: 28px auto; padding: 18px; transform: rotate(-1.2deg);
+  box-shadow: 2px 4px 0 rgba(0, 0, 0, .35); font-size: 25px; }
+.export { width: 100%; height: 160px; margin-top: 14px; font-size: 11px; }
+
+/* 수첩 */
+.squares { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.square { background: var(--paper); color: var(--ink); border-radius: 6px; padding: 9px 9px 12px; }
+.square .photos { display: flex; gap: 4px; }
+.square .memo { font-size: 18px; margin: 2px 0 6px; min-height: 3.6em; }
+.square .reply { font-size: 18px; margin: 8px 0 0; padding-top: 6px; border-top: 1px dashed rgba(59, 42, 26, .4); }
+.square button.main { color: var(--ink); border-color: var(--ink); background: transparent; margin-top: 10px; padding: 8px 22px; }
+.marks { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 0; min-height: 4px; }
+.mark { font-size: 11px; padding: 2px 7px; border-radius: 999px; border: 1px solid currentColor; opacity: .4; }
+.mark.on { opacity: 1; background: var(--gold); color: var(--ink); border-color: var(--gold); }
+.mark.on::before { content: "✓ "; }
+
+/* 장소 */
+header { display: grid; grid-template-columns: 76px 1fr 76px; align-items: center; margin-bottom: 4px; }
+header h1 { margin: 0; }
+header button { padding: 6px 0; font-size: 13px; }
+.task { text-align: center; margin: 6px 0 8px; color: var(--paper); min-height: 1.2em; }
+.stage { position: relative; }
+.stage .lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; fill: none; stroke: var(--gold);
+  stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.stage .lines .dash { stroke-dasharray: 3 3; stroke-width: 1.5; }
+.stage .preview { position: absolute; right: 6px; top: 6px; width: 34%; border: 2px solid var(--white); border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, .5); }
+.spots { position: absolute; left: 0; right: 0; bottom: 6px; display: flex; justify-content: center; gap: 6px; }
+.spots button { font-size: 12px; padding: 5px 11px; background: rgba(5, 3, 48, .6); }
+.spots button::before { content: "● "; font-size: 9px; vertical-align: 1px; }
+.oldphoto { position: relative; width: 46%; margin: 0 auto 8px; padding: 5px 5px 14px; background: var(--white); transform: rotate(-2deg);
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, .35); }
+.oldphoto .boxes { position: absolute; inset: 5px 5px 14px; pointer-events: none; }
+.oldphoto .boxes i { position: absolute; border: 2px dashed #c0392b; border-radius: 4px; }
+.times { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+.times button { border-radius: 8px; padding: 9px 20px; background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.times button.on { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 700; }
+.tools { display: flex; justify-content: center; align-items: center; gap: 22px; margin-top: 14px; }
+.shutter { width: 64px; height: 64px; padding: 0; border-radius: 50%; background: var(--white); border: 4px solid var(--night);
+  outline: 3px solid var(--white); }
+.shutter:active { background: var(--gold); }
+.sheet { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; padding: 15px; background: rgba(5, 3, 48, .88); }
+.sheet .pair { width: 100%; max-width: 450px; }
+
+/* 결과 */
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+figure { margin: 0; padding: 5px 5px 2px; background: var(--white); color: var(--ink); box-shadow: 2px 3px 0 rgba(0, 0, 0, .35); }
+figure:first-child { transform: rotate(-1.5deg); }
+figure:last-child { transform: rotate(1deg); }
+figcaption { text-align: center; font-size: 19px; }
+[data-screen=result] .marks { justify-content: center; margin-top: 14px; }
+[data-screen=result] .mark { font-size: 14px; padding: 4px 12px; }
+.sora { width: fit-content; max-width: 100%; margin: 14px auto 0; padding: 8px 13px; border-radius: 12px 12px 12px 2px; background: var(--white);
+  color: #1b1730; font-family: "Gaegu", "Pretendard Variable", sans-serif; font-size: 19px; line-height: 1.25; }
+[data-screen=result] .reply { background: var(--paper); color: var(--ink); margin: 14px auto 0; padding: 12px 16px; max-width: 320px;
+  transform: rotate(.8deg); box-shadow: 2px 4px 0 rgba(0, 0, 0, .35); }
+
+/* 마지막 물음 */
+[data-screen=ask], [data-screen=broken] { text-align: center; padding-top: 16vh; }
+.answers button.main { width: 220px; }
+
+/* 성산의 다이얼 */
+.dials { margin-top: 10px; display: grid; gap: 6px; }
+.dial { position: relative; height: 44px; border-radius: 8px; overflow: hidden; background: #0d1546; border: 1px solid rgba(246, 185, 81, .5);
+  touch-action: none; cursor: ew-resize; }
+.dial canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dial .needle { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--gold); pointer-events: none; }
+.dial .name { position: absolute; left: 8px; top: 3px; font-size: 11px; opacity: .75; pointer-events: none; }
+.dial .value { position: absolute; right: 8px; top: 3px; font-size: 12px; color: var(--gold); pointer-events: none; }
+.dial.shake { animation: shake .3s; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-2px); } 40%, 80% { transform: translateX(2px); } }
+.stage .overlay { position: absolute; inset: 0; opacity: .4; pointer-events: none; }

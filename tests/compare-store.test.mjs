@@ -170,3 +170,11 @@ test("마지막 물음의 답이 남는다", () => {
   ctx.store.setAnswer("both");
   assert.equal(ctx.open().state.answer, "both");
 });
+
+test("storage 가 던질 때 새로 시작해도 저장이 안 되는 것을 숨기지 않는다", () => {
+  const ctx = setup(fakeStorage({ throwOnRead: true }));
+  ctx.store.go("place", "seongsan");
+  ctx.store.startOver();
+  assert.equal(ctx.store.status, "memory");
+  assert.equal(ctx.store.state.screen, "start");
+});

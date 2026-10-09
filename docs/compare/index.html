@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>팔도 한량 — 시제품</title>
+<link rel="stylesheet" href="../assets/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="../assets/fonts/nanum-pen-script/400.css">
+<link rel="stylesheet" href="../assets/fonts/gaegu/400.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+  <p id="notice" hidden></p>
+  <section data-screen="start" hidden></section>
+  <section data-screen="journal" hidden></section>
+  <section data-screen="place" hidden></section>
+  <section data-screen="result" hidden></section>
+  <section data-screen="ask" hidden></section>
+  <section data-screen="broken" hidden></section>
+</main>
+<!-- 해 계산. 보통 스크립트라 모듈보다 먼저 읽는다. 못 읽으면 성산의 하늘은 연출로 바뀐다. -->
+<script src="../assets/sun.js"></script>
+<script type="module" src="main.js"></script>
+</body>
+</html>

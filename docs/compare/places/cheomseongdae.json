@@ -42,6 +42,6 @@
     { "id": "mid", "image": "cheom-mid", "horizon": 0.497, "at": 0.66, "seasons": false },
     { "id": "front", "image": "cheom-front", "horizon": 0.604, "at": 0.72, "seasons": false }
   ],
-  "tree": { "image": "cheom-tree" },
+  "tree": { "image": "cheom-tree", "horizon": 0.81, "at": 0.98, "scale": 0.85, "shift": -0.13, "away": -1.0 },
   "reply": ["내가 보던 탑이 여기 있구나.", "작아서 천삼백 년을 견뎠단다.", "큰 것부터 무너지지."]
 }

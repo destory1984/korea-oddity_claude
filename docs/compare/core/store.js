@@ -49,7 +49,7 @@ export function createStore(storage, places, now = Date.now) {
 
   store.startOver = () => {
     store.state = fresh(places);
-    store.status = "fresh";
+    if (store.status !== "memory") store.status = "fresh";
     store.save();
   };
 
