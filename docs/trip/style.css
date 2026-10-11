@@ -87,6 +87,8 @@ figure { margin: 0; }
 /* 길 카드 */
 .cards { display: grid; gap: 10px; }
 .card { position: relative; border-radius: 12px; padding: 13px 14px 12px; background: #101a44; border: 1px solid #9fb4ff55; border-left: 8px solid var(--line, #9fb4ff); }
+.card { cursor: pointer; }
+.card:active { border-color: var(--gold); background: #17245a; }
 .card h2 { font-size: 16px; }
 .card .price { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .card .facts { margin: 4px 0 0; padding: 0; list-style: none; font-size: 13px; line-height: 1.6; color: #c3cdea; }

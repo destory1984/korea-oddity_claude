@@ -643,6 +643,12 @@ function render() {
   (SCREENS[state.step] ?? SCREENS.intro)();
 }
 
+// 고르는 카드는 단추만이 아니라 카드의 어디를 눌러도 골라진다(사용자, 2026.10.12: "여기를 눌러도 반응하게 해줘").
+screen.addEventListener("click", (event) => {
+  const card = event.target.closest(".card");
+  if (card && !event.target.closest("button")) card.querySelector("button")?.click();
+});
+
 // ── 수첩, 설정, 말 ───────────────────────────────────────────────────
 
 function showJournal() {
