@@ -1,7 +1,7 @@
 /* 할머니의 수첩(새 기획)의 시제품. 너비 375의 세로 화면이 기준이고, 넓은 화면에서는 가운데 480 기둥에 둔다.
    가로 화면은 따로 짓지 않는다(사용자, 2026.10.10: "우리 가로 버전은 포기하자."). */
 :root { --night: #050330; --navy: #1a2894; --gold: #f6b951; --white: #fbf8f9; --paper: #f2e6c8; --ink: #3b2a1a;
-  --blue: #2f6fd0; --orange: #ef7d2b; }
+  --blue: #2f6fd0; --orange: #ef7d2b; --sky: #2aa5dc; }
 * { box-sizing: border-box; }
 html, body { margin: 0; min-height: 100%; background: var(--night); }
 body { font-family: "Pretendard Variable", Pretendard, "Segoe UI", "Malgun Gothic", "Hiragino Sans", "Yu Gothic", "Microsoft YaHei", sans-serif; color: var(--white);
@@ -92,7 +92,7 @@ figure { margin: 0; }
 .card .facts { margin: 4px 0 0; padding: 0; list-style: none; font-size: 13px; line-height: 1.6; color: #c3cdea; }
 .card .tag { position: absolute; right: 10px; top: 10px; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--paper); color: var(--ink); font-weight: 600; }
 .card button { margin-top: 10px; border-color: var(--gold); color: var(--gold); font-weight: 600; }
-.card.blue { --line: var(--blue); } .card.orange { --line: var(--orange); }
+.card.blue { --line: var(--blue); } .card.orange { --line: var(--orange); } .card.sky { --line: var(--sky); }
 .star { color: var(--gold); }
 
 /* 편의점, 창구, 환급기: 값과 고를 것을 놓는 판 */
@@ -134,7 +134,7 @@ figure { margin: 0; }
 .gates .zones .blue span { background: var(--blue); } .gates .zones .orange span { background: var(--orange); }
 .gates .zones button:active { background: rgba(255, 255, 255, .18); }
 .ticket { margin: 10px auto 0; width: fit-content; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #fff; background: var(--blue); }
-.ticket.orange { background: var(--orange); }
+.ticket.orange { background: var(--orange); } .ticket.sky { background: var(--sky); }
 
 /* 타기: 노선의 줄 위로 점이 달린다. */
 .ride { cursor: pointer; }
@@ -208,3 +208,21 @@ figure { margin: 0; }
 .yui { position: relative; margin: 50px 0 0 72px; max-width: calc(100% - 72px); min-height: 40px; }
 .yui::before { content: ""; position: absolute; left: -70px; bottom: -8px; width: 60px; height: 80px;
   background: url("../art/yui/yui-j1-192.png") center bottom / contain no-repeat; image-rendering: pixelated; pointer-events: none; }
+
+/* 둘째 쪽(명동). 타는 곳의 방면 둘: 승강장의 안내판처럼 하늘색(4호선) 띠와 화살표. */
+.ways { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.ways button { border-radius: 10px; padding: 10px 6px; background: #16234f; border: 1px solid #9fb4ff66; border-top: 6px solid var(--sky); font-size: 13px; font-weight: 600; line-height: 1.35; }
+.ways button b { display: block; font-size: 22px; line-height: 1.1; color: var(--sky); }
+.ways button small { display: block; margin-top: 3px; font-size: 11px; font-weight: 400; opacity: .75; }
+.ways button:disabled { opacity: .3; }
+/* 출구의 번호판: 노란 바탕에 검은 글씨. */
+.exits { display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+.exits button { border-radius: 8px; padding: 10px 14px; background: #f6c800; border-color: #1b1730; color: #1b1730; font-weight: 700; font-size: 15px; }
+.exits button:disabled { opacity: .35; }
+/* 먹은 것의 딱지 */
+.sticker { width: fit-content; margin: 12px auto 0; padding: 6px 16px; border-radius: 999px; background: #ffd9a0; color: #7a3b12; border: 2px dashed #c9772e; font-weight: 700; font-size: 15px; transform: rotate(-4deg); }
+.sticker.small { display: inline-block; margin: 0; padding: 1px 8px; font-size: 11px; border-width: 1px; transform: rotate(-3deg); }
+/* 수첩 창 안의 종이: 창의 옅은 글빛을 물려받지 않고 종이의 먹빛으로 쓴다. */
+.sheet .paper p, .sheet .paper dd, .sheet .paper dt { color: var(--ink); }
+.sheet .paper dd { display: block; font-size: inherit; line-height: inherit; }
+.sheet .paper p.sign { margin: 8px 0 0; font-size: inherit; line-height: inherit; }

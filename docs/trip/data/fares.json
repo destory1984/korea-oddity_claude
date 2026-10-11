@@ -88,5 +88,59 @@
       "colours": false
     },
     "unverifiedNote": "직통열차의 표지가 주황색이라는 것은 여행 상품 안내 글(WAUG)에서 보았다. 일반열차가 파란색이라는 것은 기억으로 적었다. 개찰구가 나뉘어 있다는 것은 공항철도 누리집의 직통열차 안내(전용 승차권, 타는 곳 따로)에서 보았다."
+  },
+  "subway": {
+    "checked": "2026-10-11",
+    "card": 1550,
+    "single": 1650,
+    "deposit": 500,
+    "minutes": 4,
+    "line": 4,
+    "stops": [
+      "seoul",
+      "hoehyeon",
+      "myeongdong"
+    ],
+    "toward": [
+      "jinjeop",
+      "buramsan"
+    ],
+    "opposite": [
+      "sadang",
+      "oido"
+    ],
+    "oppositeNext": "sookmyung",
+    "machineDests": [
+      "hoehyeon",
+      "myeongdong",
+      "chungmuro",
+      "dongdaemun"
+    ],
+    "source": "http://www.seoulmetro.co.kr/kr/page.do?menuIdx=354",
+    "verified": {
+      "card": true,
+      "single": true,
+      "deposit": true,
+      "minutes": true,
+      "stops": true,
+      "toward": true
+    },
+    "note": "어른 운임, 10km까지의 기본운임이다. 운임은 서울교통공사의 운임안내, 보증금은 승차권안내(menuIdx=355), 역의 차례와 방면과 4분은 사이버스테이션의 역 시각표(서울역 22:07, 회현 22:09, 명동 22:11 진접행)에서 2026.10.11에 읽었다. 만 13세 미만은 어린이 운임(550원)이지만 화면은 어른 값으로 둔다. 발매기의 네 역은 모두 서울역에서 10km 안이라 기본운임이다."
+  },
+  "myeongdong": {
+    "exits": {
+      "right": 6,
+      "grandma": 3,
+      "choices": [
+        3,
+        6,
+        8
+      ]
+    },
+    "verified": {
+      "exits": false
+    },
+    "unverifiedNote": "6번 출구가 명동 거리로 이어진다는 것은 여행 안내 글들에서 보았다. 3번 출구가 남산 쪽이라는 것은 기획서의 값이다. 서울교통공사의 누리집에는 출구마다의 안내 글이 없고, 역 안내도 그림은 읽지 못했다. 서울시설공단의 명동역 지하도상가 안내에는 4, 5, 6번 출구만 적혀 있다.",
+    "source": "https://sisul.or.kr/open_content/undershop/guide/myeongdong/myeongdong_station.jsp"
   }
 }

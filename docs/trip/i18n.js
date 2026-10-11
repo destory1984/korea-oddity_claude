@@ -2,6 +2,8 @@
 // 옮긴 글은 기계 번역이고 원어민이 보지 않았다. 할머니의 글과 유이의 말은 모두 초안이다.
 // 역 이름은 그 말의 흔한 표기로 적었고 공식 표기와 견주지 않았다. {이름} 은 채워 넣는 자리다.
 
+import { MYEONGDONG } from "./i18n-myeongdong.js";
+
 export const LANGS = ["ko", "en", "ja", "zh"];
 export const LANG_KEY = "koreaoddity.lang.v1";   // 시험판(overlay-proto.html)과 같은 열쇠라 고른 말이 이어진다
 
@@ -187,6 +189,9 @@ export const TEXT = {
     st_icn1: "仁川机场1号航站楼", st_cargo: "机场货物办公楼", st_unseo: "云西", st_yeongjong: "永宗", st_cheongna: "青罗国际城", st_geomam: "黔岩", st_gyeyang: "桂阳", st_gimpo: "金浦机场", st_magok: "麻谷渡口", st_dmc: "数码媒体城", st_hongik: "弘大入口", st_gongdeok: "孔德", st_seoul: "首尔站",
   },
 };
+
+// 둘째 쪽(명동)의 글을 더한다. 같은 열쇠(proto, nextPage)는 둘째 쪽의 글이 덮는다.
+for (const lang of LANGS) Object.assign(TEXT[lang], MYEONGDONG[lang]);
 
 // 고른 말이 없으면 기기의 말을 따르고, 넷이 아니면 영어로 연다(1권과 같다).
 export function pickLang(storage, navigatorLang = "") {

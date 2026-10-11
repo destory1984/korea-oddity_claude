@@ -1,5 +1,5 @@
 // 쓰는 법: node --test tests/trip.test.mjs
-// 새 기획의 시제품(공항 → 서울역): 돈의 셈, 걸음의 차례, 글이 네 나라 말에 빠짐없이 있는지 본다.
+// 새 기획의 시제품(공항 → 서울역 → 명동): 돈의 셈, 걸음의 차례, 글이 네 나라 말에 빠짐없이 있는지 본다.
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -160,4 +160,94 @@ test("그림: 화면이 부르는 그림이 모두 있다", () => {
   const source = read("main.js");
   for (const name of ["seoul-a", "seoul-station", "seoul-c"]) assert.ok(fs.existsSync(new URL(`../docs/trip/art/${name}.webp`, import.meta.url)), name);
   for (const [, name] of source.matchAll(/img\("([\w-]+)"\)/g)) assert.ok(fs.existsSync(new URL(`../docs/trip/art/${name}.webp`, import.meta.url)), name);
+});
+
+// ── 둘째 쪽: 서울역 → 명동 ──────────────────────────────────────────
+
+const pastedAirport = (patch) => at({ step: "paste", ticket: true, shot: true, pasted: true, ...patch });
+
+test("명동: 지하철 요금은 서울교통공사 누리집에서 본 값이고, 확인하지 못한 출구에는 까닭이 적혀 있다", () => {
+  const s = fares.subway;
+  assert.deepEqual([s.card, s.single, s.deposit, s.minutes], [1550, 1650, 500, 4]);
+  assert.deepEqual(s.stops, ["seoul", "hoehyeon", "myeongdong"]);
+  assert.match(s.source, /seoulmetro\.co\.kr/);
+  assert.match(s.checked, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(fares.myeongdong.verified.exits, false);
+  assert.ok(fares.myeongdong.unverifiedNote.length > 20);
+  assert.ok(fares.myeongdong.exits.choices.includes(fares.myeongdong.exits.right) && fares.myeongdong.exits.choices.includes(fares.myeongdong.exits.grandma));
+  for (const id of [...s.stops, ...s.toward, ...s.opposite, s.oppositeNext, ...s.machineDests]) for (const lang of LANGS) assert.ok(TEXT[lang][`st_${id}`], `${lang} st_${id}`);
+  assert.ok(s.machineDests.includes(s.stops.at(-1)));
+});
+
+test("명동: 공항에서 산 교통카드는 이어지고, 카드값을 다시 내지 않는다", () => {
+  const state = trip.enterMyeongdong(pastedAirport({ route: "allstop", pay: "card", charge: 10000 }));
+  assert.equal(state.step, "mdPage");
+  assert.deepEqual([state.md.carried, state.md.pay, state.md.ticket], [true, "card", true]);
+  assert.equal(trip.nextStep(state), "mdDirection");
+  assert.equal(trip.mdSpending(state, fares).total, 1550);
+  assert.equal(trip.mdSaved(state, fares), 2150 - 1550);
+  assert.deepEqual(trip.totals(state, fares), { spent: 7750 + 1550, balance: 10000 - 4750, hasCard: true });
+  assert.equal(trip.totals({ ...state, step: "mdExit" }, fares).balance, 10000 - 4750 - 1550);
+});
+
+test("명동: 직통이나 1회용으로 왔으면 표를 사야 하고, 1회용은 보증금을 돌려받아야 할머니보다 싸다", () => {
+  const state = trip.enterMyeongdong(pastedAirport({ route: "express" }));
+  assert.deepEqual([state.md.carried, state.md.ticket], [false, false]);
+  assert.equal(trip.nextStep(state), "mdPay");
+  assert.equal(trip.mdSpending(state, fares).total, 0);
+  const single = (refunded) => ({ ...state, step: "mdPaste", md: { ...state.md, pay: "single", ticket: true, refunded } });
+  assert.equal(trip.mdSaved(single(true), fares), 500);
+  assert.equal(trip.mdSaved(single(false), fares), 0);
+  assert.deepEqual(trip.totals(single(true), fares), { spent: 13000 + 1650, balance: 0, hasCard: false });
+  const bought = { ...state, step: "mdDirection", md: { ...state.md, pay: "card", ticket: true, charge: 10000 } };
+  assert.equal(trip.mdSpending(bought, fares).total, 3000 + 1550);
+  assert.equal(trip.totals(bought, fares).balance, 10000);
+  assert.equal(trip.totals({ ...bought, step: "mdShoot" }, fares).balance, 10000 - 1550);
+});
+
+test("명동: 걸음의 차례가 내는 법에 따라 갈리고 붙이기에 닿는다", () => {
+  const walk = (airport, pay) => {
+    let state = trip.enterMyeongdong(pastedAirport(airport));
+    const seen = [state.step];
+    while (state.step !== "mdPaste" && seen.length < 20) {
+      if (state.step === "mdPay") state.md.pay = pay;
+      state = { ...state, step: trip.nextStep(state) };
+      seen.push(state.step);
+    }
+    return seen;
+  };
+  assert.deepEqual(walk({ route: "allstop", pay: "card", charge: 10000 }), ["mdPage", "mdDirection", "mdRide", "mdExit", "mdShoot", "mdEat", "mdPaste"]);
+  assert.deepEqual(walk({ route: "express" }, "card"), ["mdPage", "mdPay", "mdStore", "mdDirection", "mdRide", "mdExit", "mdShoot", "mdEat", "mdPaste"]);
+  assert.deepEqual(walk({ route: "allstop", pay: "single" }, "single"), ["mdPage", "mdPay", "mdMachine", "mdDirection", "mdRide", "mdRefund", "mdExit", "mdShoot", "mdEat", "mdPaste"]);
+  for (const step of walk({ route: "express" }, "single")) assert.ok(trip.STEPS.includes(step), step);
+  assert.equal(trip.nextStep(at({ step: "mdPaste" })), "mdDone");
+});
+
+test("명동: 방면은 진접과 불암산 쪽, 출구는 자료에 적힌 번호, 할머니의 자리는 거리 들머리다", () => {
+  assert.equal(trip.directionRight("up"), true);
+  assert.equal(trip.directionRight("down"), false);
+  assert.equal(trip.exitRight("6", fares), true);
+  assert.equal(trip.exitRight(3, fares), false);
+  assert.equal(trip.freshMd().spot, trip.MD_GRANDMA_SPOT);
+  assert.equal(trip.mdSameSpot(at({})), true);
+});
+
+test("명동: 쪽이 하나이던 때의 저장을 이어받고, 명동의 걸음도 저장된다", () => {
+  const storage = { map: new Map(), getItem(k) { return this.map.get(k) ?? null; }, setItem(k, v) { this.map.set(k, v); } };
+  storage.map.set(trip.OLD_KEY, JSON.stringify({ version: 1, step: "paste", route: "allstop", pay: "card", charge: 20000, ticket: true, pasted: true }));
+  const old = trip.load(storage);
+  assert.deepEqual([old.version, old.step, old.charge, old.md.spot], [2, "paste", 20000, "A"]);
+  const state = trip.enterMyeongdong(old);
+  state.md.exitMisses = 2; state.step = "mdExit";
+  trip.save(storage, state);
+  assert.deepEqual([trip.load(storage).step, trip.load(storage).md.exitMisses, trip.load(storage).md.carried], ["mdExit", 2, true]);
+});
+
+test("명동: 화면이 쓰는 글과 그림이 모두 있고, 걸음마다 화면이 있다", () => {
+  const source = read("main.js");
+  for (const step of trip.STEPS.filter((name) => name.startsWith("md"))) assert.ok(source.includes(`  ${step}(`) || source.includes(`SCREENS.${step} =`), step);
+  for (const key of ["mdYuiCarried", "mdYuiNoCard", "mdYuiSingle", "mdYuiCard", "mdYuiNewCard", "mdReplyLost", "mdReply1", "mdReply2", "mdReply3", "exitWrongG", "exitWrong",
+    "mdWrongDest", "mdToPlatform", "mdShootTitle", "mdShootYui", "mdSpotA", "mdSpotB", "mdSpotC", "mdRideYui", "eatDone", "eatYui", "toPaste", "eatDo", "itemSubway"]) assert.ok(key in TEXT.ko, key);
+  for (const name of ["line4-platform", "md-exit", "md-wrong", "md-a", "md-b", "md-c", "md-eat"]) assert.ok(fs.existsSync(new URL(`../docs/trip/art/${name}.webp`, import.meta.url)), name);
+  for (const lang of LANGS) assert.ok(TEXT[lang].mdTipText.includes("{exit}") && TEXT[lang].mdLostText.includes("{exit}"), lang);
 });

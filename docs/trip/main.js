@@ -1,4 +1,4 @@
-// 할머니의 수첩(새 기획)의 시제품: 공항에서 서울역까지의 한 쪽.
+// 할머니의 수첩(새 기획)의 시제품: 공항에서 서울역까지의 첫 쪽과 서울역에서 명동까지의 둘째 쪽.
 // 걸음의 차례와 돈의 셈은 core/trip.js, 글은 i18n.js, 요금은 data/fares.json 에 있다. 여기는 화면만 놓는다.
 
 import { TEXT, LANGS, LANG_KEY, pickLang, translate } from "./i18n.js";
@@ -25,9 +25,12 @@ const play = (fn, ...args) => { if (soundOn) fn(...args); };
 const t = (key, values) => translate(lang, key, values);
 const W = (amount, to = lang) => trip.won(amount, to);
 const date = fares.checked.replaceAll("-", ".");
+const mdDate = fares.subway.checked.replaceAll("-", ".");
 const station = (id, to = lang) => translate(to, `st_${id}`);
 // 서울역의 자리마다의 그림.
 const SPOT_ART = { A: "seoul-a", B: "seoul-station", C: "seoul-c" };
+const MD_SPOT_ART = { A: "md-a", B: "md-b", C: "md-c" };
+const inMyeongdong = () => trip.STEPS.indexOf(state.step) >= trip.STEPS.indexOf("mdPage");
 const img = (name) => `<img src="${ART}${name}.webp" alt="" draggable="false">`;
 
 function keep() { trip.save(storage ?? memory, state); }
@@ -41,10 +44,9 @@ function go(step = trip.nextStep(state)) {
 // ── 지갑 ────────────────────────────────────────────────────────────
 
 function showWallet() {
-  const { total } = trip.spending(state, fares);
-  const { balance } = trip.wallet(state, fares);
-  const card = state.pay === "card" && state.ticket ? `<br>${t("cardLeft")} ${W(balance)}` : "";
-  $("wallet").innerHTML = `${t("spent")} <b>${W(total)}</b>${card}`;
+  const { spent, balance, hasCard } = trip.totals(state, fares);
+  const card = hasCard ? `<br>${t("cardLeft")} ${W(balance)}` : "";
+  $("wallet").innerHTML = `${t("spent")} <b>${W(spent)}</b>${card}`;
 }
 
 // ── 걸음마다의 화면 ──────────────────────────────────────────────────
@@ -154,15 +156,16 @@ const SCREENS = {
     };
   },
 
-  store() {
+  // 편의점. 공항에서도, 서울역에서도 같은 화면이다. target 은 산 것을 적을 곳이다.
+  store(target = state, nextKey = "toGates") {
     const c = fares.card;
     let charge = c.charges[0];
     const draw = () => {
       screen.innerHTML = `
         <h1>${t("storeTitle")}</h1>
         <div class="frame">${img("icn-store")}</div>
-        <p class="yui">${state.ticket ? t("storeDone") : t("storeAsk")}</p>
-        ${state.ticket ? `<button class="main" data-do="next">${t("toGates")}</button>` : `
+        <p class="yui">${target.ticket ? t("storeDone") : t("storeAsk")}</p>
+        ${target.ticket ? `<button class="main" data-do="next">${t(nextKey)}</button>` : `
         <div class="panel">
           <div class="row"><span>${t("storeCard", { price: W(c.price) })}${c.verified.price ? "" : ' <span class="star">＊</span>'}</span></div>
           <div class="row"><span>${t("storeCharge")}</span>
@@ -171,28 +174,29 @@ const SCREENS = {
         <button class="main" data-do="buy">${t("storePay", { won: W(c.price + charge) })}</button>
         <p class="note"><span class="star">＊</span> ${t("unverified")}</p>`}`;
       for (const button of screen.querySelectorAll("[data-charge]")) button.onclick = () => { charge = Number(button.dataset.charge); play(tick); draw(); };
-      on("buy", () => { state.charge = charge; state.ticket = true; keep(); play(ding); showWallet(); draw(); });
+      on("buy", () => { target.charge = charge; target.ticket = true; keep(); play(ding); showWallet(); draw(); });
       on("next", () => go());
     };
     draw();
   },
 
   // 1회용 교통카드 발매기. 기계는 한국어로 켜져 있다. 말을 바꾸는 단추를 찾는 것이 첫 배움이다(기획서 3절의 9).
-  machine() {
-    const a = fares.allstop;
+  // dests 는 [역, 1회용의 값]의 줄, right 는 수첩에 적힌 역이다.
+  machine({ dests = Object.entries(fares.allstop.to).map(([id, fare]) => [id, fare + fares.allstop.singleExtra]), right = "seoul",
+    deposit = fares.allstop.deposit, wrongKey = "mWrongDest", target = state } = {}) {
     let speak = "ko", phase = "dest", inserted = 0, wrong = false;
-    const total = a.card + a.singleExtra + a.deposit;
+    const total = Object.fromEntries(dests)[right] + deposit;
     const m = (key, values) => translate(speak, key, values);
     const draw = () => {
       const readable = speak === lang;
       const body = phase === "dest" ? `
           <h2>${m("mDest")}</h2>
-          <div class="dests">${Object.entries(a.to).map(([id, fare]) =>
-            `<button data-dest="${id}">${station(id, speak)}<small>${W(fare + a.singleExtra, speak)}</small></button>`).join("")}</div>`
+          <div class="dests">${dests.map(([id, price]) =>
+            `<button data-dest="${id}">${station(id, speak)}<small>${W(price, speak)}</small></button>`).join("")}</div>`
         : `
-          <h2>${station("seoul", speak)} · ${m("mCount")}</h2>
+          <h2>${station(right, speak)} · ${m("mCount")}</h2>
           <div class="sum">${m("mTotal", { won: W(total, speak) })}</div>
-          <div class="sub">${m("mDeposit", { deposit: W(a.deposit, speak) })}</div>
+          <div class="sub">${m("mDeposit", { deposit: W(deposit, speak) })}</div>
           ${inserted < total ? `<div class="sub">${m("mInsert")}</div>
           <div class="bills">${[1000, 5000, 10000].map((bill) => `<button data-bill="${bill}">${W(bill, speak)}</button>`).join("")}</div>` : ""}
           <div class="sub">${m("mInserted", { won: W(inserted, speak) })}</div>
@@ -208,17 +212,17 @@ const SCREENS = {
           </div>
           <div class="slot"></div>
         </div>
-        <p class="yui${wrong ? " warn" : ""}">${wrong ? t("mWrongDest") : readable ? t("machineYuiOk") : t("machineYui")}</p>`;
+        <p class="yui${wrong ? " warn" : ""}">${wrong ? t(wrongKey) : readable ? t("machineYuiOk") : t("machineYui")}</p>`;
       for (const button of screen.querySelectorAll("[data-speak]")) button.onclick = () => { speak = button.dataset.speak; wrong = false; play(tick); draw(); };
       for (const button of screen.querySelectorAll("[data-dest]")) button.onclick = () => {
-        wrong = button.dataset.dest !== "seoul";
+        wrong = button.dataset.dest !== right;
         if (!wrong) phase = "pay";
         play(tick);
         draw();
       };
       for (const button of screen.querySelectorAll("[data-bill]")) button.onclick = () => { inserted += Number(button.dataset.bill); play(tick, true); draw(); };
       on("back", () => { phase = "dest"; inserted = 0; wrong = false; draw(); });
-      on("take", () => { state.ticket = true; play(ding); go(); });
+      on("take", () => { target.ticket = true; play(ding); go(); });
     };
     draw();
   },
@@ -282,15 +286,11 @@ const SCREENS = {
     on("next", () => go());
   },
 
-  ride() {
-    const express = state.route === "express";
-    const stops = fares.stations[express ? "express" : "allstop"];
-    const seconds = express ? 3.5 : 6.5;
-    const minutes = express ? t("exactly", { n: fares.express.minutes }) : t("about", { n: fares.allstop.minutes });
+  ride({ stops, seconds, line, title, art, yuiKey } = airportRide()) {
     screen.innerHTML = `
-      <div class="ride" style="--ride:${seconds}s;--line:var(--${express ? "orange" : "blue"})">
-        <h1>${t(express ? "rideExpress" : "rideAllstop")} · ${minutes}</h1>
-        <div class="frame">${img("arex-ride")}</div>
+      <div class="ride" style="--ride:${seconds}s;--line:var(--${line})">
+        <h1>${title}</h1>
+        <div class="frame">${img(art)}</div>
         <div class="rail">
           <i class="track"></i>
           ${stops.map((id, i) => `<i class="stop${i === 0 || i === stops.length - 1 ? " end" : ""}" style="left:${(i / (stops.length - 1)) * 100}%"></i>`).join("")}
@@ -298,7 +298,7 @@ const SCREENS = {
           <div class="ends"><span>${station(stops[0])}</span><span>${station(stops.at(-1))}</span></div>
         </div>
         <p class="now"></p>
-        <p class="yui">${t("rideYui")}</p>
+        <p class="yui">${t(yuiKey)}</p>
         <p class="note">${t("skip")}</p>
       </div>`;
     const now = screen.querySelector(".now");
@@ -320,8 +320,8 @@ const SCREENS = {
     screen.querySelector(".ride").onclick = finish;
   },
 
-  refund() {
-    const deposit = W(fares.allstop.deposit);
+  refund(target = state, amount = fares.allstop.deposit) {
+    const deposit = W(amount);
     screen.innerHTML = `
       <h1>${t("refundTitle")}</h1>
       <div class="machine"><div class="band"></div>
@@ -331,36 +331,36 @@ const SCREENS = {
       <button class="main" data-do="refund">${t("refundDo")}</button>
       <button class="main" data-do="skip" style="border-color:rgba(255,255,255,.35);color:var(--white);font-weight:400">${t("refundSkip")}</button>`;
     on("refund", () => {
-      state.refunded = true; keep(); showWallet(); play(ding);
+      target.refunded = true; keep(); showWallet(); play(ding);
       const bubble = screen.querySelector(".yui");
       bubble.hidden = false; bubble.textContent = t("refundYui", { deposit });
       for (const button of screen.querySelectorAll("button")) button.disabled = true;
       setTimeout(() => { if (bubble.isConnected) go(); }, 1300);
     });
-    on("skip", () => { state.refunded = false; go(); });
+    on("skip", () => { target.refunded = false; go(); });
   },
 
-  // 서울역. 도착의 도장으로 한 장 찍는다. 삐빅, 찰칵, 2초 쉬고 수첩으로 간다.
-  arrive() {
+  // 도착의 도장으로 한 장 찍는다. 삐빅, 찰칵, 2초 쉬고 다음 걸음으로 간다. 서울역과 명동이 같은 화면을 쓴다.
+  arrive({ target = state, art = SPOT_ART, titleKey = "arriveTitle", yuiKey = "arriveYui", labelKey = "spot" } = {}) {
     screen.innerHTML = `
-      <h1>${t("arriveTitle")}</h1>
-      <div class="frame">${trip.SPOTS.map((spot) => `<img class="spot" data-spot="${spot}" src="${ART}${SPOT_ART[spot]}.webp" alt="" draggable="false">`).join("")}</div>
-      <p class="yui">${t("arriveYui")}</p>
-      <div class="spots">${trip.SPOTS.map((spot) => `<button data-pick="${spot}">${t(`spot${spot}`)}</button>`).join("")}</div>
+      <h1>${t(titleKey)}</h1>
+      <div class="frame">${trip.SPOTS.map((spot) => `<img class="spot" data-spot="${spot}" src="${ART}${art[spot]}.webp" alt="" draggable="false">`).join("")}</div>
+      <p class="yui">${t(yuiKey)}</p>
+      <div class="spots">${trip.SPOTS.map((spot) => `<button data-pick="${spot}">${t(`${labelKey}${spot}`)}</button>`).join("")}</div>
       <div class="tools"><button class="shutter" data-do="shutter" aria-label="${t("shutter")}"></button></div>`;
     // 자리를 옮기면 그 자리에서 본 그림으로 넘어간다. 어느 자리든 사진은 된다.
     const stand = (spot) => {
-      state.spot = spot; keep();
+      target.spot = spot; keep();
       for (const image of screen.querySelectorAll("img.spot")) image.classList.toggle("on", image.dataset.spot === spot);
       for (const button of screen.querySelectorAll("[data-pick]")) button.classList.toggle("on", button.dataset.pick === spot);
     };
     for (const button of screen.querySelectorAll("[data-pick]")) button.onclick = () => { stand(button.dataset.pick); play(tick); };
-    stand(state.spot);
+    stand(target.spot);
     on("shutter", () => {
       for (const pick of screen.querySelectorAll("[data-pick]")) pick.disabled = true;
       const button = screen.querySelector(".shutter"), frame = screen.querySelector(".frame");
       button.disabled = true;
-      state.shot = true; keep();
+      target.shot = true; keep();
       play(shutterSound);
       setTimeout(() => frame.classList.add("flash"), soundOn ? 350 : 0);
       setTimeout(() => { if (frame.isConnected) go(); }, SHUTTER_S * 1000 + 2000);
@@ -400,13 +400,213 @@ const SCREENS = {
       <p class="verdict">${verdict}<small>${t("asOf", { date })}</small></p>
       ${state.pasted ? `<div class="paper reply hand"><h2>${t("replyHead")}</h2>${reply}<p class="sign">${t("sign")}</p></div>
         <p class="note">${t("nextPage")}</p>
-        <button class="main" data-do="again">${t("restart")}</button>`
+        <button class="main" data-do="md">${t("toMyeongdong")}</button>`
       : `<button class="main" data-do="paste">${t("pasteDo")}</button>`}`;
     on("paste", () => { state.pasted = true; keep(); play(ding); render(); });
+    on("md", () => { state = trip.enterMyeongdong(state); go("mdPage"); });
+  },
+
+  // ── 둘째 쪽: 서울역 → 명동 ────────────────────────────────────────
+
+  mdPage() {
+    screen.innerHTML = `
+      <p class="place">${t("mdPlace")}</p>
+      ${mdGrandmaPage()}
+      <p class="yui">${t(state.md.carried ? "mdYuiCarried" : "mdYuiNoCard")}</p>
+      <button class="main" data-do="next">${t("mdStart")}</button>
+      ${mdNote()}`;
+    on("next", () => go());
+  },
+
+  mdPay() {
+    const s = fares.subway, c = fares.card;
+    const star = c.verified.price ? "" : ' <span class="star">＊</span>';
+    screen.innerHTML = `
+      <h1>${t("payTitle")}</h1>
+      <div class="cards">
+        <article class="card sky">
+          <h2>${t("payCard")}</h2>
+          <ul class="facts"><li>${t("mdCardNote", { price: W(c.price), fare: W(s.card) })}${star}</li></ul>
+          <button data-pay="card">${t("pickThis")}</button>
+        </article>
+        <article class="card sky">
+          <span class="tag">${t("grandmaWent")}</span>
+          <h2>${t("paySingle")}</h2>
+          <ul class="facts"><li>${t("mdSingleNote", { single: W(s.single), deposit: W(s.deposit) })}</li></ul>
+          <button data-pay="single">${t("pickThis")}</button>
+        </article>
+      </div>
+      <p class="note">${t("mdAsOf", { date: mdDate })}<br><span class="star">＊</span> ${t("unverified")}</p>`;
+    for (const button of screen.querySelectorAll("[data-pay]")) button.onclick = () => {
+      state.md.pay = button.dataset.pay;
+      go();
+    };
+  },
+
+  mdStore() { SCREENS.store(state.md, "mdToPlatform"); },
+
+  mdMachine() {
+    const s = fares.subway;
+    SCREENS.machine({ dests: s.machineDests.map((id) => [id, s.single]), right: s.stops.at(-1), deposit: s.deposit, wrongKey: "mdWrongDest", target: state.md });
+  },
+
+  // 타는 곳에서 방면을 고른다. 반대쪽을 타면 한 정거장 갔다가 돌아온다. 돈은 더 들지 않는다.
+  mdDirection() {
+    const s = fares.subway;
+    const toward = (ids) => t("dirToward", { a: station(ids[0]), b: station(ids[1]) });
+    const next = (id) => t("dirNext", { station: station(id) });
+    screen.innerHTML = `
+      <h1>${t("dirTitle")}</h1>
+      <div class="frame">${img("line4-platform")}</div>
+      <div class="ticket sky">${t(state.md.pay === "card" ? "myCard" : "itemSingle")}</div>
+      <p class="yui">${t("dirAsk")}</p>
+      <div class="ways">
+        <button data-dir="down"><b>←</b>${toward(s.opposite)}<small>${next(s.oppositeNext)}</small></button>
+        <button data-dir="up"><b>→</b>${toward(s.toward)}<small>${next(s.stops[1])}</small></button>
+      </div>`;
+    const bubble = screen.querySelector(".yui");
+    for (const button of screen.querySelectorAll("[data-dir]")) button.onclick = () => {
+      if (trip.directionRight(button.dataset.dir)) {
+        for (const other of screen.querySelectorAll("[data-dir]")) other.disabled = true;
+        bubble.className = "yui"; bubble.textContent = t("dirOk", { station: station(s.stops[1]) });
+        play(ding);
+        setTimeout(() => { if (bubble.isConnected) go(); }, 1100);
+        return;
+      }
+      state.md.dirMisses += 1; keep();
+      bubble.className = "yui warn"; bubble.textContent = t("dirWrong", { station: station(s.oppositeNext) });
+      button.disabled = true; play(tick, true);
+    };
+  },
+
+  mdRide() {
+    const s = fares.subway;
+    SCREENS.ride({ stops: s.stops, seconds: 4, line: "sky", title: `${t("mdRideTitle")} · ${t("exactly", { n: s.minutes })}`, art: "line4-platform", yuiKey: "mdRideYui" });
+  },
+
+  mdRefund() { SCREENS.refund(state.md, fares.subway.deposit); },
+
+  // 출구 고르기. 할머니가 헤맨 곳이다. 틀리면 다른 길이 나오고 돌아 들어온다.
+  mdExit() {
+    const x = fares.myeongdong.exits;
+    screen.innerHTML = `
+      <h1>${t("exitTitle")}</h1>
+      <div class="frame"><img class="spot on" data-view="in" src="${ART}md-exit.webp" alt="" draggable="false"><img class="spot" data-view="out" src="${ART}md-wrong.webp" alt="" draggable="false"></div>
+      <p class="yui">${t("exitAsk")}</p>
+      <div class="exits">${x.choices.map((n) => `<button data-exit="${n}">${t("exitN", { n })}</button>`).join("")}</div>
+      ${mdNote()}`;
+    const bubble = screen.querySelector(".yui");
+    const view = (name) => { for (const image of screen.querySelectorAll("img.spot")) image.classList.toggle("on", image.dataset.view === name); };
+    for (const button of screen.querySelectorAll("[data-exit]")) button.onclick = () => {
+      const n = Number(button.dataset.exit);
+      for (const other of screen.querySelectorAll("[data-exit]")) other.disabled = true;
+      if (trip.exitRight(n, fares)) {
+        bubble.className = "yui"; bubble.textContent = t("exitOk");
+        play(ding);
+        setTimeout(() => { if (bubble.isConnected) go(); }, 1100);
+        return;
+      }
+      state.md.exitMisses += 1; keep();
+      bubble.className = "yui warn"; bubble.textContent = t(n === x.grandma ? "exitWrongG" : "exitWrong");
+      view("out"); play(tick, true);
+      button.dataset.tried = "1";
+      // 돌아 들어온다. 가 본 출구는 다시 누르지 못한다.
+      setTimeout(() => {
+        if (!bubble.isConnected) return;
+        view("in");
+        for (const other of screen.querySelectorAll("[data-exit]")) other.disabled = other.dataset.tried === "1";
+      }, 2600);
+    };
+  },
+
+  mdShoot() { SCREENS.arrive({ target: state.md, art: MD_SPOT_ART, titleKey: "mdShootTitle", yuiKey: "mdShootYui", labelKey: "mdSpot" }); },
+
+  // 먹는다. 갔다 왔다는 느낌이다. 수첩에 딱지로 남는다. 값은 적지 않는다(쓴 돈은 교통만 견준다).
+  mdEat() {
+    const ate = state.md.ate;
+    screen.innerHTML = `
+      <h1>${t("eatTitle")}</h1>
+      <div class="frame">${img("md-eat")}</div>
+      <p class="yui">${t(ate ? "eatDone" : "eatYui")}</p>
+      ${ate ? `<div class="sticker">${t("eatSticker")}</div>` : ""}
+      <button class="main" data-do="${ate ? "next" : "eat"}">${t(ate ? "toPaste" : "eatDo")}</button>`;
+    on("eat", () => { state.md.ate = true; keep(); play(ding); render(); });
+    on("next", () => go());
+  },
+
+  mdPaste() {
+    const m = state.md, s = fares.subway, x = fares.myeongdong.exits;
+    const mine = trip.mdSpending(state, fares), hers = trip.mdGrandmaTotal(fares), gap = trip.mdSaved(state, fares);
+    const how = m.pay === "single" ? "mdYuiSingle" : m.carried ? "mdYuiCard" : "mdYuiNewCard";
+    const verdict = gap > 0 ? t("savedMoney", { won: W(gap) }) : gap < 0 ? t("overMoney", { won: W(-gap) }) : t("sameMoney");
+    const reply = [m.exitMisses ? "mdReplyLost" : "mdReply1", "mdReply2", "mdReply3"].map((key) => `<p>${t(key)}</p>`).join("")
+      + (trip.mdSameSpot(state) ? `<p>${t("mdReplySame")}</p>` : "")
+      + (m.ate ? `<p>${t("mdReplyAte")}</p>` : "")
+      + (gap > 0 ? `<p>${t("replySaved", { won: W(gap) })}</p>` : "");
+    screen.innerHTML = `
+      <h1>${t("mdPlace")}</h1>
+      <div class="spread">
+        <article class="paper">
+          <h2>${t("grandmaSpring")}</h2>
+          <div class="frame faded">${img(MD_SPOT_ART[trip.MD_GRANDMA_SPOT])}</div>
+          <p class="hand">${t("mdHowText")}</p>
+          <p class="hand lost">${t("mdLostText", { exit: x.grandma })}</p>
+          <p class="hand">${t("mdNotText")}</p>
+          <ul><li><span>${t("itemSingle")}</span><span>${W(s.single)}</span></li><li><span>${t("itemDeposit")}</span><span>${W(s.deposit)}</span></li>
+            <li class="sum"><span>${t("total")}</span><span>${W(hers)}</span></li></ul>
+        </article>
+        <article class="paper">
+          <h2>${t("yui")}</h2>
+          <div class="frame">${m.pasted ? img(MD_SPOT_ART[m.spot]) : ""}</div>
+          <p>${t(how)}</p>
+          <p><b>${t("mdClue")}</b> ${t("mdClueText")}</p>
+          <p>${m.exitMisses ? t("exitNote", { n: m.exitMisses }) : t("exitClean")}${m.dirMisses ? `<br>${t("dirNote", { n: m.dirMisses })}` : ""}</p>
+          ${m.ate ? `<p><b>${t("ate")}</b> <span class="sticker small">${t("eatSticker")}</span></p>` : ""}
+          <ul>${mine.items.map((item) => `<li><span>${t(item.key)}</span><span>${W(item.amount)}</span></li>`).join("")}
+            <li class="sum"><span>${t("total")}</span><span>${W(mine.total)}</span></li></ul>
+        </article>
+      </div>
+      <p class="verdict">${verdict}<small>${t("mdAsOf", { date: mdDate })}</small></p>
+      ${m.pasted ? `<div class="paper reply hand"><h2>${t("replyHead")}</h2>${reply}<p class="sign">${t("sign")}</p></div>
+        <p class="note">${t("mdNext")}</p>
+        <button class="main" data-do="again">${t("restart")}</button>`
+      : `<button class="main" data-do="paste">${t("pasteDo")}</button>`}`;
+    on("paste", () => { m.pasted = true; keep(); play(ding); render(); });
     on("again", restart);
   },
 };
 SCREENS.done = SCREENS.paste;
+SCREENS.mdDone = SCREENS.mdPaste;
+
+// 공항철도를 타는 화면에 놓을 것. 직통은 서지 않고 빨리 간다.
+function airportRide() {
+  const express = state.route === "express";
+  return {
+    stops: fares.stations[express ? "express" : "allstop"], seconds: express ? 3.5 : 6.5, line: express ? "orange" : "blue",
+    title: `${t(express ? "rideExpress" : "rideAllstop")} · ${express ? t("exactly", { n: fares.express.minutes }) : t("about", { n: fares.allstop.minutes })}`,
+    art: "arex-ride", yuiKey: "rideYui",
+  };
+}
+
+// 할머니의 명동 쪽. 맞는 출구의 번호는 꾀에 적혀 있다.
+function mdGrandmaPage() {
+  const s = fares.subway, x = fares.myeongdong.exits;
+  const star = fares.myeongdong.verified.exits ? "" : ' <span class="star">＊</span>';
+  return `
+    <div class="paper">
+      <h2>${t("mdPlace")}</h2>
+      <p class="when">${t("gWhen")}</p>
+      <dl class="hand">
+        <dt>${t("gHow")}</dt><dd>${t("mdHowText")}</dd>
+        <dt>${t("gTicket")}</dt><dd>${t("mdTicketText", { single: W(s.single), deposit: W(s.deposit) })}</dd>
+        <dt>${t("gLost")}</dt><dd class="lost">${t("mdLostText", { exit: x.grandma })}${star}</dd>
+        <dt>${t("gTip")}</dt><dd>${t("mdTipText", { exit: x.right })}${star}</dd>
+        <dt>${t("gNot")}</dt><dd>${t("mdNotText")}</dd>
+      </dl>
+      <p class="sign hand">${t("sign")}</p>
+    </div>`;
+}
+const mdNote = () => `<p class="note">${t("mdAsOf", { date: mdDate })}${fares.myeongdong.verified.exits ? "" : `<br><span class="star">＊</span> ${t("unverifiedExit")}`}</p>`;
 
 // 할머니의 쪽. 수첩 단추로도 언제든 꺼내 본다.
 function grandmaPage() {
@@ -450,7 +650,7 @@ function showJournal() {
   $("journalBody").innerHTML = `
     <figure class="old" style="float:none;width:70%;margin:0 auto 8px">${img("photo-2004")}<figcaption class="hand">典子, 2004.10</figcaption></figure>
     <p><b>${t("clueTitle")}</b> · ${t("photoThen")}<br>${t("clueText")}</p>
-    ${state.step === "intro" ? `<p>${t("pageLocked")}</p>` : grandmaPage()}`;
+    ${state.step === "intro" ? `<p>${t("pageLocked")}</p>` : `${inMyeongdong() ? `${mdGrandmaPage()}<br>` : ""}${grandmaPage()}`}`;
   $("journal").classList.add("on");
 }
 
