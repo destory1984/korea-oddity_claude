@@ -46,6 +46,3 @@ assets/codex/
 godot/.godot/
 godot/shots/
 *.import.bak
-
-# Godot 견본을 웹으로 뽑은 것(42MB). 올릴지는 정하지 않았다
-docs/godot-web/
