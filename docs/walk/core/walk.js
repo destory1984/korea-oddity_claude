@@ -1,7 +1,7 @@
 // 걷기 시험판의 셈. 화면과 브라우저를 모른다. 지도는 maps.json 에서 받는다.
 // 한 글자가 한 칸이다. 유이는 칸에서 칸으로 걷고, 닿은 칸의 글자가 일을 일으킨다.
 
-export const BLOCKED = "#scC";
+export const BLOCKED = "#scCe";
 export const EXITS = "368";
 
 export const tileAt = (map, x, y) => map.rows[y]?.[x] ?? "#";

@@ -15,11 +15,13 @@ const canvas = $("map"), ctx = canvas.getContext("2d");
 const COLS = 12, ROWS = 18, TILE = canvas.width / COLS;
 const SPEED = 5.5;          // 1초에 걷는 칸
 const WRONG_MS = 2600;      // 틀린 출구의 바깥을 보여 주는 동안
+const FRAMES = 4, FRAME_MS = 130, STAND = 1;   // 걷는 동작의 컷 수, 한 컷의 길이, 서 있을 때의 컷
 
 const load = (src) => new Promise((done) => { const image = new Image(); image.onload = () => done(image); image.onerror = () => done(null); image.src = src; });
 const art = {
   station: await load("art/station.webp"), street: await load("art/street.webp"),
-  down: await load("art/yui-down.png"), up: await load("art/yui-up.png"), side: await load("art/yui-side.png"),
+  // 걷는 동작. 한 장에 네 컷이 가로로 놓여 있다: 한 발 내딛기, 두 발 모음, 다른 발 내딛기, 두 발 모음.
+  down: await load("art/walk-down.png"), up: await load("art/walk-up.png"), side: await load("art/walk-side.png"),
 };
 const params = new URLSearchParams(location.search);
 const showGrid = params.has("grid");
@@ -154,16 +156,17 @@ function draw(now) {
     ctx.setLineDash([]);
   }
 
-  // 유이. 발이 칸의 한가운데 조금 아래에 놓인다. 걸을 때는 두 걸음에 한 번 통통 뛴다.
+  // 유이. 발이 칸의 한가운데 조금 아래에 놓인다. 걸을 때는 네 컷을 차례로 돌린다.
   const sprite = art[state.face === "up" ? "up" : state.face === "down" ? "down" : "side"];
-  const cx = (state.x + 0.5) * TILE, feet = (state.y + 0.85) * TILE - (state.way.length ? Math.abs(Math.sin(now / 90)) * 5 : 0);
+  const cx = (state.x + 0.5) * TILE, feet = (state.y + 0.85) * TILE;
   ctx.fillStyle = "rgba(0, 0, 0, .28)";
   ctx.beginPath(); ctx.ellipse(cx, (state.y + 0.85) * TILE, TILE * 0.3, TILE * 0.11, 0, 0, Math.PI * 2); ctx.fill();
   if (sprite) {
-    const height = TILE * 1.7, width = (sprite.width / sprite.height) * height;
+    const cut = sprite.width / FRAMES, height = TILE * 1.7, width = (cut / sprite.height) * height;
+    const at = state.way.length ? Math.floor(now / FRAME_MS) % FRAMES : STAND;
     ctx.save(); ctx.translate(cx, feet);
     if (state.face === "right") ctx.scale(-1, 1);   // 옆모습의 그림은 왼쪽을 본다
-    ctx.drawImage(sprite, -width / 2, -height, width, height);
+    ctx.drawImage(sprite, at * cut, 0, cut, sprite.height, -width / 2, -height, width, height);
     ctx.restore();
   } else {
     ctx.fillStyle = "#6ec3f0"; ctx.fillRect(cx - TILE * 0.25, feet - TILE, TILE * 0.5, TILE);
