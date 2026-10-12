@@ -1,17 +1,31 @@
 extends Node2D
 ## 명동 거리 한 장면. 웹의 것(docs/water/)과 같은 세 겹의 그림 위를 유이가 좌우로 걷는다.
 ## 그림의 빈 데를 누르면 그리로 걷고, 누르고 있으면 계속 걷는다. 수레와 탑은 눌러서 말을 듣는다.
-## 웹의 것에 없는 것: 늦게 뒤따르는 카메라, 지는 은행잎, 수레의 김, 저녁의 빛과 등불.
+## 웹의 것에 없는 것: 늦게 뒤따르는 카메라, 지는 은행잎, 수레의 김, 저녁과 밤의 빛, 등불, 불 켜진 탑.
 
 const WORLD := 2160.0      # 가운데 겹의 너비
 const VIEW := 720.0        # 그림 틀의 너비이자 높이
 const SPEED := 396.0       # 한 초에 걷는 거리. 웹의 것과 같다(틀 너비의 55%)
-const DAY := Color(1, 1, 1)
-const EVENING := Color(0.56, 0.54, 0.74)
+const Fonts := preload("res://fonts.gd")
+const FAR_ONLY := 2        # 빛의 가림: 먼 겹만
+
+# 때: 낮, 저녁, 밤. sky 는 화면 전체를 물들이는 빛, 나머지는 등불의 세기다. next 는 단추에 적을 다음 때다.
+const TIMES := [
+	{ "sky": Color(1, 1, 1), "lamp": 0.0, "window": 0.0, "tower": 0.0, "city": 0.0, "next": "저녁으로", "say": "다시 낮이야." },
+	{ "sky": Color(0.56, 0.54, 0.74), "lamp": 0.75, "window": 0.5, "tower": 0.45, "city": 0.3, "next": "밤으로", "say": "해가 진다. 가게마다 불이 켜졌어." },
+	{ "sky": Color(0.2, 0.24, 0.46), "lamp": 0.8, "window": 0.95, "tower": 1.0, "city": 1.2, "next": "낮으로", "say": "밤이다. 산 위의 탑에 불이 들어왔어." },
+]
 
 # 누를 곳. 수레는 가운데 겹의 자리, 탑은 먼 겹 그림(1536 x 1024)의 자리다.
 const CART := Rect2(1447, 274, 324, 360)
 const TOWER := Rect2(430, 205, 170, 225)
+# 탑(먼 겹 그림의 자리): 뾰족한 끝, 둥근 전망대, 기둥의 가운데
+const TOWER_TIP := Vector2(514, 246)
+const TOWER_DECK := Vector2(514, 316)
+const TOWER_SHAFT := Vector2(514, 356)
+# 밤에 불이 켜지는 먼 도시의 창들(먼 겹 그림의 자리)
+const CITY := [Vector2(120, 640), Vector2(300, 720), Vector2(430, 610), Vector2(640, 700), Vector2(760, 600),
+	Vector2(900, 690), Vector2(1010, 560), Vector2(1150, 650), Vector2(1290, 720), Vector2(1420, 610)]
 # 저녁에 불이 켜지는 창: 옷 가게, 가방 가게, 찻집, 수레, 화장품 가게
 const WINDOWS := [Vector2(370, 420), Vector2(800, 440), Vector2(1200, 430), Vector2(1620, 440), Vector2(1976, 420)]
 
@@ -27,29 +41,42 @@ const WINDOWS := [Vector2(370, 420), Vector2(800, 440), Vector2(1200, 430), Vect
 
 var target_x := 173.0
 var held := false
-var evening := false
+var time := 0                # TIMES 의 몇째인가
 var arriving := ""          # 걸어가서 만질 곳
 var window_lights: Array[PointLight2D] = []
+var tower_lights: Array[PointLight2D] = []
+var city_lights: Array[PointLight2D] = []
+var beacon: PointLight2D
+var halo: PointLight2D       # 탑을 감싸는 옅은 달무리
 
 
 func _ready() -> void:
 	var glow := _soft_dot(128)
 	lamp.texture = glow
-	lamp.texture_scale = 4.0
+	lamp.texture_scale = 3.2
+	var warm := Color(1, 0.8, 0.52)
 	for at: Vector2 in WINDOWS:
-		var light := PointLight2D.new()
-		light.texture = glow
-		light.texture_scale = 3.6
-		light.color = Color(1, 0.8, 0.52)
-		light.energy = 0.0
-		light.position = at
-		$Mid.add_child(light)
-		window_lights.append(light)
+		window_lights.append(_light($Mid, at, glow, warm, 3.6))
+	# 탑: 전망대의 푸른 빛, 기둥을 타고 내리는 빛, 탑을 감싸는 옅은 달무리, 끝의 붉은 깜빡이
+	# 먼 겹의 빛은 먼 겹에만 닿는다(빛의 가림 2번). 그러지 않으면 탑의 빛이 앞의 나무와 가게까지 밝힌다.
+	far_picture.light_mask = FAR_ONLY
+	var cool := Color(0.5, 0.86, 1)
+	tower_lights.append(_light(far_picture, TOWER_DECK, glow, cool, 0.5, Vector2.ONE, FAR_ONLY))
+	tower_lights.append(_light(far_picture, TOWER_SHAFT, glow, cool, 0.9, Vector2(0.2, 1.2), FAR_ONLY))
+	halo = _light(far_picture, TOWER_DECK, glow, Color(0.6, 0.8, 1), 1.7, Vector2.ONE, FAR_ONLY)
+	beacon = _light(far_picture, TOWER_TIP, glow, Color(1, 0.3, 0.25), 0.3, Vector2.ONE, FAR_ONLY)
+	for at: Vector2 in CITY:
+		city_lights.append(_light(far_picture, at, glow, warm, 0.38, Vector2.ONE, FAR_ONLY))
+	var font := Fonts.SLICES[0]
+	font.fallbacks.assign(Fonts.SLICES.slice(1))
+	say.add_theme_font_override(&"font", font)
+	dusk_button.add_theme_font_override(&"font", font)
 	_set_up_leaves()
 	_set_up_steam(glow)
-	dusk_button.pressed.connect(_toggle_evening)
+	dusk_button.pressed.connect(_next_time)
 	camera.position.x = _camera_goal()
 	camera.reset_smoothing()
+	_blink()
 	if "--demo" in OS.get_cmdline_user_args():
 		_demo()
 
@@ -116,15 +143,45 @@ func _say(text: String) -> void:
 	create_tween().tween_property(say, "modulate:a", 1.0, 0.25)
 
 
-func _toggle_evening() -> void:
-	evening = not evening
-	dusk_button.text = "낮으로" if evening else "저녁으로"
+# 낮 → 저녁 → 밤 → 낮. 그림은 그대로이고 빛만 바뀐다.
+func _next_time() -> void:
+	time = (time + 1) % TIMES.size()
+	var now: Dictionary = TIMES[time]
+	dusk_button.text = now.next
 	var tween := create_tween().set_parallel().set_trans(Tween.TRANS_SINE)
-	tween.tween_property(daylight, "color", EVENING if evening else DAY, 1.6)
-	tween.tween_property(lamp, "energy", 0.75 if evening else 0.0, 1.6)
+	tween.tween_property(daylight, "color", now.sky, 1.6)
+	tween.tween_property(lamp, "energy", now.lamp, 1.6)
 	for light in window_lights:
-		tween.tween_property(light, "energy", 0.5 if evening else 0.0, 1.6)
-	_say("해가 진다. 가게마다 불이 켜졌어." if evening else "다시 낮이야.")
+		tween.tween_property(light, "energy", now.window, 1.6)
+	for light in tower_lights:
+		tween.tween_property(light, "energy", now.tower * 1.6, 1.6)
+	tween.tween_property(halo, "energy", now.tower * 0.35, 1.6)
+	for light in city_lights:
+		tween.tween_property(light, "energy", now.city, 1.6)
+	_say(now.say)
+
+
+# 붉은 깜빡이는 탑에 불이 들어온 동안에만, 2초에 한 번 밝아졌다 꺼진다.
+func _blink() -> void:
+	var on: float = TIMES[time].tower
+	var tween := create_tween()
+	tween.tween_property(beacon, "energy", on * 1.4, 0.5)
+	tween.tween_property(beacon, "energy", 0.0, 0.5)
+	tween.tween_interval(1.0)
+	tween.finished.connect(_blink)
+
+
+func _light(on: Node, at: Vector2, glow: Texture2D, color: Color, size: float, stretch := Vector2.ONE, reach := 1) -> PointLight2D:
+	var light := PointLight2D.new()
+	light.texture = glow
+	light.texture_scale = size
+	light.scale = stretch
+	light.color = color
+	light.energy = 0.0
+	light.range_item_cull_mask = reach
+	light.position = at
+	on.add_child(light)
+	return light
 
 
 # 가운데가 짙고 가장자리로 사라지는 둥근 점. 등불의 빛과 김에 쓴다.
@@ -202,10 +259,13 @@ func _demo() -> void:
 	print("tower said: ", say.text)
 	target_x = 1500.0
 	await _shot("3-cart", 2.6)
-	_toggle_evening()
+	_next_time()
 	await _shot("4-evening", 2.2)
-	target_x = 500.0
-	await _shot("5-evening-lamp", 3.2)
+	_next_time()
+	target_x = 800.0
+	await _shot("5-night-tower", 3.4)
+	target_x = 250.0
+	await _shot("6-night-lamp", 2.6)
 	get_tree().quit()
 
 
