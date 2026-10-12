@@ -1,0 +1,107 @@
+/* 수채 견본(명동). 본보기는 Dordogne(2023): 엷은 수채의 장면 속을 직접 누르고, 모은 것으로 수첩의 한 쪽을 손수 꾸민다.
+   너비 375의 세로 화면이 기준이고, 넓은 화면에서는 가운데 480 기둥에 둔다. 바탕은 밤빛이 아니라 종이의 빛이다. */
+:root { --paper: #f6f0e2; --page: #fbf7ec; --ink: #3b2a1a; --soft: #8a7a66; --red: #c8553d; --gold: #e2a93b; --plate: #f5c400; }
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--paper); }
+body { font-family: "Pretendard Variable", Pretendard, "Segoe UI", "Malgun Gothic", "Hiragino Sans", "Yu Gothic", "Microsoft YaHei", sans-serif; color: var(--ink);
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+#app { max-width: 480px; margin: 0 auto; padding: 10px 14px 28px; }
+:lang(ko) p { word-break: keep-all; }
+.hand { font-family: "Nanum Pen Script", "Yomogi", "Ma Shan Zheng", cursive; font-size: 22px; line-height: 1.25; }
+:lang(ja) .hand, :lang(zh-Hans) .hand, :lang(en) .hand { font-size: 17px; line-height: 1.45; }
+
+#top { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 44px; margin-bottom: 8px; }
+#place { margin: 0; font-size: 16px; font-weight: 600; }
+button { font: inherit; color: var(--ink); cursor: pointer; touch-action: manipulation; }
+button.main { display: block; margin: 14px auto 0; padding: 11px 26px; border-radius: 999px; border: 1.5px solid var(--red); background: #fff8; color: var(--red); font-weight: 600; }
+button.main:disabled { opacity: .4; cursor: default; }
+button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-radius: 999px; border: 1px solid #3b2a1a55; background: none; font-size: 13px; color: var(--soft); }
+.note { font-size: 11px; color: var(--soft); text-align: center; margin: 16px 0 0; line-height: 1.5; }
+
+/* 모은 것. 아직 못 얻은 것은 빈 동그라미다. */
+#found { display: flex; gap: 5px; }
+#found span { width: 26px; height: 26px; border-radius: 50%; border: 1.5px dashed #3b2a1a55; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: transparent; }
+#found span.on { border: 0; color: #fff; background: var(--tone, var(--red)); }
+#found span.new { animation: pop .5s; }
+@keyframes pop { 0% { transform: scale(.3); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+[data-item=exit] { --tone: #b58a00; } [data-item=word] { --tone: #4f7a9c; } [data-item=photo] { --tone: #6b5b4b; } [data-item=egg] { --tone: #d9862b; } [data-item=clue] { --tone: #5d8a5a; }
+
+/* 그림의 틀. 가로 3, 세로 2. 종이에 붙인 그림처럼 흰 테를 두른다. */
+.frame { position: relative; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; border: 5px solid #fff; border-radius: 3px; background: #e9e2d2;
+  box-shadow: 0 1px 0 #0001, 0 6px 16px #3b2a1a2e; }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; opacity: 0; transition: opacity .5s; }
+.frame img.on { opacity: 1; }
+.frame .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.frame .flash.on { animation: flash .5s; }
+@keyframes flash { 0% { opacity: .95; } 100% { opacity: 0; } }
+
+/* 그림 속의 누를 곳. 가운데에 엷은 고리가 숨을 쉰다. 얻을 것을 다 얻은 곳은 고리가 사라진다. */
+.spot { position: absolute; padding: 0; border: 0; background: none; display: grid; place-items: center; }
+.spot i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; background: #fff5; box-shadow: 0 0 0 1px #3b2a1a33, 0 0 8px #fff; animation: breathe 2.2s ease-in-out infinite; }
+.spot.seen i { opacity: 0; animation: none; }
+.spot:active { background: #ffffff38; border-radius: 8px; }
+@keyframes breathe { 0%, 100% { transform: scale(.8); opacity: .65; } 50% { transform: scale(1.15); opacity: 1; } }
+/* 출구의 번호판: 노란 네모에 검은 숫자. */
+.spot .plate { align-self: start; margin-top: 4px; min-width: 30px; height: 30px; padding: 0 6px; border-radius: 4px; background: var(--plate); color: #1b1b1b; font-size: 19px; font-weight: 800; line-height: 30px;
+  box-shadow: 0 2px 5px #0005; font-variant-numeric: tabular-nums; }
+.spot.tried .plate { background: #cfc8b8; color: #7d7566; text-decoration: line-through; }
+.frame.busy .spot { pointer-events: none; }
+.frame.busy .spot i, .frame.busy .spot .plate { opacity: 0; }
+
+/* 걷는 유이. 옆모습 네 컷(docs/walk/art/walk-side.png)을 돌린다. 그림은 왼쪽을 보므로 오른쪽으로 갈 때는 뒤집는다. 서 있을 때는 둘째 컷이다. */
+.walker { position: absolute; bottom: 3%; height: 34%; aspect-ratio: 95 / 192; pointer-events: none; image-rendering: pixelated;
+  background: url("../walk/art/walk-side.png") 33.333% 0 / 400% 100% no-repeat; transform: translateX(-50%); filter: drop-shadow(0 2px 2px #3b2a1a40); }
+.walker.right { transform: translateX(-50%) scaleX(-1); }
+.walker.go { animation: steps .52s steps(4, jump-none) infinite; }
+@keyframes steps { from { background-position-x: 0; } to { background-position-x: 100%; } }
+.frame.busy .walker { opacity: 0; }
+
+/* 유이의 말 */
+.talk { display: flex; align-items: flex-end; gap: 8px; margin-top: 12px; min-height: 66px; }
+.talk .face { flex: none; width: 48px; height: 48px; object-fit: contain; object-position: bottom; image-rendering: pixelated; }
+.yui { margin: 0; padding: 8px 13px; border-radius: 12px 12px 12px 2px; background: #fff; border: 1px solid #3b2a1a22; color: #1b1730;
+  font-family: "Gaegu", "Pretendard Variable", sans-serif; font-size: 18px; line-height: 1.3; }
+:lang(ja) .yui, :lang(zh-Hans) .yui { font-size: 15px; }
+.yui.warn { background: #fde9b8; }
+.yui.in { animation: rise .25s; }
+@keyframes rise { from { transform: translateY(5px); opacity: 0; } }
+
+/* 사진기 단추 */
+.shutter { display: block; margin: 14px auto 0; width: 64px; height: 64px; border-radius: 50%; border: 4px solid var(--ink); background: #fff; position: relative; }
+.shutter::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--red); }
+.shutter:active::after { inset: 9px; }
+
+/* 수첩의 한 쪽. 모은 것을 놓고 끌어 자리를 잡는다. */
+.sheet { position: relative; width: 100%; aspect-ratio: 3 / 4; border-radius: 4px 10px 10px 4px; background: var(--page);
+  background-image: linear-gradient(#3b2a1a12 1px, transparent 1px); background-size: 100% 26px; background-position: 0 58px;
+  box-shadow: inset 12px 0 14px -10px #3b2a1a40, 0 6px 16px #3b2a1a2e; touch-action: none; overflow: hidden; }
+.sheet .head { position: absolute; left: 18px; top: 10px; margin: 0; font-size: 30px; color: var(--ink); }
+.sheet .date { position: absolute; left: 20px; top: 40px; margin: 0; font-size: 16px; color: var(--soft); }
+.piece { position: absolute; transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)); touch-action: none; cursor: grab; }
+.piece.drag { cursor: grabbing; z-index: 5; filter: drop-shadow(0 8px 8px #3b2a1a40); }
+.sheet.done .piece { cursor: default; }
+.piece.in { animation: stick .3s; }
+@keyframes stick { from { transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(1.25); opacity: 0; } }
+.piece-photo { --tilt: -3deg; width: 62%; padding: 6px 6px 22px; background: #fff; box-shadow: 1px 2px 5px #3b2a1a40; }
+.piece-photo img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; pointer-events: none; }
+.piece-egg { --tilt: 9deg; width: 74px; height: 74px; border-radius: 50%; background: #f7d98a; border: 3px solid #fff; box-shadow: 1px 2px 4px #3b2a1a40; display: grid; place-items: center;
+  font-family: "Gaegu", sans-serif; font-size: 17px; font-weight: 700; color: #7a4a12; text-align: center; line-height: 1.1; padding: 4px; }
+.piece-egg::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; border: 1.5px dashed #c98a2b88; }
+.piece-word { --tilt: -4deg; padding: 4px 14px 5px; background: #dfeaf2; box-shadow: 1px 2px 3px #3b2a1a33; text-align: center; white-space: nowrap;
+  clip-path: polygon(0 6%, 4% 0, 97% 3%, 100% 12%, 98% 94%, 94% 100%, 3% 97%, 0 88%); }
+.piece-word b { display: block; font-family: "Nanum Pen Script", cursive; font-size: 26px; font-weight: 400; line-height: 1.1; }
+.piece-word small { font-size: 11px; color: #4f7a9c; }
+.piece-clue { --tilt: 3deg; width: 46%; padding: 7px 10px; background: #e7efd9; box-shadow: 1px 2px 3px #3b2a1a33; font-size: 19px; line-height: 1.2; }
+:lang(ja) .piece-clue, :lang(zh-Hans) .piece-clue, :lang(en) .piece-clue { font-size: 14px; line-height: 1.35; }
+.piece-exit { --tilt: 7deg; min-width: 44px; height: 44px; padding: 0 8px; border-radius: 5px; background: var(--plate); color: #1b1b1b; font-size: 27px; font-weight: 800; line-height: 44px; text-align: center; box-shadow: 1px 2px 4px #3b2a1a55; }
+
+/* 아직 쪽에 놓지 않은 것 */
+.tray { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 38px; margin-top: 12px; }
+.tray button { padding: 7px 13px; border-radius: 999px; border: 1.5px solid var(--tone); background: #fff; color: var(--tone); font-size: 13px; font-weight: 600; }
+.tray button::before { content: "+ "; }
+
+/* 할머니의 답장 */
+.reply { margin-top: 16px; padding: 14px 16px; background: #f2e6c8; border-radius: 6px; box-shadow: 2px 4px 0 #3b2a1a26; transform: rotate(-.6deg); }
+.reply h2 { margin: 0 0 6px; font-size: 15px; text-align: center; font-family: inherit; border-bottom: 1px dashed #3b2a1a66; padding-bottom: 6px; }
+.reply p { margin: 0 0 4px; }
+.reply .sign { text-align: right; margin-top: 8px; opacity: .75; }

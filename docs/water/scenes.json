@@ -1,0 +1,21 @@
+{
+  "station": {
+    "art": "md-exit",
+    "wrongArt": "md-wrong",
+    "spots": [
+      { "id": "exit3", "exit": 3, "x": 1, "y": 24, "w": 19, "h": 42 },
+      { "id": "exit8", "exit": 8, "x": 38, "y": 36, "w": 13, "h": 24 },
+      { "id": "exit6", "exit": 6, "x": 88, "y": 20, "w": 12, "h": 48 },
+      { "id": "board", "say": "board", "gives": "word", "x": 24, "y": 34, "w": 12, "h": 26 },
+      { "id": "shop", "say": "shop", "x": 63, "y": 34, "w": 23, "h": 32 }
+    ]
+  },
+  "street": {
+    "art": "md-street",
+    "spots": [
+      { "id": "tower", "say": "tower", "gives": "clue", "x": 14, "y": 5, "w": 14, "h": 24 },
+      { "id": "cart", "say": "cart", "gives": "egg", "x": 62, "y": 58, "w": 32, "h": 34 },
+      { "id": "tree", "say": "tree", "x": 58, "y": 6, "w": 18, "h": 26 }
+    ]
+  }
+}
