@@ -197,7 +197,7 @@ function showScene(name, { title, first, values, acts = {}, marks = {}, bare = f
       style="left:${spot.x}%;top:${spot.y}%;width:${spot.w}%;height:${spot.h}%">${inner}</button>`;
   };
   screen.innerHTML = `
-    <div class="frame">
+    <div class="frame walk">
       <div class="world" style="aspect-ratio:${scene.wide} / 1">
         <img class="on" data-view="main" src="art/${scene.art}.webp" alt="" draggable="false">
         ${bare ? "" : scene.spots.map(mark).join("")}

@@ -66,6 +66,8 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 /* 그림의 틀. 가로 3, 세로 2. 종이에 붙인 그림처럼 흰 테를 두른다. */
 .frame { position: relative; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; border: 5px solid #fff; border-radius: 3px; background: #e9e2d2;
   box-shadow: 0 1px 0 #0001, 0 6px 16px #3b2a1a2e; }
+/* 걷는 장면의 틀은 정사각형이다. 세로 화면에서 장면과 유이가 3:2일 때보다 1.5배 크고, 긴 그림(3:1)의 3분의 1이 한 번에 보인다. */
+.frame.walk { aspect-ratio: 1 / 1; }
 /* 옆에서 본 긴 그림. 틀보다 넓고, 유이를 따라 좌우로 밀린다(main.js 의 follow). */
 .world { position: absolute; left: 0; top: 0; height: 100%; will-change: transform; touch-action: none; }
 /* 더 갈 데가 있는 쪽의 가장자리에 엷은 화살표가 뜬다. */
@@ -232,8 +234,8 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .sheet.done .piece { cursor: default; }
 .piece.in { animation: stick .3s; }
 @keyframes stick { from { transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(1.25); opacity: 0; } }
-.piece-photo { --tilt: -3deg; width: 62%; padding: 6px 6px 22px; background: #fff; box-shadow: 1px 2px 5px #3b2a1a40; }
-.piece-photo img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; pointer-events: none; }
+.piece-photo { --tilt: -3deg; width: 52%; padding: 6px 6px 22px; background: #fff; box-shadow: 1px 2px 5px #3b2a1a40; }
+.piece-photo img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; pointer-events: none; }
 .piece-egg, .piece-coin { --tilt: 9deg; width: 74px; height: 74px; border-radius: 50%; background: #f7d98a; border: 3px solid #fff; box-shadow: 1px 2px 4px #3b2a1a40; display: grid; place-content: center;
   font-family: "Gaegu", sans-serif; font-size: 17px; font-weight: 700; color: #7a4a12; text-align: center; line-height: 1.1; padding: 4px; }
 .piece-egg::before, .piece-coin::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; border: 1.5px dashed #c98a2b88; }
