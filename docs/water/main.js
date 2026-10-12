@@ -153,7 +153,9 @@ function follow() {
   world.style.transform = `translateX(${-at}px)`;
   frame.classList.toggle("more-left", at > 2);
   frame.classList.toggle("more-right", at < room - 2);
-  return room > 0 ? at / room : 0.5;
+  const where = room > 0 ? at / room : 0.5;
+  for (const layer of frame.querySelectorAll("[data-depth]")) layer.style.left = `${-(layer.dataset.wide - 100) * where}%`;
+  return where;
 }
 
 // 유이가 긴 그림 너비의 x% 자리까지 걸어간 뒤 then 을 부른다. 걷는 중에 다른 곳을 누르면 그쪽으로 돌아선다.
@@ -183,9 +185,29 @@ function walkTo(x, then) {
 
 // ── 장면 ────────────────────────────────────────────────────────────
 
+// 겹(시차). 장면에 먼 겹 far 와 앞의 겹 near 가 있으면 가운데의 긴 그림과 다른 빠르기로 밀린다.
+// tall 은 틀 높이의 몇 배로 놓는가, ratio 는 그림의 가로 / 세로, rise 는 틀의 위로 얼마나 올리는가(%), drop 은 틀의 아래로 얼마나 내리는가(%)다.
+// 틀보다 넓은 만큼만 밀리므로 좁은 겹(먼 산)은 천천히, 넓은 겹(앞의 나무)은 빨리 지나간다.
+const DEPTH = { far: { tall: 1.25, ratio: 1.5, rise: 22 }, near: { tall: 1.2, ratio: 3, drop: 20 } };
+const flat = query.has("flat");   // ?flat 이면 겹을 쓰지 않는 앞의 그림으로 연다(견주어 보기)
+const sceneName = (name) => (!flat && scenes[`${name}3`] ? `${name}3` : name);
+// 겹 하나를 놓는 자리. at 은 화면이 긴 그림의 어디쯤인가(0 → 1), box 는 틀의 가로 / 세로다.
+function layerBox(depth, at, box = 1) {
+  const d = DEPTH[depth] ?? { tall: 1, ratio: 3 };
+  const wide = (d.tall * d.ratio * 100) / box;
+  const edge = d.drop ? `top:auto;bottom:${-d.drop}%` : `top:${-(d.rise ?? 0)}%;bottom:auto`;
+  return { wide, style: `position:absolute;right:auto;${edge};left:${-(wide - 100) * at}%;width:${wide}%;height:${d.tall * 100}%;object-fit:fill` };
+}
+// 사진과 작은 그림: 긴 그림의 at 자리를 겹까지 포개어 보인다.
+function sceneView(scene, at, box = 1) {
+  const one = (depth, art) => (art ? `<img src="art/${art}.webp" alt="" draggable="false" style="${layerBox(depth, at, box).style}">` : "");
+  return `<div class="view" style="aspect-ratio:${box}">${one("far", scene.far)}${one("mid", scene.art)}${one("near", scene.near)}</div>`;
+}
+
 // 긴 그림 하나를 놓고 유이를 세운다. acts 는 누를 곳마다 걸어가서 할 일, marks 는 누를 곳 위에 붙일 것이다
 // ({ plate 번호판, label 과 sub 안내판의 글, seen 얻을 것을 다 얻었다, off 가 본 틀린 곳 }). bare 면 누를 곳을 놓지 않는다.
 function showScene(name, { title, first, values, acts = {}, marks = {}, bare = false, below = "" }) {
+  name = sceneName(name);
   const scene = scenes[name];
   if (lastScene !== name) { yuiX = scene.start; yuiRight = scene.start < 50; lastScene = name; }
   $("place").textContent = t(title);
@@ -196,13 +218,18 @@ function showScene(name, { title, first, values, acts = {}, marks = {}, bare = f
     return `<button class="spot${m.seen ? " seen" : ""}${m.off ? " tried" : ""}" data-spot="${spot.id}" aria-label="${m.name ?? spot.id}"
       style="left:${spot.x}%;top:${spot.y}%;width:${spot.w}%;height:${spot.h}%">${inner}</button>`;
   };
+  // 겹의 그림과, 그 겹에 붙은 누를 곳을 담는 판. 판은 걷는 바닥보다 위에 놓여야 눌린다.
+  const layer = (depth) => { const box = layerBox(depth, 0); return `<img class="on" data-view="main" data-depth="${depth}" data-wide="${box.wide}" src="art/${scene[depth]}.webp" alt="" draggable="false" style="${box.style}">`; };
+  const hot = (depth) => { const box = layerBox(depth, 0); return `<div class="hot" data-depth="${depth}" data-wide="${box.wide}" style="${box.style}">${scene.spots.filter((spot) => spot.layer === depth).map(mark).join("")}</div>`; };
   screen.innerHTML = `
     <div class="frame walk">
+      ${scene.far ? layer("far") : ""}
       <div class="world" style="aspect-ratio:${scene.wide} / 1">
         <img class="on" data-view="main" src="art/${scene.art}.webp" alt="" draggable="false">
-        ${bare ? "" : scene.spots.map(mark).join("")}
+        ${bare ? "" : scene.spots.filter((spot) => !spot.layer).map(mark).join("")}
         <div class="walker${yuiRight ? " right" : ""}" style="left:${yuiX}%"></div>
       </div>
+      ${scene.far && !bare ? hot("far") : ""}${scene.near ? layer("near") : ""}${scene.near && !bare ? hot("near") : ""}
       ${scene.wrongArt ? `<img data-view="wrong" src="art/${scene.wrongArt}.webp" alt="" draggable="false">` : ""}
       <div class="flash"></div>
     </div>
@@ -232,7 +259,8 @@ function showScene(name, { title, first, values, acts = {}, marks = {}, bare = f
 
   for (const button of frame.querySelectorAll(".spot")) button.onclick = () => {
     const spot = scene.spots.find((one) => one.id === button.dataset.spot);
-    walkTo(spot.x + spot.w / 2, () => {
+    const box = world.getBoundingClientRect(), hit = button.getBoundingClientRect();
+    walkTo(((hit.left + hit.width / 2 - box.left) / box.width) * 100, () => {
       const act = acts[spot.id];
       if (act) return act({ spot, button, frame, view, shake });
       if (spot.say) { play(tick, true); say(spot.say); }
@@ -775,7 +803,9 @@ const PAGES = {
 
 function compose(which, fresh) {
   const def = PAGES[which], sheetPage = album[which], locked = def.pasted();
-  const photo = (at) => `<img src="art/${scenes[def.scene].art}.webp" alt="" draggable="false" style="object-position:${at}% 50%">`;
+  const scene = scenes[sceneName(def.scene)];
+  const photo = (at, box = 1) => (scene.far || scene.near ? sceneView(scene, at / 100, box)
+    : `<img src="art/${scene.art}.webp" alt="" draggable="false" style="object-position:${at}% 50%">`);
   const piece = (id) => (id === "photo" ? ["photo", photo(sheetPage.shotAt * 100)] : def.pieces[id]());
   const waiting = sheetPage.found.filter((id) => !(id in sheetPage.placed));
   const hers = def.grandma(), mine = def.mine();
@@ -786,7 +816,7 @@ function compose(which, fresh) {
   screen.innerHTML = `
     <article class="paper side">
       <h2>${t("grandmaSpring")}</h2>
-      <div class="frame faded">${photo(def.grandmaAt)}</div>
+      <div class="frame faded">${photo(def.grandmaAt, 1.5)}</div>
       ${hers.lines.map((entry, i) => `<p class="hand${i === 1 ? " lost" : ""}">${line(entry)}</p>`).join("")}
       ${ledger(hers.items, hers.total)}
     </article>

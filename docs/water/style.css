@@ -84,6 +84,14 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .shake { animation: shake .3s; }
 @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
 
+/* 겹(시차). 먼 겹과 앞의 겹은 main.js 의 layerBox 가 자리와 크기를 정한다. 앞의 겹은 유이를 가리고 지나가며 누르기를 막지 않는다. */
+.frame .hot { pointer-events: none; }
+.frame .hot .spot { pointer-events: auto; }
+.frame.busy .hot .spot { pointer-events: none; }
+.view { position: relative; width: 100%; overflow: hidden; }
+.frame .view { height: 100%; }
+.view img { opacity: 1; max-width: none; }
+
 /* 그림 속의 누를 곳. 가운데에 엷은 고리가 숨을 쉰다. 얻을 것을 다 얻은 곳은 고리가 사라진다. */
 .spot { position: absolute; padding: 0; border: 0; background: none; display: grid; place-items: center; }
 .spot i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; background: #fff5; box-shadow: 0 0 0 1px #3b2a1a33, 0 0 8px #fff; animation: breathe 2.2s ease-in-out infinite; }
