@@ -56,9 +56,9 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .frame.busy .spot { pointer-events: none; }
 .frame.busy .spot i, .frame.busy .spot .plate { opacity: 0; }
 
-/* 걷는 유이. 옆모습 네 컷(docs/walk/art/walk-side.png)을 돌린다. 그림은 왼쪽을 보므로 오른쪽으로 갈 때는 뒤집는다. 서 있을 때는 둘째 컷이다. */
-.walker { position: absolute; bottom: 9%; height: 27%; aspect-ratio: 95 / 192; pointer-events: none; image-rendering: pixelated;
-  background: url("../walk/art/walk-side.png") 33.333% 0 / 400% 100% no-repeat; transform: translateX(-50%); filter: drop-shadow(0 2px 2px #3b2a1a40); }
+/* 걷는 유이. 수채로 받은 옆모습 네 컷(art/yui-walk.png, 한 컷이 137 x 260)을 돌린다. 그림은 왼쪽을 보므로 오른쪽으로 갈 때는 뒤집는다. 서 있을 때는 둘째 컷이다. */
+.walker { position: absolute; bottom: 9%; height: 29%; aspect-ratio: 137 / 260; pointer-events: none;
+  background: url("art/yui-walk.png") 33.333% 0 / 400% 100% no-repeat; transform: translateX(-50%); filter: drop-shadow(0 2px 2px #3b2a1a33); }
 .walker.right { transform: translateX(-50%) scaleX(-1); }
 .walker.go { animation: steps .52s steps(4, jump-none) infinite; }
 @keyframes steps { from { background-position-x: 0; } to { background-position-x: 100%; } }
@@ -66,7 +66,7 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 
 /* 유이의 말 */
 .talk { display: flex; align-items: flex-end; gap: 8px; margin-top: 12px; min-height: 66px; }
-.talk .face { flex: none; width: 48px; height: 48px; object-fit: contain; object-position: bottom; image-rendering: pixelated; }
+.talk .face { flex: none; width: 52px; height: 58px; object-fit: cover; object-position: 50% 0; }
 .yui { margin: 0; padding: 8px 13px; border-radius: 12px 12px 12px 2px; background: #fff; border: 1px solid #3b2a1a22; color: #1b1730;
   font-family: "Gaegu", "Pretendard Variable", sans-serif; font-size: 18px; line-height: 1.3; }
 :lang(ja) .yui, :lang(zh-Hans) .yui { font-size: 15px; }

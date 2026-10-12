@@ -56,7 +56,7 @@ function say(key, warn = false) {
   void bubble.offsetWidth;   // 같은 말을 또 해도 떠오르는 움직임이 다시 돈다
   bubble.classList.add("in");
 }
-const talk = (key) => `<div class="talk"><img class="face" src="../art/yui/yui-j1-192.png" alt=""><p class="yui in">${t(key)}</p></div>`;
+const talk = (key) => `<div class="talk"><img class="face" src="art/yui-stand.png" alt=""><p class="yui in">${t(key)}</p></div>`;
 
 // ── 걷기 ────────────────────────────────────────────────────────────
 
