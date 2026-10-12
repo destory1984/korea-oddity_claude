@@ -1,24 +1,67 @@
 {
+  "arrivals": {
+    "art": "icn-arrivals", "wide": 3, "start": 8,
+    "spots": [
+      { "id": "bus", "x": 17, "y": 14, "w": 14.5, "h": 54 },
+      { "id": "taxi", "x": 66.5, "y": 14, "w": 13.5, "h": 54 },
+      { "id": "train", "x": 88, "y": 14, "w": 11, "h": 56 }
+    ]
+  },
+  "b1": {
+    "art": "icn-b1", "wide": 3, "start": 8,
+    "spots": [
+      { "id": "store", "x": 11, "y": 22, "w": 21, "h": 46 },
+      { "id": "machine", "x": 34.5, "y": 36, "w": 11.5, "h": 32 },
+      { "id": "counter", "x": 48, "y": 22, "w": 16, "h": 46 },
+      { "id": "gateBlue", "x": 68, "y": 22, "w": 14.5, "h": 46 },
+      { "id": "gateOrange", "x": 85.5, "y": 22, "w": 14, "h": 46 }
+    ]
+  },
+  "platform": {
+    "art": "arex-platform", "wide": 3, "start": 8,
+    "spots": [
+      { "id": "door", "x": 40, "y": 32, "w": 17, "h": 42 }
+    ]
+  },
+  "plaza": {
+    "art": "seoul-plaza", "wide": 3, "start": 8,
+    "spots": [
+      { "id": "old", "say": "oldStation", "x": 43, "y": 20, "w": 14, "h": 50 }
+    ]
+  },
+  "subway": {
+    "art": "seoul-subway", "wide": 3, "start": 8,
+    "spots": [
+      { "id": "store", "x": 16, "y": 26, "w": 25, "h": 44 },
+      { "id": "machine", "x": 44.5, "y": 38, "w": 10.5, "h": 32 },
+      { "id": "map", "say": "lineMap", "x": 62.5, "y": 29, "w": 16, "h": 32 },
+      { "id": "gate", "x": 81, "y": 26, "w": 18, "h": 44 }
+    ]
+  },
+  "stairs": {
+    "art": "line4-stairs", "wide": 3, "start": 50,
+    "spots": [
+      { "id": "down", "x": 3, "y": 22, "w": 18, "h": 50 },
+      { "id": "map", "say": "lineMap", "x": 30.5, "y": 32, "w": 17.5, "h": 26 },
+      { "id": "vending", "say": "vending", "x": 62, "y": 39, "w": 7.5, "h": 33 },
+      { "id": "up", "x": 79, "y": 22, "w": 18, "h": 50 }
+    ]
+  },
   "station": {
-    "art": "md-exit",
-    "wrongArt": "md-wrong",
-    "wide": 3,
-    "start": 50,
+    "art": "md-exit", "wrongArt": "md-wrong", "wide": 3, "start": 50,
     "spots": [
       { "id": "exit3", "exit": 3, "x": 1, "y": 28, "w": 13, "h": 44 },
       { "id": "exit8", "exit": 8, "x": 58, "y": 36, "w": 12, "h": 36 },
       { "id": "exit6", "exit": 6, "x": 87.5, "y": 28, "w": 12, "h": 44 },
-      { "id": "board", "say": "board", "gives": "word", "x": 15.5, "y": 38, "w": 8, "h": 28 },
+      { "id": "board", "x": 15.5, "y": 38, "w": 8, "h": 28 },
       { "id": "shop", "say": "shop", "x": 27, "y": 36, "w": 14, "h": 36 }
     ]
   },
   "street": {
-    "art": "md-street",
-    "wide": 3,
-    "start": 8,
+    "art": "md-street", "wide": 3, "start": 8,
     "spots": [
-      { "id": "tower", "say": "tower", "gives": "clue", "x": 22, "y": 6, "w": 8, "h": 32 },
-      { "id": "cart", "say": "cart", "gives": "egg", "x": 67, "y": 38, "w": 14, "h": 40 },
+      { "id": "tower", "x": 22, "y": 6, "w": 8, "h": 32 },
+      { "id": "cart", "x": 67, "y": 38, "w": 14, "h": 40 },
       { "id": "tree", "say": "tree", "x": 42, "y": 4, "w": 14, "h": 36 }
     ]
   }

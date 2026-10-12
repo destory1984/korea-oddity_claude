@@ -1,60 +1,62 @@
-// 수채 견본(명동)의 셈: 무엇을 모았는지, 어느 출구를 가 봤는지, 수첩의 쪽에 무엇을 놓았는지. 화면을 모른다.
+// 수첩의 쪽마다 모은 것과 놓은 것의 셈. 화면을 모른다. 걸음과 돈의 셈은 docs/trip/core/trip.js 가 한다.
+// 쪽은 둘이다: icn(공항 → 서울역), md(서울역 → 명동).
 
-// 모으는 것 다섯. exit 는 맞는 출구로 나가면, 나머지는 장면 속의 것을 눌러 얻는다.
-export const ITEMS = ["exit", "word", "photo", "egg", "clue"];
+// 쪽마다 모으는 것 다섯. 장면 속의 것을 누르거나, 표를 사거나, 사진을 찍어 얻는다.
+export const ITEMS = {
+  icn: ["ticket", "word", "note", "coin", "photo"],
+  md: ["exit", "word", "photo", "egg", "clue"],
+};
 
-export function fresh() {
-  return { scene: "station", found: [], tried: [], misses: 0, placed: {}, pasted: false };
-}
+// found 모은 것, placed 쪽에 놓은 것과 자리, shotAt 사진을 찍을 때 화면이 긴 그림의 어디쯤이었나(0 왼쪽 끝 → 1 오른쪽 끝), tried 가 본 틀린 곳.
+export const freshPage = () => ({ found: [], placed: {}, shotAt: 0.5, tried: [] });
+export const freshAlbum = () => ({ icn: freshPage(), md: freshPage() });
 
-export const has = (state, id) => state.found.includes(id);
+export const has = (pg, id) => pg.found.includes(id);
 
 // 처음 얻었으면 true.
-export function collect(state, id) {
-  if (!ITEMS.includes(id) || has(state, id)) return false;
-  state.found.push(id);
+export function collect(pg, kind, id) {
+  if (!ITEMS[kind]?.includes(id) || has(pg, id)) return false;
+  pg.found.push(id);
   return true;
 }
 
-// 출구를 누른다. "right" 맞는 출구, "grandma" 할머니가 나간 출구, "wrong" 그 밖의 틀린 출구, "tried" 이미 가 본 틀린 출구.
-export function tapExit(state, n, exits) {
-  if (n === exits.right) {
-    collect(state, "exit");
-    state.scene = "street";
-    return "right";
-  }
-  if (state.tried.includes(n)) return "tried";
-  state.tried.push(n);
-  state.misses += 1;
-  return n === exits.grandma ? "grandma" : "wrong";
-}
-
-// 수첩의 쪽에 놓는다. x, y 는 쪽의 너비와 높이에 대한 비(0 → 1)이고 놓인 것의 가운데다.
+// 쪽에 놓는다. x, y 는 쪽의 너비와 높이에 대한 비(0 → 1)이고 놓인 것의 가운데다. 붙인 뒤(locked)에는 못 옮긴다.
 const clamp = (v) => Math.min(1, Math.max(0, v));
-export function place(state, id, x, y) {
-  if (state.pasted || !has(state, id)) return false;
-  state.placed[id] = { x: clamp(x), y: clamp(y) };
+export function place(pg, id, x, y, locked = false) {
+  if (locked || !has(pg, id)) return false;
+  pg.placed[id] = { x: clamp(x), y: clamp(y) };
   return true;
 }
-export function unplace(state, id) {
-  if (state.pasted) return false;
-  delete state.placed[id];
+export function unplace(pg, id, locked = false) {
+  if (locked) return false;
+  delete pg.placed[id];
   return true;
 }
 
 // 사진을 놓아야 붙일 수 있다.
-export const canPaste = (state) => !state.pasted && "photo" in state.placed;
-export function paste(state) {
-  if (!canPaste(state)) return false;
-  state.pasted = true;
-  return true;
-}
+export const canPaste = (pg, locked = false) => !locked && "photo" in pg.placed;
 
-// 할머니의 답장. 쪽에 놓은 것에 따라 줄이 붙는다.
-export function replyKeys(state) {
-  const keys = [state.misses ? "replyLost" : "replyExit", "replyRound"];
-  if ("clue" in state.placed) keys.push("replyClue");
-  if ("egg" in state.placed) keys.push("replyEgg");
-  if ("word" in state.placed) keys.push("replyWord");
-  return keys;
+// 사진을 찍은 자리. 긴 그림을 셋으로 나눈다. 왼쪽부터 A, B, C 이고 docs/trip/core/trip.js 의 자리 셋과 같은 이름이다.
+export const spotOf = (shotAt) => (shotAt < 1 / 3 ? "A" : shotAt < 2 / 3 ? "B" : "C");
+
+// 쪽에 놓은 것에 따라 할머니의 답장에 더 붙는 줄.
+const EXTRA = {
+  icn: [["word", "replyWordIcn"], ["note", "replyNote"], ["coin", "replyCoin"]],
+  md: [["word", "replyWord"]],
+};
+export const replyExtras = (kind, pg) => EXTRA[kind].filter(([id]) => id in pg.placed).map(([, key]) => key);
+
+// 저장에서 읽은 것을 믿을 수 있는 꼴로 고친다. 모르는 것은 버린다.
+export function restore(saved) {
+  const album = freshAlbum();
+  for (const kind of Object.keys(ITEMS)) {
+    const from = saved?.[kind];
+    if (!from) continue;
+    const pg = album[kind];
+    for (const id of Array.isArray(from.found) ? from.found : []) collect(pg, kind, id);
+    for (const [id, at] of Object.entries(from.placed ?? {})) if (Number.isFinite(at?.x) && Number.isFinite(at?.y)) place(pg, id, at.x, at.y);
+    if (Number.isFinite(from.shotAt)) pg.shotAt = clamp(from.shotAt);
+    if (Array.isArray(from.tried)) pg.tried = from.tried.filter((v) => typeof v === "number" || typeof v === "string");
+  }
+  return album;
 }
