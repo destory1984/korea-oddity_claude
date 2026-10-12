@@ -29,6 +29,14 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 /* 그림의 틀. 가로 3, 세로 2. 종이에 붙인 그림처럼 흰 테를 두른다. */
 .frame { position: relative; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; border: 5px solid #fff; border-radius: 3px; background: #e9e2d2;
   box-shadow: 0 1px 0 #0001, 0 6px 16px #3b2a1a2e; }
+/* 옆에서 본 긴 그림. 틀보다 넓고, 유이를 따라 좌우로 밀린다(main.js 의 follow). */
+.world { position: absolute; left: 0; top: 0; height: 100%; will-change: transform; touch-action: none; }
+/* 더 갈 데가 있는 쪽의 가장자리에 엷은 화살표가 뜬다. */
+.frame::before, .frame::after { content: "‹"; position: absolute; z-index: 2; top: 50%; left: 4px; transform: translateY(-50%); width: 22px; height: 22px; border-radius: 50%; background: #fff9; color: var(--ink);
+  font-size: 18px; line-height: 20px; text-align: center; pointer-events: none; opacity: 0; transition: opacity .3s; }
+.frame::after { content: "›"; left: auto; right: 4px; }
+.frame.more-left::before, .frame.more-right::after { opacity: 1; }
+.frame.busy::before, .frame.busy::after { opacity: 0; }
 .frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; opacity: 0; transition: opacity .5s; }
 .frame img.on { opacity: 1; }
 .frame .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
@@ -49,7 +57,7 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .frame.busy .spot i, .frame.busy .spot .plate { opacity: 0; }
 
 /* 걷는 유이. 옆모습 네 컷(docs/walk/art/walk-side.png)을 돌린다. 그림은 왼쪽을 보므로 오른쪽으로 갈 때는 뒤집는다. 서 있을 때는 둘째 컷이다. */
-.walker { position: absolute; bottom: 3%; height: 34%; aspect-ratio: 95 / 192; pointer-events: none; image-rendering: pixelated;
+.walker { position: absolute; bottom: 9%; height: 27%; aspect-ratio: 95 / 192; pointer-events: none; image-rendering: pixelated;
   background: url("../walk/art/walk-side.png") 33.333% 0 / 400% 100% no-repeat; transform: translateX(-50%); filter: drop-shadow(0 2px 2px #3b2a1a40); }
 .walker.right { transform: translateX(-50%) scaleX(-1); }
 .walker.go { animation: steps .52s steps(4, jump-none) infinite; }
