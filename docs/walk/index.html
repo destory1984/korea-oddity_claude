@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Korea Oddity — 명동역 걷기 시험판</title>
+<link rel="stylesheet" href="../assets/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="../assets/fonts/gaegu/400.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+  <!-- 지도 하나가 세로 화면에 통째로 보인다. 유이는 그 위를 걷는다. -->
+  <div id="stage">
+    <canvas id="map" width="768" height="1152"></canvas>
+    <div id="overlay" hidden><img id="overlayArt" alt="" draggable="false"></div>
+  </div>
+  <p id="bubble" class="yui"></p>
+  <p id="result" hidden></p>
+  <button id="again" class="main" hidden></button>
+  <p id="hint" class="note"></p>
+  <p id="langs"><button data-lang="ko" lang="ko">한국어</button><button data-lang="en" lang="en">English</button><button data-lang="ja" lang="ja">日本語</button><button data-lang="zh" lang="zh-Hans">中文</button></p>
+  <p id="note" class="note"></p>
+</main>
+<script type="module" src="main.js"></script>
+</body>
+</html>

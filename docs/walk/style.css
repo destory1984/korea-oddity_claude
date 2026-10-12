@@ -1,0 +1,26 @@
+/* 걷기 시험판. 세로 화면만 짓는다. 지도는 가로 2, 세로 3이고 화면의 높이에 맞춰 줄어든다. */
+:root { --night: #050330; --gold: #f6b951; --white: #fbf8f9; }
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--night); }
+body { font-family: "Pretendard Variable", Pretendard, "Segoe UI", "Malgun Gothic", "Hiragino Sans", "Yu Gothic", "Microsoft YaHei", sans-serif; color: var(--white);
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+#app { max-width: 480px; margin: 0 auto; padding: 8px 10px 20px; }
+[hidden] { display: none !important; }
+
+/* 말풍선과 단추가 아래에 들어갈 자리(170px)를 남기고 지도를 가장 크게 둔다. */
+#stage { position: relative; width: min(100%, calc((100dvh - 170px) * 2 / 3)); aspect-ratio: 2 / 3; margin: 0 auto; border-radius: 6px; overflow: hidden; background: #1a2550; }
+#map { display: block; width: 100%; height: 100%; image-rendering: pixelated; touch-action: none; cursor: pointer; }
+#overlay { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(5, 3, 48, .82); }
+#overlay img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+
+.yui { margin: 10px 0 0; padding: 8px 13px; min-height: 2.9em; border-radius: 12px 12px 12px 2px; background: var(--white); color: #1b1730;
+  font-family: "Gaegu", "Pretendard Variable", sans-serif; font-size: 18px; line-height: 1.3; }
+:lang(ja) .yui, :lang(zh-Hans) .yui, :lang(en) .yui { font-size: 15px; }
+.yui.warn { background: var(--gold); }
+#result { margin: 8px 0 0; text-align: center; font-size: 14px; font-weight: 700; color: var(--gold); }
+button { font: inherit; color: var(--white); background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .35); border-radius: 999px; padding: 6px 12px; cursor: pointer; touch-action: manipulation; }
+button.main { display: block; margin: 10px auto 0; padding: 10px 24px; border-color: var(--gold); color: var(--gold); font-weight: 600; }
+.note { font-size: 11px; opacity: .6; text-align: center; margin: 8px 0 0; line-height: 1.5; }
+#langs { display: flex; justify-content: center; gap: 6px; margin: 10px 0 0; }
+#langs button { font-size: 12px; padding: 4px 10px; }
+#langs button.on { border-color: var(--gold); color: var(--gold); }
