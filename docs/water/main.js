@@ -9,6 +9,7 @@ import * as trip from "../trip/core/trip.js";
 import * as page from "./core/page.js";
 import { LANGS, LANG_KEY, pickLang, translate as baseText } from "../trip/i18n.js";
 import { TEXT as EXTRA } from "./text.js";
+import { textSizeFrom, nextTextSize, canResize } from "./core/textSize.js";
 import { shutter as shutterSound, click as tick, ding } from "../compare/ui/sound.js";
 
 const scenes = await (await fetch("scenes.json")).json();
@@ -31,6 +32,7 @@ const mdDate = fares.subway.checked.replaceAll("-", ".");
 const star = (ok) => (ok ? "" : ' <span class="star">＊</span>');
 
 const SOUND_KEY = "koreaoddity.trip.sound";
+const TEXT_KEY = "koreaoddity.textSize";
 let soundOn = true;
 try { soundOn = storage?.getItem(SOUND_KEY) !== "off"; } catch { /* 켜 둔다 */ }
 const play = (fn, ...args) => { if (soundOn) fn(...args); };
@@ -921,6 +923,37 @@ function showJournal() {
   $("journal").classList.add("on");
 }
 
+// 설정의 갈래. Changes 쪽은 날마다 바뀐 것을 한 줄씩 보인다(../assets/changes.js ← docs/바뀐-것들.md). 날짜는 그날의 첫 줄에만 적는다.
+const NEWS = typeof CHANGES === "undefined" ? [] : CHANGES;
+function showTab(name) {
+  for (const button of document.querySelectorAll("#settingsTabs button")) button.setAttribute("aria-selected", String(button.dataset.tab === name));
+  for (const section of document.querySelectorAll("#settings section")) { section.hidden = section.dataset.tab !== name; section.scrollTop = 0; }
+}
+function showNews() {
+  const stamp = (day) => { const [y, m, d] = day.split("-").map(Number); return Date.UTC(y, m - 1, d); };
+  const now = new Date(), today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const words = (typeof CHANGE_WORDS === "undefined" ? {} : CHANGE_WORDS)[lang] ?? {};
+  // 판 번호의 끝자리는 바뀐 것의 줄 수다. 줄을 더하면 저절로 오른다.
+  $("appVersion").textContent = NEWS.length ? `v0.1.${NEWS.length} · ${NEWS[0].day.replaceAll("-", ".")}` : "";
+  if (typeof CHANGES_STARTED !== "undefined") {
+    const [y, m, d] = CHANGES_STARTED.split("-").map(Number);
+    $("newsStarted").textContent = `${t("started", { y, m, d })} ${t("days", { n: Math.round((today - stamp(CHANGES_STARTED)) / 86400000) + 1 })}`;
+  }
+  let lastDay = null;
+  $("newsList").innerHTML = NEWS.map(({ day, text }) => {
+    const [, month, dayOf] = day.split("-").map(Number), when = day === lastDay ? "" : `${month}.${dayOf}`;
+    lastDay = day;
+    return `<li><time datetime="${day}">${when}</time><span>${words[text] ?? text}</span></li>`;
+  }).join("");
+}
+
+// 글자 크기. 설정과 수첩의 창, 유이의 말, 종이와 판의 글이 함께 바뀐다(style.css 의 --text).
+let textSize = textSizeFrom((() => { try { return storage?.getItem(TEXT_KEY); } catch { return null; } })());
+function showTextSize() {
+  document.documentElement.style.setProperty("--text", textSize);
+  for (const button of document.querySelectorAll(".textSize button")) button.disabled = !canResize(textSize, Number(button.dataset.way));
+}
+
 function showSound() {
   $("soundButton").classList.toggle("off", !soundOn);
   $("soundSwitch").textContent = `${t("sound")} · ${t(soundOn ? "on" : "off")}`;
@@ -945,6 +978,11 @@ function setLang(next) {
   $("journalButton").setAttribute("aria-label", t("journal"));
   $("soundButton").setAttribute("aria-label", t("sound"));
   $("settingsButton").setAttribute("aria-label", t("settings"));
+  document.querySelector(".textSize").setAttribute("aria-label", t("textSize"));
+  for (const button of document.querySelectorAll(".textSize button")) button.setAttribute("aria-label", t(button.dataset.way === "1" ? "textLarger" : "textSmaller"));
+  $("helpLead").textContent = t("wHelpLead");
+  $("helpList").innerHTML = [1, 2, 3, 4, 5].map((n) => `<dt>${t(`wHelp${n}`)}</dt><dd>${t(`wHelp${n}b`)}</dd>`).join("");
+  showNews();
   $("aboutList").innerHTML = `
     <dt>${t("aboutFare")}</dt><dd>${t("aboutFareText", { date })}</dd>
     <dt>${t("aboutArt")}</dt><dd>${t("aboutArtText")}</dd>
@@ -958,7 +996,15 @@ $("journalButton").onclick = showJournal;
 $("closeJournal").onclick = () => $("journal").classList.remove("on");
 $("soundButton").onclick = () => setSound(!soundOn);
 $("soundSwitch").onclick = () => setSound(!soundOn);
-$("settingsButton").onclick = () => $("settings").classList.add("on");
+$("settingsButton").onclick = () => { showTab("options"); $("settings").classList.add("on"); };
+for (const button of document.querySelectorAll("#settingsTabs button")) button.onclick = () => showTab(button.dataset.tab);
+for (const button of document.querySelectorAll(".textSize button")) button.onclick = () => {
+  textSize = nextTextSize(textSize, Number(button.dataset.way));
+  try { storage?.setItem(TEXT_KEY, String(textSize)); } catch { /* 이번에만 */ }
+  play(tick);
+  showTextSize();
+};
+showTextSize();
 $("closeSettings").onclick = () => $("settings").classList.remove("on");
 $("restartButton").onclick = restart;
 for (const sheet of document.querySelectorAll(".modal")) sheet.onclick = (event) => { if (event.target === sheet) sheet.classList.remove("on"); };

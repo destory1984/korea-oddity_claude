@@ -116,3 +116,12 @@ test("글: 네 나라 말에 같은 열쇠가 있고, 화면이 쓰는 열쇠가
     for (const key of page.replyExtras(kind, pg)) assert.ok(known(key), key);
   }
 });
+
+test("글자 크기는 다섯 단계이고 끝에서 멈춘다", async () => {
+  const { TEXT_SIZES, textSizeFrom, nextTextSize, canResize } = await import("../docs/water/core/textSize.js");
+  assert.equal(TEXT_SIZES.length, 5);
+  assert.equal(textSizeFrom("7"), 1);
+  assert.equal(nextTextSize(1, 1), 1.15);
+  assert.equal(nextTextSize(1.5, 1), 1.5);
+  assert.equal(canResize(0.85, -1), false);
+});

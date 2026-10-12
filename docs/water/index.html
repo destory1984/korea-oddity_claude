@@ -35,16 +35,22 @@
   <button id="closeJournal" class="closer"></button>
 </div></div>
 
+<!-- 설정: 1권의 설정 창과 같은 꼴. 머리에 판 번호와 글자 크기 단추, 갈래는 Options, Help, Changes, About 이다. -->
 <div id="settings" class="modal"><div>
-  <h1 id="settingsTitle"></h1>
-  <section><dl>
+  <div class="sheetHead"><h1 id="settingsTitle"></h1><small id="appVersion"></small><div class="textSize" role="group"><button data-way="-1">가<span aria-hidden="true">−</span></button><button data-way="1">가<span aria-hidden="true">+</span></button></div></div>
+  <div id="settingsTabs" role="tablist"><button role="tab" data-tab="options">Options</button><button role="tab" data-tab="help">Help</button><button role="tab" data-tab="news">Changes</button><button role="tab" data-tab="about">About</button></div>
+  <section data-tab="options"><dl>
     <dt>언어 · Language</dt><dd id="langRow"><button data-lang="ko" lang="ko">한국어</button><button data-lang="en" lang="en">English</button><button data-lang="ja" lang="ja">日本語</button><button data-lang="zh" lang="zh-Hans">中文</button></dd>
     <dt id="soundTerm"></dt><dd><button id="soundSwitch"></button></dd>
     <dt id="testTerm"></dt><dd><button id="restartButton"></button></dd>
-  </dl><dl id="aboutList"></dl></section>
+  </dl></section>
+  <section data-tab="help" hidden><p id="helpLead"></p><dl id="helpList"></dl></section>
+  <section data-tab="news" hidden><p id="newsStarted"></p><ul id="newsList"></ul></section>
+  <section data-tab="about" hidden><dl id="aboutList"></dl></section>
   <button id="closeSettings" class="closer"></button>
 </div></div>
 
+<script src="../assets/changes.js"></script>
 <script type="module" src="main.js"></script>
 </body>
 </html>

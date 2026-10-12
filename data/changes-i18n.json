@@ -163,5 +163,35 @@
   "ja": "二つの遊び方をくらべる比較試作ができました。城山日出峰はダイヤル四つ(左右、距離、季節、時刻)で昔の写真に重ね、瞻星台は撮る場所三つと時三つから選んで撮ります。絵を6枚、新しく受け取りました。",
   "zh": "新增了用来比较两种玩法的对比试制品。城山日出峰用四个转盘(左右、远近、季节、时刻)与旧照片重合，瞻星台则从三个拍摄点和三个时段里挑着拍。新收到了6张图。",
   "en": "There is now a comparison prototype that sets two ways of playing side by side. At Seongsan Ilchulbong you line the view up with the old photo using four dials (left-right, distance, season, time); at Cheomseongdae you pick one of three spots and one of three times and shoot. Six new pictures came in."
+ },
+ "명동 거리가 세 겹이 되었습니다. 걸으면 먼 산과 탑, 가게들, 앞의 나무가 서로 다른 빠르기로 지나갑니다.": {
+  "ja": "明洞の通りが三枚重ねになりました。歩くと、遠くの山と塔、店、手前の木がちがう速さで流れます。",
+  "zh": "明洞街变成了三层。走动时,远处的山和塔、店铺、近处的树以不同的速度移动。",
+  "en": "Myeongdong street now has three layers. As you walk, the far hills and tower, the shops and the near trees pass at different speeds."
+ },
+ "설정에 글자 크기 단추(가−, 가+)와 Help, Changes 쪽이 생겼습니다. 글자 크기는 다섯 단계(85% → 150%)입니다.": {
+  "ja": "設定に文字の大きさのボタン(가−、가+)と Help、Changes のページができました。文字の大きさは五段階(85% → 150%)です。",
+  "zh": "设置里新增了文字大小按钮(가−、가+)以及 Help、Changes 页。文字大小分五档(85% → 150%)。",
+  "en": "Settings now has text size buttons (가−, 가+) and Help and Changes pages. Text comes in five sizes (85% → 150%)."
+ },
+ "걷는 장면의 그림이 정사각형으로 커졌습니다. 유이와 장면이 1.5배 크게 보입니다.": {
+  "ja": "歩く場面の絵が正方形に大きくなりました。ユイと場面が1.5倍の大きさで見えます。",
+  "zh": "行走场景的画面变成了更大的正方形。结衣和场景看起来大了1.5倍。",
+  "en": "The walking scenes are now square and larger. Yui and the scene appear 1.5 times bigger."
+ },
+ "유이가 옆에서 본 긴 수채 그림 위를 직접 걷습니다. 누른 곳까지 걸어가서 만지고, 모은 것으로 수첩의 한 쪽을 손수 꾸밉니다. 공항에서 명동까지 스무 걸음을 모두 옮겼습니다.": {
+  "ja": "ユイが横から見た長い水彩の絵の上を自分で歩きます。押した所まで歩いて行って触り、集めたもので手帳の1ページを自分で飾ります。空港から明洞までの二十の場面をすべて移しました。",
+  "zh": "结衣在侧面视角的水彩长卷上亲自行走。走到点击的地方去触碰,再用收集到的东西亲手装饰手账的一页。从机场到明洞的二十个步骤已全部搬过来。",
+  "en": "Yui now walks along long side-on watercolour scenes. She walks to where you tap, touches things, and lays out a notebook page with what she gathered. All twenty steps from the airport to Myeongdong have been moved over."
+ },
+ "그림이 물을 많이 탄 엷은 수채로 바뀌었습니다. 유이도 수채로 다시 그렸습니다.": {
+  "ja": "絵が水をたっぷり使った淡い水彩に変わりました。ユイも水彩で描き直しました。",
+  "zh": "画面改成了水分充足的淡水彩。结衣也用水彩重新画了。",
+  "en": "The art is now pale, watery watercolour. Yui was redrawn in watercolour too."
+ },
+ "둘째 쪽이 생겼습니다. 서울역에서 4호선을 타고 명동에 가서 출구를 찾고, 사진을 찍고, 계란빵을 먹습니다.": {
+  "ja": "2ページ目ができました。ソウル駅から4号線で明洞へ行き、出口を探し、写真を撮り、ケランパンを食べます。",
+  "zh": "有了第二页。从首尔站坐4号线去明洞,找出口,拍照,吃鸡蛋面包。",
+  "en": "A second page. Take Line 4 from Seoul Station to Myeongdong, find the exit, take a photo and eat egg bread."
  }
 }

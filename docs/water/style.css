@@ -51,6 +51,23 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .modal.on { display: grid; }
 .modal > div { width: calc(100% - 24px); max-width: 480px; max-height: min(640px, 90dvh); display: flex; flex-direction: column; background: var(--page); border-radius: 14px; padding: 18px; box-shadow: 0 20px 60px #3b2a1a66; }
 .modal h1 { margin: 0 0 12px; font-size: 20px; font-weight: 600; }
+/* 설정 창의 머리: 제목, 판 번호, 글자 크기 단추(가−, 가+). 1권의 설정 창과 같은 꼴이다. */
+.sheetHead { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; }
+.sheetHead h1 { margin: 0; }
+#appVersion { flex: 1 1 auto; min-width: 0; font-size: 11px; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+.textSize { display: flex; gap: 6px; flex: none; }
+.textSize button { min-width: 44px; min-height: 40px; padding: 0 8px; border-radius: 10px; border: 1px solid #3b2a1a44; background: #fff; font-weight: 700; font-size: 12px; }
+.textSize button[data-way="1"] { font-size: 16px; }
+.textSize button:disabled { opacity: .35; }
+#settingsTabs { display: flex; gap: 6px; margin: 0 0 14px; }
+#settingsTabs button { flex: 1 1 0; min-width: 0; min-height: 38px; padding: 6px 2px; font-size: 12px; border-radius: 10px; border: 1px solid #3b2a1a44; background: #fff; }
+#settingsTabs button[aria-selected="true"] { border-color: var(--red); color: var(--red); font-weight: 600; }
+#newsStarted { margin: 0 0 10px; font-size: 12px; color: var(--soft); }
+#newsList { margin: 0; padding: 0; list-style: none; font-size: 13px; line-height: 1.55; }
+#newsList li { display: grid; grid-template-columns: 38px 1fr; gap: 6px; padding: 6px 0; border-top: 1px solid #3b2a1a1c; }
+#newsList time { font-weight: 700; color: var(--soft); font-variant-numeric: tabular-nums; }
+/* 글자 크기(main.js 의 showTextSize 가 --text 를 0.85 → 1.5 로 둔다). 창의 글, 유이의 말, 종이와 판의 글이 함께 바뀐다. 그림과 수첩의 쪽은 그대로다. */
+.modal section, #screen .yui, #screen .paper, #screen .panel, #screen .cards, .note { zoom: var(--text, 1); }
 .modal section { overflow-y: auto; min-height: 0; margin-bottom: 12px; }
 .modal dl { margin: 0 0 12px; }
 .modal dt { font-size: 12px; font-weight: 700; color: var(--soft); margin-top: 12px; }
