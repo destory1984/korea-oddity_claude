@@ -4,8 +4,8 @@
     {
       "name": "proto",
       "runtimeExecutable": "py",
-      "runtimeArgs": ["-m", "http.server", "4319", "--directory", "docs"],
-      "port": 4319
+      "runtimeArgs": ["-m", "http.server", "8319", "--directory", "docs"],
+      "port": 8319
     }
   ]
 }
