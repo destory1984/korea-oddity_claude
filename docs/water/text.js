@@ -3,6 +3,9 @@
 
 export const TEXT = {
   ko: {
+    mapTitle: "공항 안내도", mapHere: "지금 여기", mapCentre: "교통센터 · 지하 1층", mapAllstop: "일반열차", mapExpress: "직통열차", mapRoad: "버스 · 택시", mapTerminal: "제1터미널 · 1층 입국장",
+    mapSay: "기차는 길 건너 교통센터의 지하 1층이야. 들어가서 왼쪽이 일반열차, 오른쪽이 직통열차래.",
+    mapNote: "인천공항 누리집의 교통센터 안내도를 보고 단순하게 다시 그렸다(2026.10.13).",
     textSize: "글자 크기", textSmaller: "글자 작게", textLarger: "글자 크게", started: "{y}년 {m}월 {d}일에 만들기 시작했습니다.", days: "오늘로 {n}일째입니다.",
     wHelpLead: "할머니의 수첩을 따라 공항에서 명동까지 걸어서 가 봅니다.",
     wHelp1: "걷는다", wHelp1b: "그림의 빈 데를 누르면 그리로 걷습니다. 누르고 있으면 계속 걷습니다. 가장자리의 화살표는 그쪽에 더 갈 데가 있다는 뜻입니다.",
@@ -31,6 +34,9 @@ export const TEXT = {
     replyWord: "\"나가는 곳\"을 읽었구나. 나는 끝내 못 읽었지.",
   },
   en: {
+    mapTitle: "Airport map", mapHere: "You are here", mapCentre: "Transportation Center · B1", mapAllstop: "All Stop", mapExpress: "Express", mapRoad: "Bus · Taxi", mapTerminal: "Terminal 1 · 1F Arrivals",
+    mapSay: "The trains are across the road, in the Transportation Center, level B1. Inside, the All Stop Train is on the left and the Express on the right.",
+    mapNote: "Redrawn in a simpler form from the Transportation Center map on the Incheon Airport website (2026.10.13).",
     textSize: "Text size", textSmaller: "Smaller text", textLarger: "Larger text", started: "Started on {y}.{m}.{d}.", days: "Day {n} today.",
     wHelpLead: "Follow Grandma's notebook on foot from the airport to Myeongdong.",
     wHelp1: "Walk", wHelp1b: "Tap an empty part of the picture to walk there. Hold to keep walking. An arrow at the edge means there is more that way.",
@@ -59,6 +65,9 @@ export const TEXT = {
     replyWord: "You read \"나가는 곳\". I never could.",
   },
   ja: {
+    mapTitle: "空港案内図", mapHere: "現在地", mapCentre: "交通センター・地下1階", mapAllstop: "一般列車", mapExpress: "直通列車", mapRoad: "バス・タクシー", mapTerminal: "第1ターミナル・1階 到着ロビー",
+    mapSay: "鉄道は道の向こうの交通センター、地下1階だ。入って左が一般列車、右が直通列車だって。",
+    mapNote: "仁川空港の公式サイトにある交通センターの案内図を見て、簡単に描き直したもの(2026.10.13)。",
     textSize: "文字の大きさ", textSmaller: "文字を小さく", textLarger: "文字を大きく", started: "{y}年{m}月{d}日に作りはじめました。", days: "今日で{n}日目です。",
     wHelpLead: "おばあちゃんの手帳をたどって、空港から明洞まで歩いて行ってみます。",
     wHelp1: "歩く", wHelp1b: "絵の何もない所を押すと、そこへ歩きます。押しつづけると歩きつづけます。端の矢印は、そちらにまだ先があるしるしです。",
@@ -87,6 +96,9 @@ export const TEXT = {
     replyWord: "「나가는 곳」が読めたんだね。わたしは最後まで読めなかったよ。",
   },
   zh: {
+    mapTitle: "机场导览图", mapHere: "当前位置", mapCentre: "交通中心 · 地下1层", mapAllstop: "普通列车", mapExpress: "直达列车", mapRoad: "巴士 · 出租车", mapTerminal: "第1航站楼 · 1层到达大厅",
+    mapSay: "铁路在马路对面的交通中心地下1层。进去以后左边是普通列车,右边是直达列车。",
+    mapNote: "参照仁川机场官网的交通中心导览图简化重画(2026.10.13)。",
     textSize: "文字大小", textSmaller: "缩小文字", textLarger: "放大文字", started: "{y}年{m}月{d}日开始制作。", days: "今天是第{n}天。",
     wHelpLead: "跟着奶奶的手账,从机场一路走到明洞。",
     wHelp1: "行走", wHelp1b: "点画面上的空白处就走过去。按住不放会一直走。边缘的箭头表示那边还有路。",

@@ -109,6 +109,18 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .frame .view { height: 100%; }
 .view img { opacity: 1; max-width: none; }
 
+/* 장면의 벽에 걸린 것(입국장의 안내도 판). 흰 테를 두른 작은 그림이다. */
+.world img.prop { inset: auto; object-fit: cover; border: 2px solid #fff; border-radius: 2px; box-shadow: 0 1px 3px #3b2a1a55; box-sizing: border-box; }
+/* 가까이 본 안내도. 이름표와 "지금 여기"와 가는 길을 그림 위에 얹는다. 자리는 그림 너비와 높이의 %다. */
+.chart .tag, .chart .here, .chart .hall { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; font-size: 11px; font-weight: 700; line-height: 1.2; }
+.chart .tag { padding: 2px 6px; border-radius: 4px; background: #fffd; color: var(--ink); box-shadow: 0 1px 2px #3b2a1a33; }
+.chart .tag.blue { background: #2f6fd0; color: #fff; }
+.chart .tag.orange { background: var(--orange); color: #fff; }
+.chart .hall { width: 14px; height: 14px; border-radius: 50%; background: #fff; color: #2f6fd0; font-size: 9px; line-height: 14px; text-align: center; box-shadow: 0 0 0 1.5px #2f6fd0; }
+.chart .here { padding: 3px 8px; border-radius: 12px; background: var(--red); color: #fff; animation: breathe 2.2s ease-in-out infinite; }
+.chart .way { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.chart .way path { fill: none; stroke: var(--red); stroke-width: 3px; stroke-dasharray: 2 7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+
 /* 그림 속의 누를 곳. 가운데에 엷은 고리가 숨을 쉰다. 얻을 것을 다 얻은 곳은 고리가 사라진다. */
 .spot { position: absolute; padding: 0; border: 0; background: none; display: grid; place-items: center; }
 .spot i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; background: #fff5; box-shadow: 0 0 0 1px #3b2a1a33, 0 0 8px #fff; animation: breathe 2.2s ease-in-out infinite; }

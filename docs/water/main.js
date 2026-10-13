@@ -228,6 +228,8 @@ function showScene(name, { title, first, values, acts = {}, marks = {}, bare = f
       ${scene.far ? layer("far") : ""}
       <div class="world" style="aspect-ratio:${scene.wide} / 1">
         <img class="on" data-view="main" src="art/${scene.art}.webp" alt="" draggable="false">
+        ${(scene.props ?? []).map((prop) => `<img class="prop on" data-view="main" src="art/${prop.art}.webp" alt="" draggable="false"
+          style="left:${prop.x}%;top:${prop.y}%;width:${prop.w}%;height:${prop.h}%">`).join("")}
         ${bare ? "" : scene.spots.filter((spot) => !spot.layer).map(mark).join("")}
         <div class="walker${yuiRight ? " right" : ""}" style="left:${yuiX}%"></div>
       </div>
@@ -298,6 +300,30 @@ function camera(onShot, onOpen) {
 // ── 걸음마다의 화면 ──────────────────────────────────────────────────
 
 let closeup = false;   // 직통 표의 창구 앞에 섰는가. 저장하지 않는다.
+let sawMap = false;    // 입국장의 안내도를 보았는가. 저장하지 않는다.
+
+// 입국장 벽의 안내도를 가까이 본다. 그림에는 글자가 없고, 이름과 "지금 여기"와 가는 길은 화면에서 얹는다.
+// 배치는 인천공항 누리집의 교통센터(지하 1층) 안내도를 따랐다: 터미널에서 길을 건너 교통센터, 들어가서 왼쪽이 일반열차, 오른쪽이 직통열차.
+const HALLS = [[8.6, 60.5], [22, 72.3], [35.9, 78.4], [64.1, 78.4], [77.9, 72.3], [91.4, 60.5]];   // 입국장 A → F
+function showMap() {
+  sawMap = true;
+  play(tick);
+  $("place").textContent = t("mapTitle");
+  const tag = (key, x, y, kind = "") => `<span class="tag ${kind}" style="left:${x}%;top:${y}%">${t(key)}</span>`;
+  screen.innerHTML = `
+    <div class="frame chart">
+      <img class="on" src="art/icn-map.webp" alt="" draggable="false">
+      <svg class="way" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M50 72 L50 34"/></svg>
+      ${HALLS.map(([x, y], i) => `<b class="hall" style="left:${x}%;top:${y}%">${"ABCDEF"[i]}</b>`).join("")}
+      ${tag("mapCentre", 50, 9)}${tag("mapAllstop", 21, 20, "blue")}${tag("mapExpress", 79, 20, "orange")}
+      ${tag("mapRoad", 31, 37)}${tag("mapTerminal", 50, 90)}
+      <span class="here" style="left:50%;top:72%">${t("mapHere")}</span>
+    </div>
+    ${talk("mapSay")}
+    <button class="main" data-do="back">${t("back")}</button>
+    <p class="note">${t("mapNote")}</p>`;
+  on("back", render);
+}
 
 const SCREENS = {
   // ── 첫 쪽: 공항 → 서울역 ──────────────────────────────────────────
@@ -355,8 +381,10 @@ const SCREENS = {
   signs() {
     const miss = (key) => () => { state.signMisses += 1; keep(); play(tick, true); say(key, true); };
     showScene("arrivals", { title: "signsTitle", first: "signsAsk",
-      marks: { bus: { name: t("signBus"), seen: page.has(album.icn, "note") }, taxi: { name: t("signTaxi"), seen: true }, train: { name: t("signTrain") } },
+      marks: { bus: { name: t("signBus"), seen: page.has(album.icn, "note") }, taxi: { name: t("signTaxi"), seen: true }, train: { name: t("signTrain") },
+        map: { name: t("mapTitle"), seen: sawMap } },
       acts: {
+        map: showMap,
         bus: ({ button }) => { state.signMisses += 1; if (!gain("note")) { keep(); play(tick, true); } button.classList.add("seen"); say("signBusSay", true); },
         taxi: miss("signTaxiSay"),
         train: ({ frame }) => {

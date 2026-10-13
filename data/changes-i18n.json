@@ -193,5 +193,10 @@
   "ja": "2ページ目ができました。ソウル駅から4号線で明洞へ行き、出口を探し、写真を撮り、ケランパンを食べます。",
   "zh": "有了第二页。从首尔站坐4号线去明洞,找出口,拍照,吃鸡蛋面包。",
   "en": "A second page. Take Line 4 from Seoul Station to Myeongdong, find the exit, take a photo and eat egg bread."
+ },
+ "인천공항 입국장의 벽에 안내도가 걸렸습니다. 누르면 터미널에서 길 건너 교통센터 지하 1층까지 가는 길과, 일반열차와 직통열차가 어느 쪽인지 보입니다.": {
+  "ja": "仁川空港の到着ロビーの壁に案内図がかかりました。押すと、ターミナルから道の向こうの交通センター地下1階までの道と、一般列車と直通列車がどちら側かが見えます。",
+  "zh": "仁川机场到达大厅的墙上挂了导览图。点一下,就能看到从航站楼过马路到交通中心地下1层的路,以及普通列车和直达列车各在哪一边。",
+  "en": "A guide map now hangs on the wall of the Incheon arrivals hall. Tap it to see the way across the road to the Transportation Center on level B1, and which side the All Stop and Express trains are on."
  }
 }
