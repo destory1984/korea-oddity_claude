@@ -24,6 +24,7 @@ test("요금: 공항철도 누리집에서 본 값이고 본 날이 적혀 있�
 test("요금: 확인하지 못한 값에는 까닭이 적혀 있다", () => {
   for (const part of [fares.allstop, fares.card, fares.machine, fares.gates]) {
     if (Object.values(part.verified).includes(false)) assert.ok(part.unverifiedNote.length > 20);
+    else assert.ok(part.note.length > 20, "확인한 값에는 어디서 보았는지 적는다");
   }
 });
 
@@ -166,14 +167,14 @@ test("그림: 화면이 부르는 그림이 모두 있다", () => {
 
 const pastedAirport = (patch) => at({ step: "paste", ticket: true, shot: true, pasted: true, ...patch });
 
-test("명동: 지하철 요금은 서울교통공사 누리집에서 본 값이고, 확인하지 못한 출구에는 까닭이 적혀 있다", () => {
+test("명동: 지하철 요금은 서울교통공사 누리집에서 본 값이고, 출구에는 본 곳이 적혀 있다", () => {
   const s = fares.subway;
   assert.deepEqual([s.card, s.single, s.deposit, s.minutes], [1550, 1650, 500, 4]);
   assert.deepEqual(s.stops, ["seoul", "hoehyeon", "myeongdong"]);
   assert.match(s.source, /seoulmetro\.co\.kr/);
   assert.match(s.checked, /^\d{4}-\d{2}-\d{2}$/);
-  assert.equal(fares.myeongdong.verified.exits, false);
-  assert.ok(fares.myeongdong.unverifiedNote.length > 20);
+  assert.equal(fares.myeongdong.verified.exits, true);
+  assert.ok(fares.myeongdong.note.length > 20 && fares.myeongdong.sources.length > 0);
   assert.ok(fares.myeongdong.exits.choices.includes(fares.myeongdong.exits.right) && fares.myeongdong.exits.choices.includes(fares.myeongdong.exits.grandma));
   for (const id of [...s.stops, ...s.toward, ...s.opposite, s.oppositeNext, ...s.machineDests]) for (const lang of LANGS) assert.ok(TEXT[lang][`st_${id}`], `${lang} st_${id}`);
   assert.ok(s.machineDests.includes(s.stops.at(-1)));

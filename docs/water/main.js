@@ -30,6 +30,8 @@ const station = (id, to = lang) => t(`st_${id}`, undefined, to);
 const date = fares.checked.replaceAll("-", ".");
 const mdDate = fares.subway.checked.replaceAll("-", ".");
 const star = (ok) => (ok ? "" : ' <span class="star">＊</span>');
+// 별표의 풀이. 별표가 붙은 값이 그 화면에 없으면 풀이도 없다.
+const starNote = (ok) => (ok ? "" : `<br><span class="star">＊</span> ${t("unverified")}`);
 
 const SOUND_KEY = "koreaoddity.trip.sound";
 const TEXT_KEY = "koreaoddity.textSize";
@@ -373,7 +375,7 @@ const SCREENS = {
           <button data-route="express">${t("pickThis")}</button>
         </article>
       </div>
-      <p class="note">${t("asOf", { date })}<br><span class="star">＊</span> ${t("unverified")}</p>`;
+      <p class="note">${t("asOf", { date })}${starNote(a.verified.minutes)}</p>`;
     for (const button of screen.querySelectorAll("[data-route]")) button.onclick = () => { state.route = button.dataset.route; go(); };
   },
 
@@ -428,7 +430,7 @@ const SCREENS = {
         </div>
         <button class="main" data-do="buy">${t("storePay", { won: W(c.price + charge) })}</button>
         <button class="plain" data-do="back">${t("back")}</button>
-        <p class="note"><span class="star">＊</span> ${t("unverified")}</p>`}`;
+        ${c.verified.price ? "" : `<p class="note"><span class="star">＊</span> ${t("unverified")}</p>`}`}`;
       for (const button of screen.querySelectorAll("[data-charge]")) button.onclick = () => { charge = Number(button.dataset.charge); play(tick); draw(); };
       on("buy", () => { target.charge = charge; target.ticket = true; if (target === state) page.collect(album.icn, "icn", "ticket"); keep(); play(ding); showWallet(); showFound("ticket"); draw(); });
       on("back", () => { target.pay = null; go(back); });
@@ -597,7 +599,7 @@ const SCREENS = {
       below: `<ul class="memo">
         <li><b>${t("payCard")}</b>${t("mdCardNote", { price: W(c.price), fare: W(s.card) })}${star(c.verified.price)}</li>
         <li><b>${t("paySingle")}</b>${t("mdSingleNote", { single: W(s.single), deposit: W(s.deposit) })} <em>${t("grandmaWent")}</em></li>
-      </ul><p class="note">${t("mdAsOf", { date: mdDate })}<br><span class="star">＊</span> ${t("unverified")}</p>` });
+      </ul><p class="note">${t("mdAsOf", { date: mdDate })}${starNote(c.verified.price)}</p>` });
   },
 
   mdStore() { SCREENS.store({ target: state.md, nextKey: "mdToPlatform", scene: "subway", back: "mdPay" }); },
@@ -716,7 +718,7 @@ function payMemo() {
   return `<ul class="memo">
       <li><b>${t("payCard")}</b>${t("payCardNote", { price: W(c.price) })}${star(c.verified.price)}</li>
       <li><b>${t("paySingle")}</b>${t("paySingleNote", { extra: W(a.singleExtra), deposit: W(a.deposit) })}</li>
-    </ul><p class="note">${t("asOf", { date })}<br><span class="star">＊</span> ${t("unverified")}</p>`;
+    </ul><p class="note">${t("asOf", { date })}${starNote(c.verified.price)}</p>`;
 }
 
 // 손에 든 표. 색이 개찰구의 색이다.

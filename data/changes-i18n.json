@@ -203,5 +203,10 @@
   "ja": "歩くユイが1.5倍大きくなりました。場面の高さのうちユイが占める割合が29% → 43.5%になりました。",
   "zh": "走路的结衣变大了1.5倍。结衣在场景高度中所占的比例从29% → 43.5%。",
   "en": "Yui is now 1.5 times bigger when she walks. She takes up 43.5% of the scene's height, up from 29%."
+ },
+ "＊가 붙어 있던 값 다섯을 공식 누리집에서 확인했습니다. 일반열차 59분, 교통카드 3,000원, 발매기의 말 넷, 일반열차 파랑과 직통열차 주황, 명동역 6번 출구입니다. 값은 바뀌지 않았고 화면의 ＊가 사라졌습니다.": {
+  "ja": "＊がついていた5つの値を公式サイトで確認しました。一般列車59分、交通カード3,000ウォン、券売機の4つの言語、一般列車は青で直通列車はオレンジ、明洞駅の6番出口です。値は変わらず、画面の＊がなくなりました。",
+  "zh": "带＊的5个数值已在官方网站上核对。普通列车59分钟、交通卡3,000韩元、售票机的4种语言、普通列车蓝色和直达列车橙色、明洞站6号出口。数值没有变化,画面上的＊消失了。",
+  "en": "The five values marked ＊ were checked against official websites: 59 minutes on the All Stop train, 3,000 won for a transit card, four languages on the ticket machines, blue for All Stop and orange for Express, and Exit 6 at Myeongdong Station. No value changed, and the ＊ marks are gone from the screens."
  }
 }

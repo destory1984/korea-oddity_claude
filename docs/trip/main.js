@@ -99,7 +99,7 @@ const SCREENS = {
           <button data-route="express">${t("pickThis")}</button>
         </article>
       </div>
-      <p class="note">${t("asOf", { date })}<br><span class="star">＊</span> ${t("unverified")}</p>`;
+      <p class="note">${t("asOf", { date })}${fares.allstop.verified.minutes ? "" : `<br><span class="star">＊</span> ${t("unverified")}`}</p>`;
     for (const button of screen.querySelectorAll("[data-route]")) button.onclick = () => {
       state.route = button.dataset.route;
       go();
@@ -149,7 +149,7 @@ const SCREENS = {
           <button data-pay="single">${t("pickThis")}</button>
         </article>
       </div>
-      <p class="note">${t("asOf", { date })}<br><span class="star">＊</span> ${t("unverified")}</p>`;
+      <p class="note">${t("asOf", { date })}${fares.card.verified.price ? "" : `<br><span class="star">＊</span> ${t("unverified")}`}</p>`;
     for (const button of screen.querySelectorAll("[data-pay]")) button.onclick = () => {
       state.pay = button.dataset.pay;
       go();
@@ -172,7 +172,7 @@ const SCREENS = {
             <span class="choices">${c.charges.map((amount) => `<button data-charge="${amount}" class="${amount === charge ? "on" : ""}">${W(amount)}</button>`).join("")}</span></div>
         </div>
         <button class="main" data-do="buy">${t("storePay", { won: W(c.price + charge) })}</button>
-        <p class="note"><span class="star">＊</span> ${t("unverified")}</p>`}`;
+        ${fares.card.verified.price ? "" : `<p class="note"><span class="star">＊</span> ${t("unverified")}</p>`}`}`;
       for (const button of screen.querySelectorAll("[data-charge]")) button.onclick = () => { charge = Number(button.dataset.charge); play(tick); draw(); };
       on("buy", () => { target.charge = charge; target.ticket = true; keep(); play(ding); showWallet(); draw(); });
       on("next", () => go());
@@ -436,7 +436,7 @@ const SCREENS = {
           <button data-pay="single">${t("pickThis")}</button>
         </article>
       </div>
-      <p class="note">${t("mdAsOf", { date: mdDate })}<br><span class="star">＊</span> ${t("unverified")}</p>`;
+      <p class="note">${t("mdAsOf", { date: mdDate })}${fares.card.verified.price ? "" : `<br><span class="star">＊</span> ${t("unverified")}`}</p>`;
     for (const button of screen.querySelectorAll("[data-pay]")) button.onclick = () => {
       state.md.pay = button.dataset.pay;
       go();
