@@ -213,5 +213,10 @@
   "ja": "ホンデのページの前半ができました。明洞のページを貼ると弘大入口駅で降り、階段ごとに音を聞いて出口をさがし、路上ライブを通りすぎて、地下の練習室のドアをたたきます。歩み4つ、歩く場面2つです。",
   "zh": "弘大这一页的前半做出来了。贴好明洞那一页后,在弘大入口站下车,到每个楼梯听声音找出口,路过街头演出,去敲地下练习室的门。4个步骤,2个行走场景。",
   "en": "The first half of the Hongdae page is in. After pasting the Myeongdong page you get off at Hongik Univ. Station, listen at each stairway to find the exit, pass a street show, and knock on the door of a basement studio. Four steps, two walking scenes."
+ },
+ "할머니의 쪽에서 \"간 길\", \"헤맨 곳\" 같은 작은 제목의 글자를 키웠습니다. 11px의 손글씨에서 14px의 또렷한 글꼴로 바꿨습니다.": {
+  "ja": "おばあちゃんのページの「行き方」「迷ったところ」などの小さな見出しの字を大きくしました。11pxの手書きから14pxのはっきりした書体に変えました。",
+  "zh": "奶奶那一页上“走的路”“迷路的地方”等小标题的字变大了。从11px的手写体换成了14px的清晰字体。",
+  "en": "The small headings on Grandma's page, such as \"How I went\" and \"Where I got lost\", are bigger. They changed from 11px handwriting to a clear 14px typeface."
  }
 }

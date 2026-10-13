@@ -165,12 +165,13 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .paper { background: var(--note); color: var(--ink); border-radius: 6px; padding: 14px 16px; box-shadow: 2px 4px 0 #3b2a1a26; }
 .paper h2 { margin: 0 0 6px; text-align: center; font-size: 16px; border-bottom: 1px dashed #3b2a1a66; padding-bottom: 6px; }
 .paper dl { margin: 8px 0 0; }
-.paper dt { font-size: 11px; font-weight: 700; letter-spacing: .06em; opacity: .65; margin-top: 9px; }
+/* 할머니의 쪽의 작은 제목(간 길, 헤맨 곳). 손글씨 글꼴은 작은 크기에서 읽기 어려워 화면의 글꼴로 바꾸고 11px → 14px로 키웠다(사용자, 2026.10.14: "글자가 너무 작다"). */
+.paper dt { font-family: "Pretendard Variable", Pretendard, "Segoe UI", "Malgun Gothic", "Hiragino Sans", "Yu Gothic", "Microsoft YaHei", sans-serif; font-size: 14px; font-weight: 700; letter-spacing: .03em; color: #8a4a2a; margin-top: 11px; }
 .paper dd { margin: 1px 0 0; }
 .paper .lost { text-decoration: underline wavy var(--red); text-underline-offset: 4px; }
 .paper .sign { text-align: right; margin: 8px 0 0; opacity: .75; }
 /* 그 쪽이 언제의 길인지. 옛 사진과 지난봄의 길을 헷갈리지 않게 한다. */
-.paper .when { margin: 5px 0 0; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: .04em; opacity: .7; }
+.paper .when { margin: 5px 0 0; text-align: center; font-size: 13px; font-weight: 600; letter-spacing: .04em; opacity: .7; }
 .letter { margin-top: 12px; transform: rotate(-.6deg); }
 .letter p { margin: 0 0 4px; }
 .letter .then { font-family: "Pretendard Variable", Pretendard, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .04em; opacity: .65; margin: 0 0 6px; }
