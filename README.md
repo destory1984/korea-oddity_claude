@@ -165,7 +165,7 @@ node --test tests/trip.test.mjs tests/walk.test.mjs tests/water.test.mjs
 - [기획서: 일본 할머니의 수첩](docs/기획서-일본-할머니의-수첩.md)
 - [넘김: 지금까지 한 일과 다음에 할 일](docs/넘김.md)
 - [바뀐 것들: 날마다 한 일](docs/바뀐-것들.md)
-- [재주의 목록: 다 익히면 할 수 있게 되는 것 39가지](docs/재주-목록.md)
+- [재주의 목록: 다 익히면 할 수 있게 되는 것 45가지](docs/재주-목록.md)
 - [게임 만드는 도구 이야기](docs/게임-만드는-도구-이야기.md)
 - 그림 발주서: `docs/art-order-1.md` → `docs/art-order-13.md`. 지금의 그림은 [11](docs/art-order-11.md), [12](docs/art-order-12.md), [13](docs/art-order-13.md)이다.
 
