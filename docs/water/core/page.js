@@ -1,15 +1,16 @@
 // 수첩의 쪽마다 모은 것과 놓은 것의 셈. 화면을 모른다. 걸음과 돈의 셈은 docs/trip/core/trip.js 가 한다.
-// 쪽은 둘이다: icn(공항 → 서울역), md(서울역 → 명동).
+// 쪽은 셋이다: icn(공항 → 서울역), md(서울역 → 명동), hd(홍대).
 
 // 쪽마다 모으는 것 다섯. 장면 속의 것을 누르거나, 표를 사거나, 사진을 찍어 얻는다.
 export const ITEMS = {
   icn: ["ticket", "word", "note", "coin", "photo"],
   md: ["exit", "word", "photo", "egg", "clue"],
+  hd: ["exit", "word", "idol", "photo", "sign"],
 };
 
 // found 모은 것, placed 쪽에 놓은 것과 자리, shotAt 사진을 찍을 때 화면이 긴 그림의 어디쯤이었나(0 왼쪽 끝 → 1 오른쪽 끝), tried 가 본 틀린 곳.
 export const freshPage = () => ({ found: [], placed: {}, shotAt: 0.5, tried: [] });
-export const freshAlbum = () => ({ icn: freshPage(), md: freshPage() });
+export const freshAlbum = () => ({ icn: freshPage(), md: freshPage(), hd: freshPage() });
 
 export const has = (pg, id) => pg.found.includes(id);
 
@@ -43,6 +44,7 @@ export const spotOf = (shotAt) => (shotAt < 1 / 3 ? "A" : shotAt < 2 / 3 ? "B" :
 const EXTRA = {
   icn: [["word", "replyWordIcn"], ["note", "replyNote"], ["coin", "replyCoin"]],
   md: [["word", "replyWord"]],
+  hd: [],
 };
 export const replyExtras = (kind, pg) => EXTRA[kind].filter(([id]) => id in pg.placed).map(([, key]) => key);
 

@@ -76,5 +76,29 @@
       { "id": "cart", "x": 68, "y": 38, "w": 15, "h": 50 },
       { "id": "tree", "say": "tree", "layer": "near", "x": 29, "y": 0, "w": 21, "h": 55 }
     ]
+  },
+  "hdStation": {
+    "art": "hd-station", "wide": 3, "start": 7,
+    "spots": [
+      { "id": "gates", "say": "hdGates", "x": 0.5, "y": 50, "w": 12, "h": 20 },
+      { "id": "board", "say": "hdBoard", "x": 13.5, "y": 37, "w": 12, "h": 25 },
+      { "id": "stairsA", "x": 27.5, "y": 32, "w": 7, "h": 36 },
+      { "id": "shop", "say": "hdMusicShop", "x": 54.5, "y": 36, "w": 8, "h": 32 },
+      { "id": "posters", "x": 63, "y": 35, "w": 7, "h": 30 },
+      { "id": "stairsB", "x": 71.5, "y": 32, "w": 7, "h": 36 },
+      { "id": "corridor", "x": 80.5, "y": 36, "w": 11, "h": 32 },
+      { "id": "stairsC", "x": 93, "y": 32, "w": 7, "h": 36 }
+    ]
+  },
+  "hdStreet": {
+    "art": "hd-street", "wide": 3, "start": 6,
+    "spots": [
+      { "id": "canopy", "say": "hdCanopy", "x": 0.5, "y": 28, "w": 9, "h": 44 },
+      { "id": "photo", "say": "hdPhotoShop", "x": 21, "y": 30, "w": 10, "h": 42 },
+      { "id": "stage", "x": 46, "y": 36, "w": 19, "h": 38 },
+      { "id": "guitar", "say": "hdGuitarShop", "x": 66.5, "y": 30, "w": 10, "h": 42 },
+      { "id": "down", "x": 77.3, "y": 38, "w": 5, "h": 34 },
+      { "id": "record", "say": "hdRecordShop", "x": 84, "y": 30, "w": 12, "h": 42 }
+    ]
   }
 }

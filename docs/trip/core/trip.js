@@ -16,6 +16,7 @@ export const fresh = () => ({
   shot: false,
   pasted: false,
   md: freshMd(),
+  hd: freshHd(),
 });
 
 // 명동 쪽에서 유이가 고르는 것.
@@ -31,6 +32,14 @@ export function freshMd() {
     spot: "A",          // 명동에서 사진을 찍은 자리: A 거리 들머리, B 거리 한가운데, C 옆 골목
     shot: false,
     ate: false,
+    pasted: false,
+  };
+}
+
+// 홍대 쪽에서 유이가 겪는 것. 이 쪽은 표를 사지 않는다(가는 길은 아직 짓지 않았다).
+export function freshHd() {
+  return {
+    exitMisses: 0,      // 소리가 나지 않는 계단으로 간 횟수
     pasted: false,
   };
 }
@@ -98,13 +107,18 @@ export function nextStep(state) {
     case "mdShoot": return "mdEat";
     case "mdEat": return "mdPaste";
     case "mdPaste": case "mdDone": return "mdDone";
+    case "hdPage": return "hdExit";
+    case "hdExit": return "hdStreet";
+    case "hdStreet": return "hdDoor";
+    case "hdDoor": case "hdSoon": return "hdSoon";   // 연습실의 문 앞까지 지었다
     default: return "done";
   }
 }
 
 // 차례대로 적는다. 열차를 탔는지를 이 차례로 가린다(wallet, totals).
 export const STEPS = ["intro", "page", "route", "signs", "platform", "pay", "store", "machine", "expressTicket", "gates", "ride", "refund", "arrive", "paste", "done",
-  "mdPage", "mdPay", "mdStore", "mdMachine", "mdDirection", "mdRide", "mdRefund", "mdExit", "mdShoot", "mdEat", "mdPaste", "mdDone"];
+  "mdPage", "mdPay", "mdStore", "mdMachine", "mdDirection", "mdRide", "mdRefund", "mdExit", "mdShoot", "mdEat", "mdPaste", "mdDone",
+  "hdPage", "hdExit", "hdStreet", "hdDoor", "hdSoon"];
 
 // ── 둘째 쪽: 서울역 → 명동 ──────────────────────────────────────────
 
@@ -152,6 +166,14 @@ export const exitRight = (exit, fares) => Number(exit) === fares.myeongdong.exit
 export const MD_GRANDMA_SPOT = "A";
 export const mdSameSpot = (state) => state.md.spot === MD_GRANDMA_SPOT;
 
+// ── 홍대: 노는 쪽 ───────────────────────────────────────────────────
+
+// 명동의 쪽을 붙이고 홍대 쪽을 편다.
+export const enterHongdae = (state) => ({ ...state, step: "hdPage", hd: freshHd() });
+// 홍대입구역의 계단 가운데 기타 소리가 나는 쪽. 역 안의 배치는 지어낸 것이라 번호가 아니라 자리의 이름으로 가린다.
+export const HD_SOUND = "stairsC";
+export const hdExitRight = (id) => id === HD_SOUND;
+
 // 돈을 그 말의 꼴로. 원은 그대로 원이다(기획서 15절: 지갑은 원으로 보인다).
 export function won(amount, lang) {
   const n = Math.abs(amount).toLocaleString("en-US");
@@ -167,7 +189,7 @@ export function load(storage) {
   for (const [key, version] of [[KEY, 2], [OLD_KEY, 1]]) {
     try {
       const saved = JSON.parse(storage.getItem(key));
-      if (saved && saved.version === version && STEPS.includes(saved.step)) return { ...fresh(), ...saved, version: 2, md: { ...freshMd(), ...saved.md } };
+      if (saved && saved.version === version && STEPS.includes(saved.step)) return { ...fresh(), ...saved, version: 2, md: { ...freshMd(), ...saved.md }, hd: { ...freshHd(), ...saved.hd } };
     } catch { /* 다음 열쇠로, 없으면 새로 */ }
   }
   return fresh();

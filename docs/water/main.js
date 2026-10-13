@@ -1,4 +1,4 @@
-// 할머니의 수첩, 걷는 틀: 공항 → 서울역 → 명동. 본보기는 Dordogne(2023)다: 엷은 수채의 장면 속의 것을 직접 누르고,
+// 할머니의 수첩, 걷는 틀: 공항 → 서울역 → 명동 → 홍대(연습실의 문 앞까지). 본보기는 Dordogne(2023)다: 엷은 수채의 장면 속의 것을 직접 누르고,
 // 모은 것으로 수첩의 한 쪽을 손수 꾸민다. 움직임은 Until Then(2024)을 따른다: 장면은 옆에서 본 긴 그림이고,
 // 유이가 옆모습으로 좌우로 걸으면 화면이 따라간다. 누른 곳까지 걸어가서 만진다.
 // 걸음의 차례와 돈의 셈은 docs/trip/core/trip.js, 요금은 docs/trip/data/fares.json, 글은 docs/trip/i18n.js 와 text.js,
@@ -67,7 +67,7 @@ function jump(step) {
   const a = page.freshAlbum();
   s.route = query.get("route") === "express" ? "express" : "allstop";
   s.pay = s.route === "allstop" ? (query.get("pay") === "single" ? "single" : "card") : null;
-  const md = step.startsWith("md");
+  const hd = step.startsWith("hd"), md = step.startsWith("md") || hd;
   if (md || ["gates", "platform", "ride", "refund", "arrive", "paste"].includes(step)) {
     s.ticket = true;
     s.charge = fares.card.charges[0];
@@ -81,7 +81,12 @@ function jump(step) {
     if (step === "mdStore") s.md.pay = "card";
     if (step === "mdMachine") s.md.pay = "single";
     if (["mdShoot", "mdEat", "mdPaste"].includes(step)) page.collect(a.md, "md", "exit");
-    if (step === "mdPaste") { for (const id of page.ITEMS.md) page.collect(a.md, "md", id); s.md.shot = s.md.ate = true; }
+    if (step === "mdPaste" || hd) { for (const id of page.ITEMS.md) page.collect(a.md, "md", id); s.md.shot = s.md.ate = true; }
+  }
+  if (hd) {
+    s.md.pasted = true;
+    s = trip.enterHongdae(s);
+    if (!["hdPage", "hdExit"].includes(step)) page.collect(a.hd, "hd", "exit");
   }
   s.step = step;
   state = s; album = a;
@@ -89,7 +94,7 @@ function jump(step) {
 const jumped = trip.STEPS.includes(query.get("step"));
 if (jumped) jump(query.get("step")); else load();
 
-const kind = () => (state.step.startsWith("md") ? "md" : "icn");
+const kind = () => (state.step.startsWith("hd") ? "hd" : state.step.startsWith("md") ? "md" : "icn");
 const pg = () => album[kind()];
 
 function go(step = trip.nextStep(state)) {
@@ -680,10 +685,106 @@ const SCREENS = {
   },
 
   mdPaste() { compose("md"); },
+
+  // ── 홍대: 노는 쪽. 화면 너머로만 보던 밴드를 만나러 간다(docs/이야기-홍대.md). 연습실의 문 앞까지 지었다 ──
+
+  hdPage() {
+    $("place").textContent = t("hdPlace");
+    screen.innerHTML = `${hdGrandmaPage()}${talk("hdYui")}
+      <button class="main" data-do="next">${t("hdStart")}</button>`;
+    on("next", () => go());
+  },
+
+  // 출구가 많은 역. 번호가 아니라 소리로 찾는다. 할머니가 지난봄에 그렇게 나갔다.
+  hdExit() {
+    const tried = album.hd.tried;
+    const listen = (id, key) => ({ button, frame }) => {
+      if (trip.hdExitRight(id)) {
+        gain("exit"); say(key);
+        frame.classList.add("busy");
+        return later(1800, () => go());
+      }
+      if (tried.includes(id)) return say("hdTried");
+      tried.push(id); state.hd.exitMisses += 1; keep();
+      button.classList.add("tried"); play(tick, true);
+      say(key, true);
+    };
+    const stairs = (id) => ({ label: t("hdStairs"), off: tried.includes(id), name: t("hdStairs") });
+    showScene("hdStation", { title: "hdStationTitle", first: "hdStationYui",
+      marks: { gates: { seen: true }, board: { seen: true }, shop: { seen: true }, posters: { seen: page.has(album.hd, "word") },
+        stairsA: stairs("stairsA"), stairsB: stairs("stairsB"), corridor: stairs("corridor"), stairsC: stairs("stairsC") },
+      acts: {
+        stairsA: listen("stairsA", "hdStairsA"), stairsB: listen("stairsB", "hdStairsB"), corridor: listen("corridor", "hdCorridor"), stairsC: listen("stairsC", "hdStairsC"),
+        posters: ({ button }) => { if (!gain("word")) play(tick, true); button.classList.add("seen"); say("hdPosters"); },
+      } });
+  },
+
+  // 낮의 거리. 아이돌의 공연은 지나가는 구경거리이고, 유이가 갈 곳은 기타 간판이 걸린 지하다.
+  hdStreet() {
+    showScene("hdStreet", { title: "hdStreetTitle", first: sawIdol ? "hdStreetBack" : "hdStreetYui",
+      marks: { canopy: { seen: true }, photo: { seen: true }, guitar: { seen: true }, record: { seen: true }, stage: { seen: page.has(album.hd, "idol") }, down: { name: t("hdDoorTitle") } },
+      acts: {
+        stage: showIdol,
+        down: ({ frame }) => {
+          say("hdDown"); play(ding);
+          frame.classList.add("busy");
+          later(1600, () => go());
+        },
+      } });
+  },
+
+  // 연습실의 문 앞. 두 번 머뭇거리고 세 번째에 두드린다.
+  hdDoor() {
+    let tries = 0;
+    $("place").textContent = t("hdDoorTitle");
+    screen.innerHTML = `${picture("hd-door")}${talk("hdDoorYui")}<button class="main" data-do="knock">${t("hdKnock")}</button>`;
+    on("knock", () => {
+      tries += 1;
+      if (tries < 3) { play(tick, true); return say(tries === 1 ? "hdHesitate1" : "hdHesitate2", true); }
+      play(ding); say("hdKnocked");
+      for (const button of screen.querySelectorAll("button")) button.disabled = true;
+      later(1500, () => go());
+    });
+  },
+
+  hdSoon() {
+    $("place").textContent = t("hdDoorTitle");
+    screen.innerHTML = `${picture("hd-door")}
+      <div class="paper"><p>${t("hdSoonText")}</p></div>
+      <p class="note">${t("hdSoonNote")}</p><button class="plain" data-do="again">${t("restart")}</button>`;
+    on("again", restart);
+  },
 };
 SCREENS.done = SCREENS.paste;
 SCREENS.mdEat = SCREENS.mdShoot;
 SCREENS.mdDone = SCREENS.mdPaste;
+
+// 홍대의 거리 공연을 가까이 본다. 지나가는 구경거리다.
+let sawIdol = false;   // 이번에 공연을 보고 돌아왔는가. 저장하지 않는다.
+function showIdol() {
+  sawIdol = true;
+  $("place").textContent = t("hdIdolTitle");
+  screen.innerHTML = `${picture("hd-idol")}${talk("hdIdolSay", { idol: t("idolName") })}
+    <button class="main" data-do="back">${t("back")}</button>`;
+  if (!gain("idol")) play(tick);
+  on("back", render);
+}
+
+// 할머니의 홍대 쪽. 길은 한 줄뿐이고 나머지는 그날 본 것이다.
+function hdGrandmaPage() {
+  return `
+    <div class="paper">
+      <h2>${t("hdPlace")}</h2>
+      <p class="when">${t("gWhen")}</p>
+      <dl class="hand">
+        <dt>${t("gHow")}</dt><dd>${t("hdHowText")}</dd>
+        <dt>${t("gLost")}</dt><dd class="lost">${t("hdLostText")}</dd>
+        <dt>${t("gTip")}</dt><dd>${t("hdTipText")}</dd>
+        <dt>${t("hdSawLabel")}</dt><dd>${t("hdSawText", { band: t("bandName") })}</dd>
+      </dl>
+      <p class="sign hand">${t("sign")}</p>
+    </div>`;
+}
 
 // 지하 1층 교통센터. 표를 살 때와 개찰구를 고를 때 같은 긴 그림에 선다.
 function showB1(first, acts, below = "") {
@@ -829,7 +930,7 @@ const PAGES = {
       return [t(m.exitMisses ? "mdReplyLost" : "mdReply1"), t("mdReply2"), ...("clue" in placed ? [t("mdReply3")] : []),
         ...(trip.mdSameSpot(state) ? [t("mdReplySame")] : []), ...("egg" in placed ? [t("mdReplyAte")] : []), ...(gap > 0 ? [t("replySaved", { won: W(gap) })] : [])];
     },
-    after: () => `<p class="note">${t("mdNext")}</p><button class="plain" data-do="again">${t("restart")}</button>`,
+    after: () => `<p class="note">${t("mdNext")}</p><button class="main" data-do="hd">${t("toHongdae")}</button><button class="plain" data-do="again">${t("restart")}</button>`,
   },
 };
 
@@ -876,6 +977,7 @@ function compose(which, fresh) {
   if (!locked) for (const one of sheet.querySelectorAll(".piece")) drag(one, sheet, sheetPage, () => compose(which));
   on("paste", () => { if (!page.canPaste(sheetPage)) return; def.setPasted(); keep(); play(ding); compose(which); });
   on("md", () => { state = trip.enterMyeongdong(state); go("mdPage"); });
+  on("hd", () => { state = trip.enterHongdae(state); go("hdPage"); });
   on("again", restart);
 }
 
@@ -949,7 +1051,7 @@ function showJournal() {
   $("journalBody").innerHTML = `
     <figure class="old wide"><img src="art/photo-2004.webp" alt="" draggable="false"><figcaption class="hand">典子, 2004.10</figcaption></figure>
     <p><b>${t("clueTitle")}</b> · ${t("photoThen")}<br>${t("clueText")}</p>
-    ${state.step === "intro" ? `<p>${t("pageLocked")}</p>` : `${kind() === "md" ? `${mdGrandmaPage()}<br>` : ""}${grandmaPage()}`}`;
+    ${state.step === "intro" ? `<p>${t("pageLocked")}</p>` : `${kind() === "hd" ? `${hdGrandmaPage()}<br>` : ""}${kind() !== "icn" ? `${mdGrandmaPage()}<br>` : ""}${grandmaPage()}`}`;
   $("journal").classList.add("on");
 }
 
