@@ -139,7 +139,7 @@ button.plain { display: block; margin: 12px auto 0; padding: 8px 16px; border-ra
 .frame.busy .spot i, .frame.busy .spot .plate { opacity: 0; }
 
 /* 걷는 유이. 수채로 받은 옆모습 네 컷(art/yui-walk.png, 한 컷이 137 x 260)을 돌린다. 그림은 왼쪽을 보므로 오른쪽으로 갈 때는 뒤집는다. 서 있을 때는 둘째 컷이다. */
-.walker { position: absolute; bottom: 9%; height: 29%; aspect-ratio: 137 / 260; pointer-events: none;
+.walker { position: absolute; bottom: 9%; height: 43.5%; aspect-ratio: 137 / 260; pointer-events: none;
   background: url("art/yui-walk.png") 33.333% 0 / 400% 100% no-repeat; transform: translateX(-50%); filter: drop-shadow(0 2px 2px #3b2a1a33); }
 .walker.right { transform: translateX(-50%) scaleX(-1); }
 .walker.go { animation: steps .52s steps(4, jump-none) infinite; }

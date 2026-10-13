@@ -198,5 +198,10 @@
   "ja": "仁川空港の到着ロビーの壁に案内図がかかりました。押すと、ターミナルから道の向こうの交通センター地下1階までの道と、一般列車と直通列車がどちら側かが見えます。",
   "zh": "仁川机场到达大厅的墙上挂了导览图。点一下,就能看到从航站楼过马路到交通中心地下1层的路,以及普通列车和直达列车各在哪一边。",
   "en": "A guide map now hangs on the wall of the Incheon arrivals hall. Tap it to see the way across the road to the Transportation Center on level B1, and which side the All Stop and Express trains are on."
+ },
+ "걷는 유이가 1.5배 커졌습니다. 장면의 높이에서 유이가 차지하는 몫이 29% → 43.5%가 되었습니다.": {
+  "ja": "歩くユイが1.5倍大きくなりました。場面の高さのうちユイが占める割合が29% → 43.5%になりました。",
+  "zh": "走路的结衣变大了1.5倍。结衣在场景高度中所占的比例从29% → 43.5%。",
+  "en": "Yui is now 1.5 times bigger when she walks. She takes up 43.5% of the scene's height, up from 29%."
  }
 }
