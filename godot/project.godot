@@ -1,20 +1,20 @@
-; 팔도 한량(3권)의 Godot 견본: 명동 거리 한 장면.
+; 팔도 한량(3권)의 Godot 판. 웹의 것(docs/water/)을 옮기는 중이다. main.tscn 은 명동 거리의 빛 견본이다.
 ; 웹의 것(docs/water/)과 같은 그림으로 지어 나란히 견주려는 것이다.
 
 config_version=5
 
 [application]
 
-config/name="Korea Oddity — 명동 거리 견본"
-run/main_scene="res://main.tscn"
+config/name="Korea Oddity — 할머니의 수첩"
+run/main_scene="res://game.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]
 
 window/size/viewport_width=720
-window/size/viewport_height=1040
-window/size/window_width_override=450
-window/size/window_height_override=650
+window/size/viewport_height=1480
+window/size/window_width_override=414
+window/size/window_height_override=851
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_width"
 window/handheld/orientation=1

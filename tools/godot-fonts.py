@@ -7,6 +7,7 @@
 
     python tools/godot-fonts.py
 """
+import json
 import re
 import shutil
 from pathlib import Path
@@ -15,7 +16,13 @@ root = Path(__file__).resolve().parent.parent
 source = root / 'docs/assets/fonts/gaegu'
 target = root / 'godot/fonts'
 
-text = ''.join((root / 'godot' / name).read_text(encoding='utf-8') for name in ('main.gd', 'main.tscn'))
+text = ''.join((root / 'godot' / name).read_text(encoding='utf-8') for name in ('main.gd', 'main.tscn', 'game.gd'))
+# 게임의 글은 data/text.json 에 있다(tools/godot-data.mjs 가 뽑는다). game.gd 가 따옴표로 부르는 열쇠와,
+# 걸음마다 붙여 부르는 열쇠(hd 로 시작하는 것, item 으로 시작하는 것)의 글자를 더한다.
+# 지금은 한국어만 넣는다. 다른 세 나라 말은 그 말의 글꼴을 고른 뒤에 더한다.
+words = json.loads((root / 'godot/data/text.json').read_text(encoding='utf-8'))['ko']
+called = set(re.findall(r'"(\w+)"', (root / 'godot/game.gd').read_text(encoding='utf-8')))
+text += ''.join(value for key, value in words.items() if key in called or key.startswith(('hd', 'item')))
 wanted = {ord(ch) for ch in text if not ch.isspace()} | set(range(0x20, 0x7f))
 
 slices = []

@@ -1,0 +1,154 @@
+{
+ "note": "요금과 시간은 여기 한곳에만 적는다. 화면과 글은 이 파일에서 읽는다. 바뀌면 여기만 고친다.",
+ "checked": "2026-10-10",
+ "currency": "KRW",
+ "allstop": {
+  "from": "icn1",
+  "to": {
+   "seoul": 4750,
+   "gongdeok": 4650,
+   "hongik": 4650,
+   "gimpo": 4350
+  },
+  "card": 4750,
+  "singleExtra": 100,
+  "deposit": 500,
+  "minutes": 59,
+  "source": "https://www.airportrailroad.com/train/normal/fare",
+  "verified": {
+   "card": true,
+   "singleExtra": true,
+   "deposit": true,
+   "minutes": true
+  },
+  "toNote": "인천공항1터미널에서 그 역까지의 어른 운임(선후불 교통카드). 공항철도의 역간 기준운임 표에서 옮겼다.",
+  "note": "59분은 공항철도 누리집의 일반열차 소개(https://www.airportrailroad.com/train/normal/introduce)에서 2026.10.14에 읽었다: \"서울역 ~ 인천공항1터미널역 : 59분 (일부 열차는 2~6분정도 추가소요)\". 제2터미널까지는 66분이다."
+ },
+ "express": {
+  "adult": 13000,
+  "regular": 18500,
+  "minutes": 43,
+  "source": "https://www.airportrailroad.com/train/express/introduce",
+  "verified": {
+   "adult": true,
+   "regular": true,
+   "minutes": true
+  }
+ },
+ "card": {
+  "price": 3000,
+  "charges": [
+   10000,
+   20000
+  ],
+  "verified": {
+   "price": true
+  },
+  "source": "https://www.airportrailroad.com/train/normal/ticket",
+  "priceSource": "https://www.t-money.co.kr/ncs/pct/tmnyintd/ReadTmnyIntd.dev",
+  "note": "카드값 3,000원은 티머니 누리집의 카드 소개에서 2026.10.14에 읽었다. 가장 싼 카드가 3,000원이다(베이직 그레이: 세븐일레븐, 이마트24. GS POP NEW 블랙: GS25. CU+티머니카드 베이직: CU). 그림이 든 카드는 4,000 → 6,000원이다. 서울관광재단의 영문 안내(english.visitseoul.net/transportation)도 3,000원이라 적는다. 파는 곳(각 역의 편의점, 교통카드 자판기)과 충전하는 곳(각 역의 승차권 자동발매기)은 공항철도의 일반열차 승차권 안내에서 보았다."
+ },
+ "stations": {
+  "allstop": [
+   "icn1",
+   "cargo",
+   "unseo",
+   "yeongjong",
+   "cheongna",
+   "geomam",
+   "gyeyang",
+   "gimpo",
+   "magok",
+   "dmc",
+   "hongik",
+   "gongdeok",
+   "seoul"
+  ],
+  "express": [
+   "icn1",
+   "seoul"
+  ],
+  "source": "https://www.airportrailroad.com/train/express/introduce"
+ },
+ "machine": {
+  "languages": [
+   "ko",
+   "en",
+   "ja",
+   "zh"
+  ],
+  "verified": {
+   "languages": true
+  },
+  "source": "https://www.airportrailroad.com/train/express/guide",
+  "note": "2026.10.14에 읽었다. 직통열차 발매기: 공항철도 누리집의 이용 안내에 언어 선택 화면이 \"한글,영어,중문,일본어\"라 적혀 있고 화면 그림에도 단추 넷이 있다. 1회용 교통카드 발매기: 서울시 누리집(mediahub.seoul.go.kr/archives/872021, 2015)에 \"영어, 일본어, 중국어 중에서 선택할 수 있다\", 같은 누리집의 2025.4 글(archives/2013930)에 \"외국어는 영어, 일본어, 중국어만 지원\"이라 적혀 있다. 인천공항1터미널역에 놓인 1회용 발매기의 화면을 따로 보지는 못했다."
+ },
+ "gates": {
+  "allstop": "blue",
+  "express": "orange",
+  "verified": {
+   "colours": true
+  },
+  "source": "https://www.airportrailroad.com/train/normal/introduce",
+  "note": "2026.10.14에 보았다. 공항철도 누리집의 노선도는 일반열차를 파란 줄, 직통열차를 주황 줄로 그린다. 직통열차의 발매기 화면 제목, 창구, 열차도 주황이다. 개찰구가 따로라는 것은 같은 누리집의 이용 안내에서 보았다(개찰구에 \"직통전용 Express Only\", 인천공항1터미널역 지하 1층은 일반열차가 동편, 직통열차가 서편). 개찰구의 몸체가 그 색으로 칠해져 있는지는 보지 못했다. 색은 표지와 노선의 색이다."
+ },
+ "subway": {
+  "checked": "2026-10-11",
+  "card": 1550,
+  "single": 1650,
+  "deposit": 500,
+  "minutes": 4,
+  "line": 4,
+  "stops": [
+   "seoul",
+   "hoehyeon",
+   "myeongdong"
+  ],
+  "toward": [
+   "jinjeop",
+   "buramsan"
+  ],
+  "opposite": [
+   "sadang",
+   "oido"
+  ],
+  "oppositeNext": "sookmyung",
+  "machineDests": [
+   "hoehyeon",
+   "myeongdong",
+   "chungmuro",
+   "dongdaemun"
+  ],
+  "source": "http://www.seoulmetro.co.kr/kr/page.do?menuIdx=354",
+  "verified": {
+   "card": true,
+   "single": true,
+   "deposit": true,
+   "minutes": true,
+   "stops": true,
+   "toward": true
+  },
+  "note": "어른 운임, 10km까지의 기본운임이다. 운임은 서울교통공사의 운임안내, 보증금은 승차권안내(menuIdx=355), 역의 차례와 방면과 4분은 사이버스테이션의 역 시각표(서울역 22:07, 회현 22:09, 명동 22:11 진접행)에서 2026.10.11에 읽었다. 만 13세 미만은 어린이 운임(550원)이지만 화면은 어른 값으로 둔다. 발매기의 네 역은 모두 서울역에서 10km 안이라 기본운임이다."
+ },
+ "myeongdong": {
+  "exits": {
+   "right": 6,
+   "grandma": 3,
+   "choices": [
+    3,
+    6,
+    8
+   ]
+  },
+  "verified": {
+   "exits": true
+  },
+  "source": "https://sisul.or.kr/open_content/undershop/guide/myeongdong/myeongdong_station.jsp",
+  "sources": [
+   "https://love.seoul.go.kr/articles/9515",
+   "https://mediahub.seoul.go.kr/archives/2012343",
+   "https://mediahub.seoul.go.kr/archives/2015205"
+  ],
+  "note": "2026.10.14에 읽었다. 6번 출구: 서울시의 월간지 서울사랑(2023.6)에 \"명동역 6번 출구에서 걸어가다 보면 명동예술극장을 만나게 된다\", 서울시 누리집의 글(2024.10)에 명동의 환대센터가 \"명동역 6번 출구 바로 앞\"이라 적혀 있다. 3번 출구: 서울시 누리집의 글(2025.7)에 명동재미로를 따라가면 명동역 3번 출구이고 그 길이 남산의 북측숲길로 이어진다고 적혀 있다. 8번 출구가 한산하다는 것은 지어낸 것이다. 서울시설공단의 명동역 지하도상가 안내에는 4, 5, 6번 출구가 적혀 있다."
+ }
+}
