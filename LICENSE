@@ -16,6 +16,14 @@ This repository is licensed in two parts.
    The character comes from "Space Oddity — 할머니의 수첩"
    (https://github.com/destory1984/oddity_claude), where it is reserved under
    the same terms.
+   - The character "Yui" (유이): its design and every drawing of it in this
+     repository, including the drafts in docs/art/yui/ and the sheets
+     docs/art/yui-*-sheet.jpg, the walk sprites in docs/walk/art/walk-*.png,
+     the watercolour sprites docs/water/art/yui-*.png and godot/art/yui-*.png,
+     and any drawing of the character added later.
+   - Pictures that show the character, such as the screens in
+     docs/mock/water-*.jpg and docs/mock/godot-*.jpg, are reserved as far as
+     they show it.
 
 Material from third parties keeps its own terms; every such item and its
 source is listed in THIRD-PARTY.md.

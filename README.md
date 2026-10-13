@@ -181,4 +181,4 @@ node --test tests/trip.test.mjs tests/walk.test.mjs tests/water.test.mjs
 [LICENSE](LICENSE)는 두 갈래다.
 
 - 코드와 문서는 MIT다.
-- 소라 캐릭터와 그 그림은 MIT가 아니다. 모든 권리를 남겨 둔다. 1권, 2권과 같은 조건이다. 옛 시제품의 화면에 소라가 나온다.
+- 유이 캐릭터와 소라 캐릭터, 그 그림은 MIT가 아니다. 모든 권리를 남겨 둔다. 유이는 이 게임의 주인공이고, 소라는 1권과 2권의 주인공으로 옛 시제품의 화면에 나온다.
