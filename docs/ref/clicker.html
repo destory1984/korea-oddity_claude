@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>눌러 푸는 게임들</title>
+<style>
+  body { margin: 0; padding: 16px; background: #1b1b1f; color: #eee; font: 15px/1.5 system-ui, sans-serif; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.note { margin: 0 0 12px; color: #aaa; font-size: 13px; }
+  .game { margin: 0 0 26px; padding-top: 14px; border-top: 1px solid #444; }
+  .game h3 { font-size: 16px; margin: 0 0 2px; }
+  .game h3 a { color: #9cd3ff; text-decoration: none; }
+  .game .meta { color: #aaa; font-size: 13px; margin: 0 0 2px; }
+  .game .like { color: #ffd27a; font-size: 14px; margin: 0 0 8px; }
+  .shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px; }
+  .shots.tall { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .shots.tall img { aspect-ratio: 347 / 500; }
+  .shots img { width: 100%; display: block; border-radius: 4px; background: #333; aspect-ratio: 16 / 9; object-fit: cover; }
+</style>
+</head>
+<body>
+<h1>눌러 푸는 게임들</h1>
+<p class="note">가져올 것: 장면을 눌러 살피고 가방의 물건을 사람에게 건네 길을 여는 틀, 엉뚱한 인물과 엇나가는 말, 15분 남짓의 짧고 꽉 찬 크기. 기묘한 기운은 빼고 밝게 간다. 2026.10.14에 스팀 상점과 itch.io에서 읽었고 그림은 그곳의 주소를 가리킨다.</p>
+<div id="list"></div>
+<script>
+// 열쇠는 스팀의 앱 번호(0은 itch.io). 둘째 칸은 무엇, 셋째 칸은 우리가 가져올 곳.
+const ITEMS = [
+  [0, '전하가 보내신 것. 가방의 물건을 사람에게 건네면 다음 길이 열린다. 칼 → 쥐 → 다리, 치즈 → 쥐 → 들판처럼 사슬로 이어진다. 15분쯤에 끝난다.', '가져올 곳: 틀과 크기의 본. 기묘하고 어두운 기운은 뺀다.'],
+  [1328840, '두 남매가 상상 속을 다닌다. 손그림 만화 같은 밝은 장면, 물건을 주고받는 수수께끼, 말 대신 몸짓으로 웃긴다.', '가져올 곳: 밝고 따뜻한 그림에 눌러 푸는 틀. 가장 가깝다.'],
+  [711660, '털뭉치 하나가 체리를 쫓는다. 장면마다 눌러 보면 엉뚱한 일이 터진다.', '가져올 곳: 누를 때마다 무언가 웃긴 반응이 나오는 맛.'],
+  [207690, '작은 풀벌레들이 나무를 구한다. 장면 곳곳을 눌러 보면 소리와 움직임으로 답한다.', '가져올 곳: 인물이 저마다 버릇 있게 움직이는 것.'],
+  [581270, '노인이 편지를 받고 길을 떠난다. 수채 같은 풍경을 눌러 길을 잇고, 떠올린 기억이 짧게 끼어든다.', '가져올 곳: 엷은 수채, 짧은 여행, 윗대의 이야기.'],
+  [232790, '두 주인공이 따로 나아간다. 말을 고르는 대화가 많고 말투가 우습다.', '가져올 곳: 말을 고르는 대화, 엇나가는 대꾸.'],
+  [368390, '형사 둘이 짧은 사건을 하나씩 푼다. 사건 하나가 20분쯤이고 말장난이 많다.', '가져올 곳: 짧은 꼭지를 하나씩 끝내는 짜임(곳 하나 = 꼭지 하나).'],
+  [569860, '옛 LucasArts 식의 본격 포인트 앤 클릭. 가방, 물건 섞기, 길게 이어지는 실마리.', '가져올 곳: 가방과 물건 건네기의 본. 다만 이만큼 어렵게 하지는 않는다.'],
+];
+
+fetch('clicker.json').then(r => r.json()).then(games => {
+  const byId = new Map(games.map(g => [g.id, g]));
+  const list = document.getElementById('list');
+  for (const [id, what, like] of ITEMS) {
+    const g = byId.get(id);
+    if (!g) continue;
+    const div = document.createElement('div');
+    div.className = 'game';
+    const h3 = document.createElement('h3');
+    const a = document.createElement('a');
+    a.href = g.url || ('https://store.steampowered.com/app/' + id + '/');
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = g.name;
+    h3.append(a);
+    const meta = document.createElement('p');
+    meta.className = 'meta';
+    meta.textContent = g.date + ' · ' + what;
+    const p = document.createElement('p');
+    p.className = 'like';
+    p.textContent = like;
+    const shots = document.createElement('div');
+    shots.className = id === 0 ? 'shots tall' : 'shots';
+    for (const src of [].concat(g.shots)) {
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.referrerPolicy = 'no-referrer';
+      img.src = src;
+      img.alt = g.name;
+      shots.append(img);
+    }
+    div.append(h3, meta, p, shots);
+    list.append(div);
+  }
+});
+</script>
+</body>
+</html>
