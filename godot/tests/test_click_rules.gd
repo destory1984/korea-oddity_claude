@@ -9,7 +9,7 @@ var fails := 0
 
 func _init() -> void:
 	for name: String in ["test_has", "test_find_first_match", "test_find_give_needs_item", "test_find_not",
-			"test_run_state", "test_run_commands", "test_fallback"]:
+			"test_run_state", "test_run_commands", "test_fallback", "test_reply"]:
 		var before := fails
 		call(name)
 		print(("ok   " if fails == before else "FAIL ") + name)
@@ -84,3 +84,14 @@ func test_fallback() -> void:
 	check(Rules.fallback(data, "tap", "cat", "", 3) == [["say", "cat", "냐아"]], "idle turns round")
 	check(Rules.fallback(data, "give", "cat", "drinks") == [["say", "cat", "상자에 들어간다"]], "own reply")
 	check(Rules.fallback(data, "give", "clerk", "drinks") == [["say", "y", "그건 아닌 것 같아"]], "star")
+
+
+func test_reply() -> void:
+	var data := { "end": "끝", "reply": [
+		{ "text": "하나" },
+		{ "text": "둘", "need": ["wrongExit"] },
+		{ "text": "셋", "not": ["wrongExit"] },
+	] }
+	check(Rules.reply(data, fresh()) == ["하나", "셋"], "no flag: %s" % [Rules.reply(data, fresh())])
+	check(Rules.reply(data, fresh(["wrongExit"])) == ["하나", "둘"], "wrongExit")
+	check(Rules.reply({ "end": "끝" }, fresh()) == ["끝"], "no reply falls back to end")

@@ -55,3 +55,17 @@ static func fallback(data: Dictionary, act: String, target: String, item: String
 	else:
 		line = data.wrong.get(item + ">" + target, data.wrong["*"])
 	return [["say", line[0], line[1]]]
+
+
+# 할머니의 답장. 표시에 맞는 줄을 차례대로. 답장이 없는 쪽은 끝의 글 한 줄.
+static func reply(data: Dictionary, state: Dictionary) -> Array:
+	if not data.has("reply"):
+		return [data.end]
+	var lines := []
+	for line: Dictionary in data.reply:
+		if line.get("need", []).any(func(c: String) -> bool: return not has(state, c)):
+			continue
+		if line.get("not", []).any(func(c: String) -> bool: return has(state, c)):
+			continue
+		lines.append(line.text)
+	return lines

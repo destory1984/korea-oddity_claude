@@ -63,6 +63,7 @@ var root: Control
 var backdrop: ColorRect
 var title: Label
 var bag: HBoxContainer
+var dots: HBoxContainer
 var column: VBoxContainer
 
 
@@ -203,22 +204,42 @@ func _enter(key: String) -> void:
 
 
 # 임시 인물: 둥근 덩어리와 이름표. 그림을 받으면 바꾼다.
+# 사람을 세운다. 그림(art)이 있으면 그 그림을, 없으면 임시 덩어리를. "tap": false 면 그림만 서고 누를 수 없다.
 func _stand(who: String) -> void:
 	var one: Dictionary = data.people[who]
 	var h: float = YUI_H * one.height
-	var w := h * (0.3 if h > 150.0 else 1.5)
-	var body := Panel.new()
-	var box := _box(Color(Color(one.color), 0.82), int(w / 2.2), 0, 0, Color(INK, 0.35), 3)
-	body.add_theme_stylebox_override(&"panel", box)
-	body.size = Vector2(w, h)
-	body.position = Vector2(one.x / 100.0 * WORLD - w / 2.0, FEET - h + 6)
-	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	props.add_child(body)
-	var tag := _sign(Rect2(body.position + Vector2(-30, -40), Vector2(w + 60, 0)), data.who[who].name)
+	var path := "res://art/%s.png" % one.get("art", "")
+	var rect: Rect2
+	if one.has("art") and ResourceLoader.exists(path):
+		var body := Sprite2D.new()
+		body.texture = load(path)
+		body.centered = false
+		var k := h / body.texture.get_height()
+		body.scale = Vector2(k, k)
+		var w := body.texture.get_width() * k
+		body.position = Vector2(one.x / 100.0 * WORLD - w / 2.0, FEET - h + 6)
+		props.add_child(body)
+		rect = Rect2(body.position, Vector2(w, h))
+	else:
+		if one.has("art"):
+			push_error("no picture %s" % path)
+		var w := h * (0.3 if h > 150.0 else 1.5)
+		var body := Panel.new()
+		var box := _box(Color(Color(one.get("color", "#c9b48a")), 0.82), int(w / 2.2), 0, 0, Color(INK, 0.35), 3)
+		body.add_theme_stylebox_override(&"panel", box)
+		body.size = Vector2(w, h)
+		body.position = Vector2(one.x / 100.0 * WORLD - w / 2.0, FEET - h + 6)
+		body.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		props.add_child(body)
+		rect = Rect2(body.position, body.size)
+	if not one.get("tap", true):
+		return
+	var body := rect
+	var tag := _sign(Rect2(body.position + Vector2(-30, -40), Vector2(body.size.x + 60, 0)), data.who[who].name)
 	tag.add_theme_stylebox_override(&"normal", _box(Color(1, 1, 1, 0.86), 14, 10, 2))
 	tag.add_theme_color_override(&"font_color", INK)
-	marks[who] = Rect2(body.position, body.size)
-	_ring_at(Rect2(body.position, body.size).get_center())
+	marks[who] = body
+	_ring_at(body.get_center())
 
 
 func _light_up(art: String, size: Vector2) -> void:
@@ -401,7 +422,7 @@ func _next() -> void:
 		"end":
 			queue.clear()
 			_clear_column()
-			column.add_child(_line(data.end, 30, INK))
+			column.add_child(_reply_paper())
 			_button("처음부터", _restart)
 
 
@@ -456,6 +477,38 @@ func _draw_bag() -> void:
 			slot.disabled = true
 		bag.add_child(slot)
 	shown_bag.assign(state.bag)
+	_draw_dots()
+
+
+func _draw_dots() -> void:
+	for dot in dots.get_children():
+		dots.remove_child(dot)
+		dot.queue_free()
+	var goals: Array = data.get("goals", [])
+	for goal: Dictionary in goals:
+		var got := Rules.has(state, "got:" + goal.id)
+		var one := Panel.new()
+		one.custom_minimum_size = Vector2(30, 30)
+		one.tooltip_text = goal.name
+		one.add_theme_stylebox_override(&"panel", _box(GOLD if got else Color(1, 1, 1, 0.7), 15, 0, 0, Color(INK, 0.35), 2))
+		dots.add_child(one)
+	dots.position = Vector2(VIEW - 14 - goals.size() * 38 + 8, bag.position.y + SLOT + 10)
+
+
+# 할머니의 답장. 줄은 표시에 따라 갈린다(click_rules.gd 의 reply).
+func _reply_paper() -> PanelContainer:
+	var paper := PanelContainer.new()
+	paper.add_theme_stylebox_override(&"panel", _box(Color("fbf6ea"), 10, 28, 22, Color(INK, 0.2), 2))
+	var inside := VBoxContainer.new()
+	inside.add_theme_constant_override(&"separation", 8)
+	for words: String in Rules.reply(data, state):
+		inside.add_child(_line(words, 32, INK))
+	if data.has("reply"):
+		var sign := _line("할머니가", 28, SOFT)
+		sign.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		inside.add_child(sign)
+	paper.add_child(inside)
+	return paper
 
 
 func _dot(color: Color, size: int) -> GradientTexture2D:
@@ -499,6 +552,10 @@ func _build_ui() -> void:
 	bag.position = Vector2(VIEW - 14 - SLOTS * SLOT - (SLOTS - 1) * 8, 14 + 52)
 	root.add_child(bag)
 
+	dots = HBoxContainer.new()      # 이 쪽에서 얻을 것. 얻으면 금빛으로 찬다
+	dots.add_theme_constant_override(&"separation", 8)
+	root.add_child(dots)
+
 	column = VBoxContainer.new()
 	column.custom_minimum_size = Vector2(VIEW - 48, 0)
 	column.size = Vector2(VIEW - 48, 0)
@@ -527,6 +584,10 @@ func _clear_column() -> void:
 
 func _face(who: String) -> Texture2D:
 	if faces.has(who):
+		return faces[who]
+	var path := "res://art/%s.png" % data.people.get(who, {}).get("face", "")
+	if data.people.get(who, {}).has("face") and ResourceLoader.exists(path):
+		faces[who] = load(path)
 		return faces[who]
 	var color := Color(data.people[who].color) if data.people.has(who) else Color("c9b48a")
 	faces[who] = _dot(color, 96)
