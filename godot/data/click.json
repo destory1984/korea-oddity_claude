@@ -5,7 +5,7 @@
     "drinks": { "name": "음료 상자", "color": "#e2a93b" }
   },
   "places": {
-    "alley": { "art": "hd-street", "kind": "walk", "start": 6, "title": "연습실이 있는 골목" },
+    "alley": { "art": "hd-street", "kind": "walk", "start": 6, "title": "연습실이 있는 골목", "say": "여기야, 연습실이 있는 골목. 지하로 내려가는 계단은 저 끝에 있어." },
     "open": { "art": "hd-door", "kind": "still", "title": "연습실의 문 앞" }
   },
   "spots": {

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://click.gd" id="1"]
+
+; 장면의 나무는 click.gd 가 세운다. 여기에는 뿌리만 있다.
+[node name="Click" type="Node2D"]
+script = ExtResource("1")
