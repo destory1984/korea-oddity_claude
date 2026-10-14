@@ -1,4 +1,5 @@
 {
+  "names": { "exit3": "3번 출구", "exit8": "8번 통로", "exit6": "6번 출구", "tower": "남산의 탑", "cart": "계란빵 수레", "shop": "화장품 가게", "back": "되돌아간다" },
   "first": "station",
   "start": { "flags": [], "bag": ["card", "photo", "bill"] },
   "items": {

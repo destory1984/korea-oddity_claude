@@ -48,6 +48,10 @@ var frame_h := 0.0
 var turns := {}                  # 대상마다 기본 대꾸를 몇 번 했나(고양이의 자세를 돌린다)
 var marks := {}                  # 누를 것의 이름 → Rect2(그림 위의 자리)
 var shown_bag: Array[String] = []
+var rings := {}                  # 누를 것의 이름 → 그 흰 고리(키보드로 고르면 금빛이 된다)
+var picked_id := ""              # 키보드로 고른 누를 것
+var picked_button := 0           # 말이 떠 있을 때 키보드로 고른 단추
+var key_hint: Label
 
 var daylight: CanvasModulate
 var camera: Camera2D
@@ -163,6 +167,8 @@ func _enter(key: String) -> void:
 	for node in lights.get_children() + props.get_children():
 		node.queue_free()
 	marks.clear()
+	rings.clear()
+	picked_id = ""
 	arriving = ""
 	walking = where.kind == "walk"
 	yui.visible = walking
@@ -187,7 +193,7 @@ func _enter(key: String) -> void:
 		marks[spot.id] = rect
 		if spot.has("label"):
 			_sign(rect, spot.label)
-		_ring_at(rect.get_center())
+		rings[spot.id] = _ring_at(rect.get_center())
 	for who: String in data.people:
 		if data.people[who].place == key:
 			_stand(who)
@@ -195,6 +201,8 @@ func _enter(key: String) -> void:
 	# 가방과 얻을 것은 그림 밖, 말 칸의 맨 위에 둔다. 그림 위에 두면 탑 같은 누를 것을 가린다
 	bag.position = Vector2(VIEW - 14 - SLOTS * SLOT - (SLOTS - 1) * 8, frame_h + 10)
 	column.position = Vector2(24, frame_h + 10 + SLOT + 14)
+	key_hint.position = Vector2(14, frame_h - 40)
+	_show_hint()
 	_draw_dots()
 	var rule := Rules.find(data.rules, "enter", key, "", state)
 	if rule.is_empty():
@@ -242,7 +250,7 @@ func _stand(who: String) -> void:
 	tag.add_theme_stylebox_override(&"normal", _box(Color(1, 1, 1, 0.86), 14, 10, 2))
 	tag.add_theme_color_override(&"font_color", INK)
 	marks[who] = body
-	_ring_at(body.get_center())
+	rings[who] = _ring_at(body.get_center())
 
 
 func _light_up(art: String, size: Vector2) -> void:
@@ -278,7 +286,7 @@ func _radial(fade: Gradient, size: int) -> GradientTexture2D:
 	return dot
 
 
-func _ring_at(at: Vector2) -> void:
+func _ring_at(at: Vector2) -> Sprite2D:
 	var one := Sprite2D.new()
 	one.texture = ring
 	one.position = at
@@ -287,6 +295,7 @@ func _ring_at(at: Vector2) -> void:
 	var tween := one.create_tween().set_loops().set_trans(Tween.TRANS_SINE)
 	tween.tween_property(one, "scale", Vector2(1.18, 1.18), 1.1)
 	tween.tween_property(one, "scale", Vector2(0.9, 0.9), 1.1)
+	return one
 
 
 func _sign(rect: Rect2, words: String) -> Label:
@@ -310,6 +319,10 @@ func _sign(rect: Rect2, words: String) -> Label:
 func _process(delta: float) -> void:
 	if not walking:
 		return
+	var way := _held_way()
+	if way != 0 and not busy:      # ← → 나 A D 를 누르고 있는 동안 걷는다
+		arriving = ""
+		target_x = clampf(yui.position.x + way * 80.0, 0.04 * WORLD, 0.96 * WORLD)
 	var gap := target_x - yui.position.x
 	var move := SPEED * delta
 	if absf(gap) <= move:
@@ -338,6 +351,111 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if event.position.y < frame_h:
 			press(get_canvas_transform().affine_inverse() * event.position)
+	elif event is InputEventKey and event.pressed and not event.echo:
+		key(event.keycode)
+
+
+# ── 키보드 ──────────────────────────────────────────────────────────
+# ← → (A D) 걷기, ↑ ↓ (W S) 누를 것 고르기, Enter 나 스페이스 하기, 1 → 5 가방의 칸, Esc 내려놓기.
+# 말이 떠 있으면 ← → 로 단추를 고르고 Enter 로 누른다. 고를 말은 1 → 3 으로도 고른다.
+
+func _held_way() -> int:
+	var way := 0
+	if Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A):
+		way -= 1
+	if Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D):
+		way += 1
+	return way
+
+
+func _buttons() -> Array:
+	return column.find_children("*", "Button", true, false).filter(func(c: Node) -> bool: return not c.is_queued_for_deletion())
+
+
+func key(code: int) -> void:
+	var buttons := _buttons()
+	var number := code - KEY_1 if code >= KEY_1 and code <= KEY_9 else -1
+	if not buttons.is_empty() and (busy or queue.is_empty()):
+		match code:
+			KEY_LEFT, KEY_A, KEY_UP, KEY_W:
+				picked_button = posmod(picked_button - 1, buttons.size())
+				_light_button()
+				return
+			KEY_RIGHT, KEY_D, KEY_DOWN, KEY_S:
+				picked_button = posmod(picked_button + 1, buttons.size())
+				_light_button()
+				return
+			KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
+				var one: Button = buttons[clampi(picked_button, 0, buttons.size() - 1)]
+				picked_button = 0
+				one.pressed.emit()
+				return
+		if number >= 0 and busy and number < buttons.size():
+			picked_button = 0
+			(buttons[number] as Button).pressed.emit()
+			return
+	if busy:
+		return
+	match code:
+		KEY_UP, KEY_W:
+			_pick_target(-1)
+		KEY_DOWN, KEY_S:
+			_pick_target(1)
+		KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
+			if picked_id != "" and marks.has(picked_id):
+				press((marks[picked_id] as Rect2).get_center())
+		KEY_ESCAPE:
+			if held != "":
+				held = ""
+				_draw_bag()
+		_:
+			if number >= 0 and number < state.bag.size():
+				pick(state.bag[number])
+
+
+# 화면에 보이는 누를 것을 왼쪽에서 오른쪽 차례로 하나씩 고른다.
+func _pick_target(step: int) -> void:
+	var left := camera.position.x if walking else 0.0
+	var seen := marks.keys().filter(func(id: String) -> bool:
+		var x := (marks[id] as Rect2).get_center().x
+		return x >= left and x <= left + VIEW)
+	if seen.is_empty():
+		return
+	seen.sort_custom(func(a: String, b: String) -> bool: return marks[a].get_center().x < marks[b].get_center().x)
+	var at := seen.find(picked_id)
+	picked_id = seen[posmod(at + step, seen.size()) if at >= 0 else (0 if step > 0 else seen.size() - 1)]
+	for id: String in rings:
+		var one := rings[id] as Sprite2D
+		one.modulate = Color(1.0, 0.62, 0.1) if id == picked_id else Color.WHITE
+		one.self_modulate.a = 1.0
+		one.z_index = 1 if id == picked_id else 0
+	_show_hint()
+
+
+# 그림 왼쪽 아래의 키 안내. 키로 고른 것이 있으면 그 이름을 앞에 붙인다.
+const KEYS := "←→ 걷기  ↑↓ 고르기  Enter 하기  1-5 가방  Esc 내려놓기"
+
+
+func _show_hint() -> void:
+	var name := _target_name(picked_id)
+	key_hint.text = ("고름: %s   " % name if name != "" else "") + KEYS
+
+
+func _target_name(id: String) -> String:
+	if id == "":
+		return ""
+	if data.who.has(id):
+		return data.who[id].name
+	for spot: Dictionary in data.spots.get(place, []):
+		if spot.id == id:
+			return data.get("names", {}).get(id, spot.get("label", id))
+	return id
+
+
+func _light_button() -> void:
+	var buttons := _buttons()
+	for i in buttons.size():
+		(buttons[i] as Button).modulate = Color(1.0, 0.86, 0.55) if i == picked_button else Color.WHITE
 
 
 # 그림의 at 을 눌렀다. 사람이나 물건이면 그 앞까지 걸어가서 만지고, 빈 데면 든 것을 내려놓고 그리로 걷는다.
@@ -392,6 +510,7 @@ func _obey(commands: Array) -> void:
 
 # 다음 명령 하나. 말은 "다음"으로 넘기고, 마지막 말은 단추 없이 남겨 두고 다시 걸을 수 있게 한다.
 func _next() -> void:
+	picked_button = 0
 	_draw_bag()
 	if queue.is_empty():
 		busy = false
@@ -569,6 +688,14 @@ func _build_ui() -> void:
 	bag.position = Vector2(VIEW - 14 - SLOTS * SLOT - (SLOTS - 1) * 8, 14 + 52)
 	root.add_child(bag)
 
+	key_hint = Label.new()      # 키보드로 하는 법. 그림의 왼쪽 아래 귀퉁이
+	key_hint.text = KEYS
+	key_hint.add_theme_font_size_override(&"font_size", 18)
+	key_hint.add_theme_color_override(&"font_color", INK)
+	key_hint.add_theme_stylebox_override(&"normal", _box(Color(1, 1, 1, 0.7), 10, 10, 3))
+	key_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(key_hint)
+
 	dots = HBoxContainer.new()      # 이 쪽에서 얻을 것. 얻으면 금빛으로 찬다
 	dots.add_theme_constant_override(&"separation", 8)
 	root.add_child(dots)
@@ -721,6 +848,7 @@ func _demo_myeongdong() -> void:
 
 
 func _demo_alley() -> void:
+	await _keyboard_check()
 	await _shot("first", 0.8)
 	await _go("cat")
 	await _shot("cat-1", 0.6)
@@ -768,6 +896,40 @@ var ask_bottom := 0.0
 func _measure_ask() -> void:
 	for child: Control in column.get_children():
 		ask_bottom = maxf(ask_bottom, child.get_global_rect().end.y)
+
+
+# 키보드만으로: 오른쪽으로 걷고, 누를 것을 고르고, Enter 로 만지고, Enter 로 말을 넘기고, 숫자로 가방을 집는다.
+func _keyboard_check() -> void:
+	var start_x := yui.position.x
+	_hold(KEY_D, true)
+	await get_tree().create_timer(0.8).timeout
+	_hold(KEY_D, false)
+	await get_tree().create_timer(0.2).timeout
+	var walked := yui.position.x - start_x
+	key(KEY_DOWN)
+	var first := picked_id
+	await _shot("key-picked", 0.3)
+	key(KEY_ENTER)
+	while arriving != "":
+		await get_tree().process_frame
+	await _shot("key-touched", 0.5)
+	while not _buttons().is_empty():
+		key(KEY_ENTER)
+		await get_tree().create_timer(0.2).timeout
+	key(KEY_1)
+	var held_one := held
+	key(KEY_ESCAPE)
+	print("keyboard: walked=", walked, " picked=", first, " held=", held_one, " after_esc=", held)
+	_restart()
+	await get_tree().create_timer(0.3).timeout
+
+
+func _hold(code: int, down: bool) -> void:
+	var one := InputEventKey.new()
+	one.keycode = code
+	one.physical_keycode = code
+	one.pressed = down
+	Input.parse_input_event(one)
 
 
 # 그 앞까지 걸어가 닿을 때까지 기다린다.

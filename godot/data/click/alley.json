@@ -1,4 +1,5 @@
 {
+  "names": { "door": "지하 계단", "singer": "서윤" },
   "first": "alley",
   "start": { "flags": [], "bag": ["card"] },
   "items": {

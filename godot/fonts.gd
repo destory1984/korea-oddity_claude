@@ -1,8 +1,8 @@
 # tools/godot-fonts.py 가 쓴 파일이다. 손으로 고치지 않는다.
 # 개구(Gaegu) 글꼴에서 이 견본의 글자가 든 조각들. 첫 조각이 바탕이고 나머지가 뒤를 받친다.
 const SLICES: Array[FontFile] = [
-	preload("res://fonts/gaegu-118-400-normal.woff2"),
 	preload("res://fonts/gaegu-latin-400-normal.woff2"),
+	preload("res://fonts/gaegu-118-400-normal.woff2"),
 	preload("res://fonts/gaegu-119-400-normal.woff2"),
 	preload("res://fonts/gaegu-117-400-normal.woff2"),
 	preload("res://fonts/gaegu-116-400-normal.woff2"),
@@ -15,8 +15,8 @@ const SLICES: Array[FontFile] = [
 	preload("res://fonts/gaegu-109-400-normal.woff2"),
 	preload("res://fonts/gaegu-108-400-normal.woff2"),
 	preload("res://fonts/gaegu-103-400-normal.woff2"),
-	preload("res://fonts/gaegu-106-400-normal.woff2"),
 	preload("res://fonts/gaegu-107-400-normal.woff2"),
+	preload("res://fonts/gaegu-106-400-normal.woff2"),
 	preload("res://fonts/gaegu-105-400-normal.woff2"),
 	preload("res://fonts/gaegu-101-400-normal.woff2"),
 	preload("res://fonts/gaegu-102-400-normal.woff2"),

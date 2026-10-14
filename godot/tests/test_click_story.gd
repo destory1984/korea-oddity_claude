@@ -9,7 +9,7 @@ const OWN := {
 	"alley": ["test_alley_paths", "test_alley_repeat", "test_alley_buy_first", "test_alley_must_reply", "test_alley_every_pair"],
 	"myeongdong": ["test_md_paths", "test_md_photo_before_hint", "test_md_repeat", "test_md_reply_lines", "test_md_bag_fits", "test_md_photo_seen"],
 }
-const SHARED := ["test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]
+const SHARED := ["test_every_target_named", "test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]
 
 var chapters := {}               # 쪽의 이름 → 줄거리
 var raw := {}                    # 쪽의 이름 → 파일의 글
@@ -115,6 +115,15 @@ func _targets() -> Array:
 
 
 # ── 모든 쪽 ─────────────────────────────────────────────────────────
+
+# 키보드로 고르면 이름을 띄운다. 누를 것마다 이름(사람은 who, 자리는 names 나 label)이 있다.
+func test_every_target_named() -> void:
+	for place: String in data.places:
+		for spot: Dictionary in data.spots[place]:
+			check(data.get("names", {}).has(spot.id) or spot.has("label"), "no name for " + spot.id)
+	for who: String in data.people:
+		if data.people[who].get("tap", true):
+			check(data.who.has(who), "no who for " + who)
 
 # 사람에게 건네는 짝은 모두 제 대꾸가 있다. 사물에는 두루 쓰는 대꾸("*")로도 된다.
 func test_wrong_pairs() -> void:
