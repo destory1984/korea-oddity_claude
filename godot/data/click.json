@@ -1,0 +1,143 @@
+{
+  "start": { "flags": [], "bag": ["card"] },
+  "items": {
+    "card": { "name": "교통카드", "color": "#4f86c6" },
+    "drinks": { "name": "음료 상자", "color": "#e2a93b" }
+  },
+  "places": {
+    "alley": { "art": "hd-street", "kind": "walk", "start": 6, "title": "연습실이 있는 골목" },
+    "open": { "art": "hd-door", "kind": "still", "title": "연습실의 문 앞" }
+  },
+  "spots": {
+    "alley": [
+      { "id": "store", "x": 21, "y": 30, "w": 10, "h": 42, "label": "편의점" },
+      { "id": "board", "x": 73.5, "y": 40, "w": 3.5, "h": 22, "label": "안내판" },
+      { "id": "door", "x": 77.3, "y": 38, "w": 5, "h": 34 }
+    ],
+    "open": [
+      { "id": "singer", "x": 35, "y": 10, "w": 30, "h": 85 }
+    ]
+  },
+  "people": {
+    "clerk": { "place": "alley", "x": 26, "height": 0.9, "color": "#7fbf8e" },
+    "rider": { "place": "alley", "x": 69, "height": 0.95, "color": "#d9774f" },
+    "cat": { "place": "alley", "x": 75.5, "height": 0.3, "color": "#c9a27a" }
+  },
+  "who": {
+    "y": { "name": "", "color": "#ffffff" },
+    "note": { "name": "할머니의 수첩", "color": "#f2e6c8" },
+    "clerk": { "name": "편의점 알바", "color": "#e3f3e6" },
+    "rider": { "name": "배달 기사", "color": "#fbe3d6" },
+    "cat": { "name": "고양이", "color": "#f3ead9" },
+    "f": { "name": "서윤", "color": "#f7e4e8" }
+  },
+  "rules": [
+    { "on": "tap", "target": "door", "not": ["wantDrink"], "do": [
+      ["say", "y", "(문고리에 손을 대자 손이 덜덜 떨린다) …안 되겠다. 숨 한 번만 고르고."],
+      ["say", "note", "남의 곳에 처음 갈 때는 마실 것 한 상자."],
+      ["say", "y", "할머니 수첩… 아, 나 빈손이구나. 편의점이 저기 있었지."],
+      ["set", "wantDrink"]
+    ] },
+    { "on": "tap", "target": "door", "need": ["bag:drinks"], "do": [
+      ["say", "y", "음료도 샀는데… 손이 또 떨려. 벨이 하늘만큼 높아 보여."]
+    ] },
+    { "on": "tap", "target": "door", "do": [
+      ["say", "y", "아직 빈손이야. 마실 것 한 상자부터."]
+    ] },
+
+    { "on": "give", "target": "clerk", "item": "card", "not": ["bag:drinks"], "do": [
+      ["say", "clerk", "1+1이에요! 교통카드 찍으세요. 삑!"],
+      ["say", "clerk", "음료 상자 하나 사시면 하나는 마음으로 드려요. 무거우니까요!"],
+      ["give", "drinks"],
+      ["say", "y", "교통카드로 음료를 샀어! 지하철만 타는 카드인 줄 알았는데."]
+    ] },
+    { "on": "give", "target": "clerk", "item": "card", "need": ["bag:drinks"], "do": [
+      ["say", "clerk", "1+1이에요! …아, 벌써 사셨구나. 1+1은 하루에 한 번이에요!"]
+    ] },
+    { "on": "tap", "target": "clerk", "need": ["wantDrink"], "not": ["bag:drinks"], "do": [
+      ["say", "clerk", "1+1이에요! 어서 오세요!"],
+      ["say", "y", "저, 마실 것 한 상자 사고 싶어요. 돈은… 교통카드뿐인데."],
+      ["say", "clerk", "1+1이에요! 아니, 교통카드도 돼요! 가게마다 다르긴 한데 우리 집은 돼요."]
+    ] },
+
+    { "on": "tap", "target": "rider", "not": ["askedRoom"], "do": [
+      ["say", "rider", "학생! 혹시 '두 정거장' 알아? B01호라는데 안내판 글씨가 콩알만 해서 말이야."],
+      ["say", "rider", "짜장면 두 그릇이 불어 터지기 직전이야…"],
+      ["say", "y", "저 그 밴드 만나러 왔어요! 안내판을 같이 볼게요."],
+      ["set", "askedRoom"]
+    ] },
+    { "on": "tap", "target": "rider", "need": ["askedRoom"], "do": [
+      ["say", "rider", "안내판, 안내판! 나는 돋보기를 오토바이에 두고 왔어."]
+    ] },
+
+    { "on": "tap", "target": "board", "not": ["askedRoom"], "do": [
+      ["say", "y", "건물 안내판이다. 글자가 빽빽해서… 나중에 천천히 읽자."]
+    ] },
+    { "on": "tap", "target": "board", "need": ["askedRoom"], "do": [
+      ["say", "y", "글자가 느려… 천천히. '두 정거장'을 찾자."],
+      ["ask", [
+        ["B02 두부 공방", [
+          ["say", "rider", "두부? 짜장면에 두부는 안 시켰을 텐데!"],
+          ["say", "y", "'두' 다음 글자가 달랐어. 한 번 더 볼게요."]
+        ]],
+        ["B01 두 정거장", [
+          ["say", "y", "여기다! B01, 두 정거장! 여기선 지하를 B라고 쓰나 봐."],
+          ["say", "rider", "고마워 학생! 벨은 내가 누를게. 딩동! 짜장면 왔습니다!"],
+          ["set", "rang"],
+          ["goto", "open"]
+        ]],
+        ["1F 정거장 카페", [
+          ["say", "rider", "카페는 1층이잖아. 우리는 지하로 가야 돼, 지하!"]
+        ]]
+      ]]
+    ] },
+
+    { "on": "enter", "target": "open", "need": ["bag:drinks"], "do": [
+      ["say", "f", "짜장면 왔… 어? 너, 영상마다 기타 쳐서 올리던 그 유이?"],
+      ["say", "y", "(준비한 한국말이 머릿속에서 다 날아갔다. 손에는 음료 상자뿐)"]
+    ] },
+    { "on": "enter", "target": "open", "do": [
+      ["say", "f", "짜장면 왔… 어? 너, 영상마다 기타 쳐서 올리던 그 유이?"],
+      ["say", "y", "아, 안녕하세요! …빈손으로 와 버렸어. 할머니가 그렇게 일렀는데."]
+    ] },
+    { "on": "give", "target": "singer", "item": "drinks", "do": [
+      ["take", "drinks"],
+      ["set", "gaveDrinks"],
+      ["say", "y", "이, 이거… 마실 것 한 상자요! (두 손으로)"],
+      ["say", "f", "어머, 두 손으로 주는 거 봐. 고마워. 들어와, 다들 기다렸어!"],
+      ["end"]
+    ] },
+    { "on": "tap", "target": "singer", "need": ["bag:drinks"], "do": [
+      ["say", "f", "응? 그 손에 꼭 쥔 상자는 뭐야?"]
+    ] },
+    { "on": "tap", "target": "singer", "do": [
+      ["say", "f", "빈손이면 어때. 기타 치러 온 거잖아. 들어와!"],
+      ["end"]
+    ] }
+  ],
+  "idle": {
+    "clerk": [["clerk", "1+1이에요! …아직 아무것도 안 고르셨지만요!"], ["clerk", "오늘은 바나나 우유도 1+1이에요!"]],
+    "rider": [["rider", "B01호… B01호…"]],
+    "cat": [["cat", "(문 앞 매트에서 배를 보이고 눕는다. 비킬 생각이 없다)"], ["cat", "(뒷다리 하나를 하늘로 쭉 뻗는다)"], ["cat", "(매트를 꾹꾹 누르며 유이를 빤히 본다)"]],
+    "board": [["y", "건물 안내판이다."]],
+    "door": [["y", "연습실로 내려가는 계단이다."]],
+    "store": [["y", "편의점이다. 알바 언니가 문 앞에서 손을 흔들어."]],
+    "singer": [["f", "들어와!"]]
+  },
+  "wrong": {
+    "*": ["y", "그건 아닌 것 같아."],
+    "card>rider": ["rider", "교통카드? 고맙지만 나는 오토바이로 다녀!"],
+    "card>cat": ["cat", "(카드 냄새를 맡더니 앞발로 찍는 시늉을 한다. 삑?)"],
+    "card>board": ["y", "안내판은 카드를 안 받겠지."],
+    "card>door": ["y", "문에 카드 찍는 데는 없네. 여긴 벨이야."],
+    "card>store": ["y", "물건값은 알바 언니한테 내야지."],
+    "card>singer": ["f", "교통카드? 같이 버스 타고 어디 가자고?"],
+    "drinks>clerk": ["clerk", "환불도 1+1은 안 돼요!"],
+    "drinks>rider": ["rider", "나 주는 거야? 마음만 받을게, 배달 중이라서!"],
+    "drinks>cat": ["cat", "(상자에 쏙 들어가 눕는다. …유이가 조심조심 다시 꺼냈다)"],
+    "drinks>board": ["y", "안내판은 목이 안 마를 거야."],
+    "drinks>door": ["y", "문 앞에 두고 도망칠 수는 없지."],
+    "drinks>store": ["y", "이건 벌써 산 거야."]
+  },
+  "end": "맛보기는 여기까지. 연습실 안의 이야기는 홍대 판에 있다."
+}
