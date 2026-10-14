@@ -29,17 +29,17 @@
       { "id": "exit6", "x": 87.5, "y": 28, "w": 12, "h": 44, "label": "6" }
     ],
     "wrong": [
-      { "id": "back", "x": 0, "y": 0, "w": 100, "h": 100, "label": "되돌아간다" }
+      { "id": "back", "x": 30, "y": 62, "w": 40, "h": 30, "label": "되돌아간다" }
     ],
     "street": [
       { "id": "down", "x": 0, "y": 30, "w": 9, "h": 50, "label": "명동역" },
       { "id": "tower", "x": 22, "y": 6, "w": 8, "h": 32 },
       { "id": "cart", "x": 67, "y": 38, "w": 6, "h": 40 },
-      { "id": "shop", "x": 80, "y": 30, "w": 15, "h": 45, "label": "화장품" }
+      { "id": "shop", "x": 80, "y": 30, "w": 15, "h": 45 }
     ]
   },
   "people": {
-    "ajumma": { "place": "street", "art": "md-ajumma", "face": "md-ajumma-face", "x": 74, "height": 1.25, "color": "#d98c5f" },
+    "ajumma": { "place": "street", "art": "md-ajumma", "face": "md-ajumma-face", "x": 77, "height": 1.25, "color": "#d98c5f" },
     "clerk": { "place": "street", "art": "md-clerk", "face": "md-clerk-face", "x": 88, "height": 1.3, "color": "#f0a6bd" },
     "family": { "place": "street", "art": "md-mom", "face": "md-mom-face", "x": 62, "height": 1.3, "color": "#b9a27f" },
     "dad": { "place": "street", "art": "md-dad", "face": "md-dad-face", "x": 57, "height": 1.35, "color": "#5f6f8f", "tap": false },

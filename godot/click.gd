@@ -14,7 +14,7 @@ const SPEED := 396.0       # 한 초에 걷는 거리
 const FEET := 655.0        # 유이의 발이 닿는 높이
 const YUI_H := 312.0       # 유이의 키(그림 260 × 1.2)
 const SLOT := 88.0         # 가방 칸 하나의 크기
-const SLOTS := 4
+const SLOTS := 5         # 명동에서 한때 다섯을 든다
 
 const INK := Color("3b2a1a")
 const PAPER := Color("f6f0e2")
@@ -192,7 +192,10 @@ func _enter(key: String) -> void:
 		if data.people[who].place == key:
 			_stand(who)
 	backdrop.position = Vector2(0, frame_h)
-	column.position = Vector2(24, frame_h + 24)
+	# 가방과 얻을 것은 그림 밖, 말 칸의 맨 위에 둔다. 그림 위에 두면 탑 같은 누를 것을 가린다
+	bag.position = Vector2(VIEW - 14 - SLOTS * SLOT - (SLOTS - 1) * 8, frame_h + 10)
+	column.position = Vector2(24, frame_h + 10 + SLOT + 14)
+	_draw_dots()
 	var rule := Rules.find(data.rules, "enter", key, "", state)
 	if rule.is_empty():
 		_clear_column()
@@ -492,7 +495,7 @@ func _draw_dots() -> void:
 		one.tooltip_text = goal.name
 		one.add_theme_stylebox_override(&"panel", _box(GOLD if got else Color(1, 1, 1, 0.7), 15, 0, 0, Color(INK, 0.35), 2))
 		dots.add_child(one)
-	dots.position = Vector2(VIEW - 14 - goals.size() * 38 + 8, bag.position.y + SLOT + 10)
+	dots.position = Vector2(24, bag.position.y + (SLOT - 30) / 2.0)
 
 
 # 할머니의 답장. 줄은 표시에 따라 갈린다(click_rules.gd 의 reply).
@@ -659,6 +662,51 @@ var shots := 0
 
 func _demo() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://shots"))
+	if chapter == "myeongdong":
+		await _demo_myeongdong()
+	else:
+		await _demo_alley()
+	print("click demo: chapter=", chapter, " place=", place, " flags=", state.flags, " bag=", state.bag, " ask_bottom=", ask_bottom, " ask_fits=", ask_bottom <= 1040.0)
+	get_tree().quit()
+
+
+func _demo_myeongdong() -> void:
+	await _through("md-start")
+	await _go("exit3")
+	await _through("md-wrong")
+	press(marks["back"].get_center())
+	await _through("md-back")
+	await _go("board")
+	await _through("md-board")
+	await _go("exit6")
+	await _through("md-street")
+	await _go("ajumma")
+	await _through("md-queue")
+	pick("photo")
+	await _go("tower")
+	await _through("md-tower-early")
+	pick("bill")
+	await _go("clerk")
+	await _through("md-change")
+	pick("sample")
+	await _go("ajumma")
+	await _through("md-sample")
+	pick("coins")
+	await _go("ajumma")
+	await _through("md-bread")
+	await _go("ajumma")
+	await _through("md-photo")
+	pick("photo")
+	await _go("tower")
+	await _through("md-clue")
+	await _go("down")
+	await _through("md-ask")
+	_measure_ask()
+	choose(0)
+	await _through("md-end")
+
+
+func _demo_alley() -> void:
 	await _shot("first", 0.8)
 	await _go("cat")
 	await _shot("cat-1", 0.6)
@@ -697,8 +745,6 @@ func _demo() -> void:
 	await _shot("drinks-held-open", 0.3)
 	press(marks["singer"].get_center())
 	await _through("end")
-	print("click demo: place=", place, " flags=", state.flags, " bag=", state.bag, " ask_bottom=", ask_bottom, " ask_fits=", ask_bottom <= 1040.0)
-	get_tree().quit()
 
 
 # 고를 말의 아래 끝이 기준 높이 1040 안에 드는가. 키가 짧은 손전화(아이폰 SE의 사파리, 1052쯤)에서도 보이게.

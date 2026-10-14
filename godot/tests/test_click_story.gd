@@ -7,7 +7,7 @@ const DIR := "res://data/click/"
 # 쪽마다의 길 시험. 쪽에 매이지 않는 시험은 모든 쪽에 돈다.
 const OWN := {
 	"alley": ["test_alley_paths", "test_alley_repeat", "test_alley_buy_first", "test_alley_must_reply", "test_alley_every_pair"],
-	"myeongdong": ["test_md_paths", "test_md_photo_before_hint", "test_md_repeat", "test_md_reply_lines"],
+	"myeongdong": ["test_md_paths", "test_md_photo_before_hint", "test_md_repeat", "test_md_reply_lines", "test_md_bag_fits"],
 }
 const SHARED := ["test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]
 
@@ -260,3 +260,10 @@ func test_md_reply_lines() -> void:
 	var b := play(data, [["tap", "exit3"], ["tap", "back"], ["tap", "exit6"]] + MD_STREET, [1])
 	var rb := Rules.reply(data, b.state)
 	check(rb.size() == 2 and "너도 3번으로" in rb[0], "B reply %s" % [rb])
+
+
+# 가방의 칸(click.gd 의 SLOTS)보다 물건이 많아지면 끝의 것이 보이지 않는다.
+func test_md_bag_fits() -> void:
+	var slots: int = load("res://click.gd").get_script_constant_map().SLOTS
+	var g := play(data, [["tap", "exit6"]] + MD_STREET, [0])
+	check(g.state.bag.size() <= slots, "bag holds %d, slots %d" % [g.state.bag.size(), slots])
