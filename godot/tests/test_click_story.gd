@@ -16,7 +16,7 @@ func _init() -> void:
 		quit(1)
 		return
 	data = read
-	for name: String in ["test_paths", "test_repeat", "test_wrong_pairs", "test_everyone_speaks", "test_targets_exist"]:
+	for name: String in ["test_paths", "test_repeat", "test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]:
 		var before := fails
 		call(name)
 		print(("ok   " if fails == before else "FAIL ") + name)
@@ -130,3 +130,10 @@ func test_targets_exist() -> void:
 		check(rule.on == "enter" and data.places.has(rule.target) or all.has(rule.target), "unknown target " + rule.target)
 	for line: Array in data.idle.values().reduce(func(acc: Array, x: Array) -> Array: return acc + x, []) + data.wrong.values():
 		check(data.who.has(line[0]), "unknown speaker " + str(line[0]))
+
+
+# 개구 글꼴에 없는 글자(말줄임표, 가운뎃점)는 웹에서 네모로 나온다.
+func test_font_has_glyphs() -> void:
+	var raw := FileAccess.get_file_as_string("res://data/click.json")
+	for ch: String in ["…", "·"]:
+		check(not raw.contains(ch), "click.json has U+%04X" % ch.unicode_at(0))
