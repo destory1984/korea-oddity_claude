@@ -16,7 +16,7 @@ func _init() -> void:
 		quit(1)
 		return
 	data = read
-	for name: String in ["test_paths", "test_repeat", "test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]:
+	for name: String in ["test_paths", "test_repeat", "test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs", "test_buy_first"]:
 		var before := fails
 		call(name)
 		print(("ok   " if fails == before else "FAIL ") + name)
@@ -137,3 +137,13 @@ func test_font_has_glyphs() -> void:
 	var raw := FileAccess.get_file_as_string("res://data/click.json")
 	for ch: String in ["…", "·"]:
 		check(not raw.contains(ch), "click.json has U+%04X" % ch.unicode_at(0))
+
+
+# 음료를 먼저 사고 문이나 알바를 누르면, 빈손이라거나 아직 안 골랐다는 말이 나오지 않는다.
+func test_buy_first() -> void:
+	var g := play([["give", "card", "clerk"], ["tap", "door"], ["tap", "clerk"]], [])
+	var after: Array = g.said.slice(g.said.size() - 2)
+	for line: Array in after:
+		check(not ("빈손" in line[2] or "안 고르" in line[2]), "contradicts the drinks in the bag: %s" % line[2])
+	var d := play([["give", "card", "clerk"], ["tap", "door"], ["tap", "rider"], ["tap", "board"], ["give", "drinks", "singer"]], [1])
+	check(d.ended and d.state.flags.has("gaveDrinks"), "buy-first path ends with the gift (%s)" % d.stuck)

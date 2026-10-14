@@ -32,7 +32,7 @@
     "f": { "name": "서윤", "color": "#f7e4e8" }
   },
   "rules": [
-    { "on": "tap", "target": "door", "not": ["wantDrink"], "do": [
+    { "on": "tap", "target": "door", "not": ["wantDrink", "bag:drinks"], "do": [
       ["say", "y", "(문고리에 손을 대자 손이 덜덜 떨린다) ...안 되겠다. 숨 한 번만 고르고."],
       ["say", "note", "남의 곳에 처음 갈 때는 마실 것 한 상자."],
       ["say", "y", "할머니 수첩... 아, 나 빈손이구나. 편의점이 저기 있었지."],
@@ -53,6 +53,9 @@
     ] },
     { "on": "give", "target": "clerk", "item": "card", "need": ["bag:drinks"], "do": [
       ["say", "clerk", "1+1이에요! ...아, 벌써 사셨구나. 1+1은 하루에 한 번이에요!"]
+    ] },
+    { "on": "tap", "target": "clerk", "need": ["bag:drinks"], "do": [
+      ["say", "clerk", "1+1이에요! 그 상자, 드릴 때 두 손으로 드리면 더 좋아요!"]
     ] },
     { "on": "tap", "target": "clerk", "need": ["wantDrink"], "not": ["bag:drinks"], "do": [
       ["say", "clerk", "1+1이에요! 어서 오세요!"],

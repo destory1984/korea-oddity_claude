@@ -365,8 +365,11 @@ func _next() -> void:
 			for row in column.get_children():
 				if row is Button:
 					row.queue_free()
+			var row := HBoxContainer.new()      # 고를 말은 한 줄에 나란히. 세로로 쌓으면 키가 짧은 손전화에서 화면 밖으로 밀린다
+			row.add_theme_constant_override(&"separation", 10)
+			column.add_child(row)
 			for pick: Array in one[1]:
-				_button(pick[0], _picked.bind(pick[1]), true)
+				_button(pick[0], _picked.bind(pick[1]), true, row)
 		"goto":
 			var rest := queue
 			queue = []
@@ -387,7 +390,7 @@ func _picked(actions: Array) -> void:
 
 # 고를 말이나 "다음"을 차례로 누른다(시연이 쓴다).
 func choose(index: int) -> void:
-	var buttons := column.get_children().filter(func(c: Node) -> bool: return c is Button and not c.is_queued_for_deletion())
+	var buttons := column.find_children("*", "Button", true, false).filter(func(c: Node) -> bool: return not c.is_queued_for_deletion())
 	(buttons[index] as Button).pressed.emit()
 
 
@@ -536,24 +539,26 @@ func _talk_row(who: String, words: String) -> HBoxContainer:
 	return row
 
 
-# plain 이면 고를 말: 너비를 다 채우고 키가 80 이상이다.
-func _button(words: String, then: Callable, plain := false) -> void:
+# plain 이면 고를 말: 줄의 너비를 나눠 갖고 키가 80 이상이다.
+func _button(words: String, then: Callable, plain := false, into: Container = null) -> void:
 	var one := Button.new()
 	one.text = words
 	one.focus_mode = Control.FOCUS_NONE
-	one.size_flags_horizontal = Control.SIZE_FILL if plain else Control.SIZE_SHRINK_CENTER
+	one.size_flags_horizontal = Control.SIZE_EXPAND_FILL if plain else Control.SIZE_SHRINK_CENTER
 	if plain:
 		one.custom_minimum_size = Vector2(0, 80)
+		one.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var color := NAVY if plain else RED
-	one.add_theme_font_size_override(&"font_size", 32)
+	one.add_theme_font_size_override(&"font_size", 26 if plain else 32)
 	for look: StringName in [&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color"]:
 		one.add_theme_color_override(look, color)
-	var box := _box(Color(1, 1, 1, 0.55), 40, 44, 16, color, 3)
+	var pad := 12 if plain else 44
+	var box := _box(Color(1, 1, 1, 0.55), 40, pad, 16, color, 3)
 	for look: StringName in [&"normal", &"hover", &"disabled", &"focus"]:
 		one.add_theme_stylebox_override(look, box)
-	one.add_theme_stylebox_override(&"pressed", _box(Color(1, 1, 1, 0.9), 40, 44, 16, color, 3))
+	one.add_theme_stylebox_override(&"pressed", _box(Color(1, 1, 1, 0.9), 40, pad, 16, color, 3))
 	one.pressed.connect(then)
-	column.add_child(one)
+	(into if into != null else column).add_child(one)
 
 
 func _line(words: String, size: int, color: Color) -> Label:
@@ -599,6 +604,7 @@ func _demo() -> void:
 	await _through("rider")
 	await _go("board")
 	await _through("board-ask")
+	_measure_ask()
 	choose(0)
 	await _through("board-wrong")
 	await _go("board")
@@ -609,8 +615,17 @@ func _demo() -> void:
 	await _shot("drinks-held-open", 0.3)
 	press(marks["singer"].get_center())
 	await _through("end")
-	print("click demo: place=", place, " flags=", state.flags, " bag=", state.bag)
+	print("click demo: place=", place, " flags=", state.flags, " bag=", state.bag, " ask_bottom=", ask_bottom, " ask_fits=", ask_bottom <= 1040.0)
 	get_tree().quit()
+
+
+# 고를 말의 아래 끝이 기준 높이 1040 안에 드는가. 키가 짧은 손전화(아이폰 SE의 사파리, 1052쯤)에서도 보이게.
+var ask_bottom := 0.0
+
+
+func _measure_ask() -> void:
+	for child: Control in column.get_children():
+		ask_bottom = maxf(ask_bottom, child.get_global_rect().end.y)
 
 
 # 그 앞까지 걸어가 닿을 때까지 기다린다.
