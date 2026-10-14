@@ -9,7 +9,7 @@ var fails := 0
 
 func _init() -> void:
 	for name: String in ["test_has", "test_find_first_match", "test_find_give_needs_item", "test_find_not",
-			"test_run_state", "test_run_commands", "test_fallback", "test_reply"]:
+			"test_run_state", "test_run_commands", "test_fallback", "test_reply", "test_verb"]:
 		var before := fails
 		call(name)
 		print(("ok   " if fails == before else "FAIL ") + name)
@@ -95,3 +95,10 @@ func test_reply() -> void:
 	check(Rules.reply(data, fresh()) == ["하나", "셋"], "no flag: %s" % [Rules.reply(data, fresh())])
 	check(Rules.reply(data, fresh(["wrongExit"])) == ["하나", "둘"], "wrongExit")
 	check(Rules.reply({ "end": "끝" }, fresh()) == ["끝"], "no reply falls back to end")
+
+
+func test_verb() -> void:
+	var data := { "people": { "clerk": {} }, "verbs": { "tower": "대 보기" } }
+	check(Rules.verb(data, "clerk") == "건네기", "person: %s" % Rules.verb(data, "clerk"))
+	check(Rules.verb(data, "door") == "써 보기", "thing: %s" % Rules.verb(data, "door"))
+	check(Rules.verb(data, "tower") == "대 보기", "own verb")

@@ -3,8 +3,8 @@
   "first": "alley",
   "start": { "flags": [], "bag": ["card"] },
   "items": {
-    "card": { "name": "교통카드", "color": "#4f86c6" },
-    "drinks": { "name": "음료 상자", "color": "#e2a93b" }
+    "card": { "name": "교통카드", "color": "#4f86c6", "about": "교통카드. 지하철도 타고, 편의점에서도 낼 수 있대." },
+    "drinks": { "name": "음료 상자", "color": "#e2a93b", "about": "마실 것 한 상자. 할머니가 처음 가는 곳에는 빈손으로 가지 말랬어." }
   },
   "places": {
     "alley": { "art": "hd-street", "kind": "walk", "start": 6, "title": "연습실이 있는 골목", "say": "여기야, 연습실이 있는 골목. 지하로 내려가는 계단은 저 끝에 있어." },

@@ -69,3 +69,10 @@ static func reply(data: Dictionary, state: Dictionary) -> Array:
 			continue
 		lines.append(line.text)
 	return lines
+
+
+# 물건을 들었을 때 고리에 띄울 짧은 글. 사람에게는 건네고, 사물에는 써 본다. 줄거리의 verbs 가 앞선다.
+static func verb(data: Dictionary, target: String) -> String:
+	if data.get("verbs", {}).has(target):
+		return data.verbs[target]
+	return "건네기" if data.get("people", {}).has(target) else "써 보기"

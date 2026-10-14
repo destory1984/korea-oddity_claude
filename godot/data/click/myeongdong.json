@@ -1,15 +1,16 @@
 {
   "names": { "exit3": "3번 출구", "exit8": "8번 통로", "exit6": "6번 출구", "tower": "남산의 탑", "cart": "계란빵 수레", "shop": "화장품 가게", "back": "되돌아간다" },
+  "verbs": { "tower": "대 보기", "exit3": "써 보기", "board": "대 보기" },
   "first": "station",
   "start": { "flags": [], "bag": ["card", "photo", "bill"] },
   "items": {
-    "card": { "name": "교통카드", "color": "#4f86c6" },
-    "photo": { "name": "2004년 사진", "color": "#c9a46a", "art": "photo-2004" },
-    "bill": { "name": "만 원", "color": "#7fae7a" },
-    "coins": { "name": "천 원 다발", "color": "#9ab7d6" },
-    "bread": { "name": "계란빵", "color": "#e2a93b" },
-    "sample": { "name": "샘플", "color": "#f0a6bd" },
-    "sticker": { "name": "스티커", "color": "#e06f5c" }
+    "card": { "name": "교통카드", "color": "#4f86c6", "about": "교통카드. 지하철을 탈 때 찍는 카드." },
+    "photo": { "name": "2004년 사진", "color": "#c9a46a", "about": "할머니의 2004년 사진. 노란 주전자 간판, 그 뒤로 남산의 탑이 오른쪽에 보여.", "art": "photo-2004" },
+    "bill": { "name": "만 원", "color": "#7fae7a", "about": "만 원짜리 한 장. 큰 돈이라 노점에서는 거스름돈이 귀찮을지도." },
+    "coins": { "name": "천 원 다발", "color": "#9ab7d6", "about": "천 원짜리 열 장. 노점에서는 작은 돈이 편해." },
+    "bread": { "name": "계란빵", "color": "#e2a93b", "about": "따끈한 계란빵. 서서 먹는 거래." },
+    "sample": { "name": "샘플", "color": "#f0a6bd", "about": "화장품 샘플 한 줌. 아직 아무것도 안 샀는데." },
+    "sticker": { "name": "스티커", "color": "#e06f5c", "about": "꼬마가 준 스티커. 수첩에 붙여야지." }
   },
   "goals": [
     { "id": "exit", "name": "출구" },

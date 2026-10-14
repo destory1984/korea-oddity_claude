@@ -9,7 +9,7 @@ const OWN := {
 	"alley": ["test_alley_paths", "test_alley_repeat", "test_alley_buy_first", "test_alley_must_reply", "test_alley_every_pair"],
 	"myeongdong": ["test_md_paths", "test_md_photo_before_hint", "test_md_repeat", "test_md_reply_lines", "test_md_bag_fits", "test_md_photo_seen"],
 }
-const SHARED := ["test_every_target_named", "test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]
+const SHARED := ["test_every_item_described", "test_every_target_named", "test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]
 
 var chapters := {}               # 쪽의 이름 → 줄거리
 var raw := {}                    # 쪽의 이름 → 파일의 글
@@ -115,6 +115,12 @@ func _targets() -> Array:
 
 
 # ── 모든 쪽 ─────────────────────────────────────────────────────────
+
+# 가방의 물건은 살펴보면 설명 한 줄이 뜬다.
+func test_every_item_described() -> void:
+	for item: String in data.items:
+		check(str(data.items[item].get("about", "")) != "", "no about for " + item)
+
 
 # 키보드로 고르면 이름을 띄운다. 누를 것마다 이름(사람은 who, 자리는 names 나 label)이 있다.
 func test_every_target_named() -> void:

@@ -11,7 +11,8 @@ const VIEW := 720.0        # 화면의 너비이자 걷는 틀의 높이
 const WORLD := 2160.0      # 긴 그림의 너비(가로 3, 세로 1)
 const STILL := 480.0       # 가까이 본 그림(가로 3, 세로 2)의 높이
 const SPEED := 396.0       # 한 초에 걷는 거리
-const FEET := 655.0        # 유이의 발이 닿는 높이
+const FEET := 655.0        # 사람들의 발이 닿는 높이
+const YUI_FEET := 679.0    # 유이는 조금 앞(화면 아래쪽)에 선다. 사람들과 겹쳐도 앞에 보인다
 const YUI_H := 312.0       # 유이의 키(그림 260 × 1.2)
 const SLOT := 88.0         # 가방 칸 하나의 크기
 const SLOTS := 5         # 명동에서 한때 다섯을 든다
@@ -168,6 +169,7 @@ func _enter(key: String) -> void:
 		node.queue_free()
 	marks.clear()
 	rings.clear()
+	verb_tags.clear()
 	picked_id = ""
 	arriving = ""
 	walking = where.kind == "walk"
@@ -179,7 +181,7 @@ func _enter(key: String) -> void:
 	frame_h = size.y
 	picture.scale = size / art.get_size()
 	if walking:
-		yui.position = Vector2(where.start / 100.0 * WORLD, FEET)
+		yui.position = Vector2(where.start / 100.0 * WORLD, YUI_FEET)
 		yui.flip_h = true
 		yui.play(&"stand")
 		target_x = yui.position.x
@@ -201,7 +203,6 @@ func _enter(key: String) -> void:
 	# 가방과 얻을 것은 그림 밖, 말 칸의 맨 위에 둔다. 그림 위에 두면 탑 같은 누를 것을 가린다
 	bag.position = Vector2(VIEW - 14 - SLOTS * SLOT - (SLOTS - 1) * 8, frame_h + 10)
 	column.position = Vector2(24, frame_h + 10 + SLOT + 14)
-	key_hint.position = Vector2(14, frame_h - 40)
 	_show_hint()
 	_draw_dots()
 	var rule := Rules.find(data.rules, "enter", key, "", state)
@@ -404,6 +405,11 @@ func key(code: int) -> void:
 		KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
 			if picked_id != "" and marks.has(picked_id):
 				press((marks[picked_id] as Rect2).get_center())
+		KEY_E:
+			if held != "":
+				examine(held)
+			elif not state.bag.is_empty():
+				examine(state.bag[0])
 		KEY_ESCAPE:
 			if held != "":
 				held = ""
@@ -433,7 +439,7 @@ func _pick_target(step: int) -> void:
 
 
 # 그림 왼쪽 아래의 키 안내. 키로 고른 것이 있으면 그 이름을 앞에 붙인다.
-const KEYS := "←→ 걷기  ↑↓ 고르기  Enter 하기  1-5 가방  Esc 내려놓기"
+const KEYS := "←→ 걷기  ↑↓ 고르기  Enter 하기  1-5 가방  E 살펴보기  Esc 내려놓기"
 
 
 func _show_hint() -> void:
@@ -576,6 +582,64 @@ func pick(item: String) -> void:
 	_draw_bag()
 
 
+# 칸을 오른쪽 단추로 누르거나 손가락으로 길게 누르면 살펴본다.
+var press_started := -1.0
+
+
+func _slot_input(event: InputEvent, item: String) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		examine(item)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			press_started = Time.get_ticks_msec() / 1000.0
+			var mine := press_started
+			await get_tree().create_timer(0.5).timeout
+			if press_started == mine:      # 0.5초를 떼지 않고 눌렀다
+				press_started = -1.0
+				examine(item)
+		else:
+			press_started = -1.0
+
+
+# 물건을 크게 보고 설명을 읽는다. 그림이 있으면 그림을, 없으면 색 동그라미를.
+func examine(item: String) -> void:
+	if busy or not state.bag.has(item):
+		return
+	var info: Dictionary = data.items[item]
+	held = ""
+	busy = true
+	_clear_column()
+	var art := "res://art/%s.webp" % info.get("art", "")
+	var picture := TextureRect.new()
+	picture.texture = load(art) if info.has("art") and ResourceLoader.exists(art) else _dot(Color(info.color), 160)
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.custom_minimum_size = Vector2(VIEW - 48, 260 if info.has("art") else 140)
+	column.add_child(picture)
+	column.add_child(_talk_row("y", info.get("about", info.name)))
+	_button("다음", _next)
+	_draw_bag()
+
+
+# 물건을 들었으면 보이는 고리마다 "건네기", "대 보기" 같은 글을 단다.
+var verb_tags: Array[Label] = []
+
+
+func _show_verbs() -> void:
+	for tag in verb_tags:
+		tag.queue_free()
+	verb_tags.clear()
+	if held == "" or busy:
+		return
+	for id: String in marks:
+		var at: Vector2 = (marks[id] as Rect2).get_center()
+		var tag := _sign(Rect2(at + Vector2(-60, 36), Vector2(120, 0)), Rules.verb(data, id))
+		tag.add_theme_stylebox_override(&"normal", _box(GOLD, 12, 8, 2))
+		tag.add_theme_color_override(&"font_color", INK)
+		tag.add_theme_font_size_override(&"font_size", 20)
+		verb_tags.append(tag)
+
+
 func _draw_bag() -> void:
 	for slot in bag.get_children():
 		bag.remove_child(slot)
@@ -605,6 +669,7 @@ func _draw_bag() -> void:
 			for look: StringName in [&"font_color", &"font_hover_color", &"font_pressed_color"]:
 				slot.add_theme_color_override(look, INK)
 			slot.pressed.connect(pick.bind(item))
+			slot.gui_input.connect(_slot_input.bind(item))
 			if not shown_bag.has(item):      # 새로 들어온 것은 한 번 통통 튄다
 				var tween := slot.create_tween().set_trans(Tween.TRANS_BACK)
 				tween.tween_property(slot, "scale", Vector2(1.25, 1.25), 0.18)
@@ -614,6 +679,7 @@ func _draw_bag() -> void:
 		bag.add_child(slot)
 	shown_bag.assign(state.bag)
 	_draw_dots()
+	_show_verbs()
 
 
 func _draw_dots() -> void:
@@ -695,6 +761,7 @@ func _build_ui() -> void:
 	key_hint.add_theme_stylebox_override(&"normal", _box(Color(1, 1, 1, 0.7), 10, 10, 3))
 	key_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(key_hint)
+	key_hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, 14)      # 화면 맨 아래
 
 	dots = HBoxContainer.new()      # 이 쪽에서 얻을 것. 얻으면 금빛으로 찬다
 	dots.add_theme_constant_override(&"separation", 8)
@@ -838,6 +905,7 @@ func _demo_myeongdong() -> void:
 	await _go("ajumma")
 	await _through("md-photo")
 	pick("photo")
+	await _shot("md-photo-held", 0.3)
 	await _go("tower")
 	await _through("md-clue")
 	await _go("down")
@@ -918,8 +986,14 @@ func _keyboard_check() -> void:
 		await get_tree().create_timer(0.2).timeout
 	key(KEY_1)
 	var held_one := held
+	var tags := verb_tags.size()
+	await _shot("key-held-verbs", 0.3)
 	key(KEY_ESCAPE)
-	print("keyboard: walked=", walked, " picked=", first, " held=", held_one, " after_esc=", held)
+	key(KEY_E)
+	var looked := busy
+	await _shot("key-examine", 0.4)
+	key(KEY_ENTER)
+	print("keyboard: walked=", walked, " picked=", first, " held=", held_one, " verb_tags=", tags, " examined=", looked, " after=", held, " busy=", busy)
 	_restart()
 	await get_tree().create_timer(0.3).timeout
 
