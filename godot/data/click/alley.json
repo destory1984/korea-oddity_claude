@@ -1,4 +1,5 @@
 {
+  "first": "alley",
   "start": { "flags": [], "bag": ["card"] },
   "items": {
     "card": { "name": "교통카드", "color": "#4f86c6" },

@@ -23,7 +23,7 @@ text = ''.join((root / 'godot' / name).read_text(encoding='utf-8') for name in (
 words = json.loads((root / 'godot/data/text.json').read_text(encoding='utf-8'))['ko']
 called = set(re.findall(r'"(\w+)"', (root / 'godot/game.gd').read_text(encoding='utf-8')))
 text += ''.join(value for key, value in words.items() if key in called or key.startswith(('hd', 'item')))
-# 눌러 푸는 맛보기(click.gd)의 글은 click.json 에 바로 적혀 있다. 그 안의 글을 모두 더한다.
+# 눌러 푸는 틀(click.gd)의 글은 쪽마다 data/click/<쪽>.json 에 바로 적혀 있다. 그 안의 글을 모두 더한다.
 text += (root / 'godot/click.gd').read_text(encoding='utf-8')
 def strings(node):
     if isinstance(node, str):
@@ -34,7 +34,8 @@ def strings(node):
     elif isinstance(node, list):
         for value in node:
             yield from strings(value)
-text += ''.join(strings(json.loads((root / 'godot/data/click.json').read_text(encoding='utf-8'))))
+for story in sorted((root / 'godot/data/click').glob('*.json')):
+    text += ''.join(strings(json.loads(story.read_text(encoding='utf-8'))))
 wanted = {ord(ch) for ch in text if not ch.isspace()} | set(range(0x20, 0x7f))
 
 slices = []

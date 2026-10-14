@@ -134,10 +134,10 @@ var faces := {}
 
 
 func _ready() -> void:
-	# 눌러 푸는 맛보기(click.tscn)로 가는 길. 컴퓨터는 -- --click, 웹은 주소 끝의 ?click
+	# 눌러 푸는 틀(click.tscn)로 가는 길. 컴퓨터는 -- --click 이나 --click=<쪽>, 웹은 주소 끝의 ?click 이나 ?click=<쪽>
 	var args := OS.get_cmdline_user_args()
-	var web_click := OS.has_feature("web") and str(JavaScriptBridge.eval("location.search", true)).contains("click")
-	if web_click or "--click" in args or "--click-demo" in args:
+	var web_click := OS.has_feature("web") and bool(JavaScriptBridge.eval("new URLSearchParams(location.search).has('click')", true))
+	if web_click or Array(args).any(func(a: String) -> bool: return a.begins_with("--click")):
 		get_tree().change_scene_to_file.call_deferred("res://click.tscn")
 		return
 	text = JSON.parse_string(FileAccess.get_file_as_string("res://data/text.json"))

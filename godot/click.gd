@@ -1,7 +1,7 @@
 extends Node2D
 ## 눌러 푸는 어드벤처의 맛보기: 연습실이 있는 골목 하나.
 ## 그림을 누르면 유이가 그리로 걷고, 사람이나 물건을 누르면 그 앞에서 만진다. 가방의 물건을 집어 들고 누르면 건넨다.
-## 줄거리는 data/click.json 에 있고, 규칙을 고르고 상태를 바꾸는 일은 click_rules.gd 가 한다.
+## 줄거리는 쪽마다 data/click/<쪽>.json 에 있고(--click=<쪽>, 웹은 ?click=<쪽>. 이름이 없으면 alley), 규칙을 고르고 상태를 바꾸는 일은 click_rules.gd 가 한다.
 ## 화면의 짜임과 빛은 game.gd 의 것을 따른다(값이 같다).
 
 const Fonts := preload("res://fonts.gd")
@@ -35,6 +35,7 @@ const LIGHT := {
 }
 
 var data: Dictionary
+var chapter := "alley"
 var state: Dictionary
 var place := ""
 var held := ""                   # 집어 든 물건. 없으면 ""
@@ -66,14 +67,33 @@ var column: VBoxContainer
 
 
 func _ready() -> void:
-	data = JSON.parse_string(FileAccess.get_file_as_string("res://data/click.json"))
+	chapter = _chapter_name()
+	data = JSON.parse_string(FileAccess.get_file_as_string("res://data/click/%s.json" % chapter))
 	glow = _radial(_fade([[0.0, 1.0], [1.0, 0.0]]), 128)
 	ring = _radial(_fade([[0.0, 0.3], [0.62, 0.3], [0.7, 1.0], [0.86, 1.0], [0.93, 0.0], [1.0, 0.0]]), 64)
 	_build_stage()
 	_build_ui()
 	_restart()
-	if "--click-demo" in OS.get_cmdline_user_args():
+	if Array(OS.get_cmdline_user_args()).any(func(a: String) -> bool: return a.begins_with("--click-demo")):
 		_demo()
+
+
+# 고를 쪽. 컴퓨터는 --click=<쪽> 이나 --click-demo=<쪽>, 웹은 ?click=<쪽>. 없거나 모르는 이름이면 alley.
+func _chapter_name() -> String:
+	var name := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--click") and "=" in arg:
+			name = arg.get_slice("=", 1)
+	if OS.has_feature("web"):
+		var query := str(JavaScriptBridge.eval("new URLSearchParams(location.search).get('click') || ''", true))
+		if query != "":
+			name = query
+	if name == "":
+		return "alley"
+	if not FileAccess.file_exists("res://data/click/%s.json" % name):
+		push_error("no chapter %s" % name)
+		return "alley"
+	return name
 
 
 func _restart() -> void:
@@ -85,7 +105,7 @@ func _restart() -> void:
 	shown_bag.clear()
 	shown_bag.assign(state.bag)
 	_draw_bag()
-	_enter("alley")
+	_enter(data.first)
 
 
 # ── 장면 ────────────────────────────────────────────────────────────
