@@ -10,7 +10,7 @@ const read = (path) => JSON.parse(fs.readFileSync(at(path), "utf8"));
 const write = (path, value) => fs.writeFileSync(at(path), `${JSON.stringify(value, null, 1)}\n`);
 
 // Godot 판이 쓰는 그림. 장면을 옮길 때마다 여기에 더한다.
-const ART = ["hd-station", "hd-street", "hd-door", "hd-idol"];
+const ART = ["hd-station", "hd-street", "hd-door", "hd-idol", "hd-studio", "hd-jam", "hd-evening", "hd-show", "hd-eat"];
 
 fs.mkdirSync(at("godot/data"), { recursive: true });
 const text = Object.fromEntries(LANGS.map((lang) => [lang, { ...BASE[lang], ...EXTRA[lang] }]));

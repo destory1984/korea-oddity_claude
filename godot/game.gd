@@ -1,6 +1,7 @@
 extends Node2D
-## 할머니의 수첩, Godot 판. 웹의 것(docs/water/)을 옮기는 중이다. 지금 있는 것은 홍대의 앞 절반이다:
-## 할머니의 쪽 → 홍대입구역(소리로 출구 찾기) → 낮의 거리(아이돌의 공연) → 지하 연습실의 문 앞.
+## 할머니의 수첩, Godot 판. 웹의 것(docs/water/)을 옮기는 중이다. 지금 있는 것은 홍대의 쪽이다(docs/이야기-홍대.md):
+## 할머니의 쪽 → 홍대입구역(소리로 출구 찾기) → 낮의 거리(아이돌의 공연) → 연습실의 문 앞 → 연습실(두 사람을 만나고 기타를 빌린다)
+## → 합주(박자 맞추기) → 저녁의 거리 → 거리 공연 → 떡볶이(식문화 셋) → 헤어지기와 할머니의 답장.
 ## 글, 장면의 자리, 요금은 웹의 것이 한 벌이고 tools/godot-data.mjs 가 data/ 로 뽑는다. 여기는 화면과 빛만 놓는다.
 ## 장면의 나무는 이 스크립트가 세운다. 손대지 않고 돌려 보려면: godot --path godot -- --demo
 
@@ -11,6 +12,9 @@ const WORLD := 2160.0      # 긴 그림의 너비(가로 3, 세로 1)
 const STILL := 480.0       # 가까이 본 그림(가로 3, 세로 2)의 높이
 const SPEED := 396.0       # 한 초에 걷는 거리. 웹의 것과 같다(틀 너비의 55%)
 const FEET := 655.0        # 유이의 발이 닿는 높이
+const ADULT := 0.78        # 어른의 선 모습(키 520)을 놓는 크기. 유이보다 머리 하나쯤 크다
+const BEAT := 0.75         # 합주의 한 박
+const ON_BEAT := 0.19      # 박에서 이만큼 안에 치면 맞은 것이다
 
 const INK := Color("3b2a1a")
 const PAPER := Color("f6f0e2")
@@ -23,26 +27,52 @@ const LABEL := Color("8a4a2a")
 const WARM := Color(1.0, 0.8, 0.52)
 const SUN := Color(1.0, 0.93, 0.7)
 
-# 걸음의 차례. 웹의 docs/trip/core/trip.js 의 nextStep 과 같다.
-const NEXT := { "hdPage": "hdExit", "hdExit": "hdStreet", "hdStreet": "hdDoor", "hdDoor": "hdSoon", "hdSoon": "hdSoon" }
+# 걸음의 차례. 문 앞까지는 웹의 docs/trip/core/trip.js 와 같고, 그 뒤는 Godot 판에만 있다.
+const NEXT := { "hdPage": "hdExit", "hdExit": "hdStreet", "hdStreet": "hdDoor", "hdDoor": "hdStudio", "hdStudio": "hdJam",
+	"hdJam": "hdEvening", "hdEvening": "hdShow", "hdShow": "hdEat", "hdEat": "hdBye", "hdBye": "hdDone", "hdDone": "hdDone" }
 const ITEMS := ["exit", "word", "idol", "photo", "sign"]
 # 홍대입구역의 계단과 거기서 들리는 것. 기타 소리가 나는 계단은 하나다.
 const STAIRS := { "stairsA": "hdStairsA", "stairsB": "hdStairsB", "corridor": "hdCorridor", "stairsC": "hdStairsC" }
 const SOUND := "stairsC"
 # 처음부터 고리가 없는 누를 곳(읽을 거리)
-const QUIET := { "hdStation": ["gates", "board", "shop"], "hdStreet": ["canopy", "photo", "guitar", "record"] }
+const QUIET := { "hdStation": ["gates", "board", "shop"], "hdStreet": ["canopy", "photo", "guitar", "record"],
+	"hdStudio": ["door", "sofa", "drums"], "hdEvening": ["basement", "bench"] }
+# 말하는 사람: 얼굴 그림, 이름의 열쇠, 말풍선의 빛
+const WHO := {
+	"y": { "face": "", "name": "", "color": Color.WHITE },
+	"f": { "face": "singer-f-face", "name": "nameF", "color": Color("f7e4e8") },
+	"m": { "face": "singer-m-face", "name": "nameM", "color": Color("fbf0cc") },
+}
+# 떡볶이 자리에서 배우는 것 셋: [묻는 말, 일본 버릇대로, 한국에서 하는 대로, 일러 주는 사람, 틀렸을 때, 맞았을 때]
+const TABLE := [
+	["hdQ1", "hdQ1a", "hdQ1b", "m", "hdQ1no", "hdQ1ok"],
+	["hdQ2", "hdQ2a", "hdQ2b", "f", "hdQ2no", "hdQ2ok"],
+	["hdQ3", "hdQ3a", "hdQ3b", "m", "hdQ3no", "hdQ3ok"],
+]
 
 # 장면마다의 빛. sky 는 화면을 물들이는 빛이고, lights 는 [가로 %, 세로 %, 색, 크기, 세기, 가로 늘임, 세로 늘임] 이다.
-# 그림은 맑은 낮으로 받았다. 빛은 여기서 얹는다. 어둑하게 하지 않는다.
+# 그림은 받은 그대로이고 빛은 여기서 얹는다. 어둑하게 하지 않는다.
 const LIGHT := {
 	"hdStation": { "sky": Color(0.82, 0.84, 0.92), "lights": [
 		[30.8, 40.0, SUN, 3.0, 0.55, 0.7, 1.3], [74.8, 40.0, SUN, 3.0, 0.55, 0.7, 1.3], [96.6, 40.0, SUN, 3.0, 0.55, 0.7, 1.3],
-		[40.2, 52.0, WARM, 2.6, 0.3], [49.6, 52.0, WARM, 2.6, 0.3], [58.6, 52.0, WARM, 2.6, 0.3] ] },
+		[40.2, 52.0, WARM, 2.6, 0.3], [49.6, 52.0, WARM, 2.6, 0.3], [58.6, 52.0, WARM, 2.6, 0.3]] },
 	"hdStreet": { "sky": Color(1.0, 0.96, 0.9), "lights": [
 		[14.8, 60.0, WARM, 3.0, 0.16], [26.0, 60.0, WARM, 3.0, 0.16], [42.0, 60.0, WARM, 3.0, 0.16], [71.8, 60.0, WARM, 3.0, 0.16], [90.0, 60.0, WARM, 3.0, 0.16],
-		[48.6, 44.0, SUN, 2.4, 0.3], [64.0, 44.0, SUN, 2.4, 0.3] ] },
+		[48.6, 44.0, SUN, 2.4, 0.3], [64.0, 44.0, SUN, 2.4, 0.3]] },
 	"hd-idol": { "sky": Color(1.0, 0.96, 0.9), "lights": [[2.6, 22.0, SUN, 3.4, 0.5], [97.4, 22.0, SUN, 3.4, 0.5]] },
 	"hd-door": { "sky": Color(0.7, 0.7, 0.84), "lights": [[50.0, 5.0, WARM, 4.2, 0.85], [50.0, 73.0, WARM, 2.2, 0.7, 2.6, 0.3]] },
+	"hdStudio": { "sky": Color(0.84, 0.82, 0.9), "lights": [
+		[22.5, 9.0, WARM, 2.4, 0.5], [36.0, 11.0, WARM, 2.4, 0.5], [50.0, 13.0, WARM, 2.4, 0.5], [62.0, 11.0, WARM, 2.4, 0.5], [76.5, 9.0, WARM, 2.4, 0.5], [90.0, 8.0, WARM, 2.4, 0.5],
+		[5.5, 46.0, SUN, 3.0, 0.35, 0.6, 1.4]] },
+	"hd-jam": { "sky": Color(0.86, 0.84, 0.92), "lights": [
+		[11.0, 6.0, WARM, 2.8, 0.5], [39.0, 7.0, WARM, 2.8, 0.5], [52.0, 5.0, WARM, 2.8, 0.5], [68.5, 7.0, WARM, 2.8, 0.5], [82.0, 5.0, WARM, 2.8, 0.5], [96.0, 6.0, WARM, 2.8, 0.5]] },
+	"hdEvening": { "sky": Color(0.84, 0.8, 0.94), "lights": [
+		[42.8, 20.0, WARM, 4.2, 0.75], [97.6, 20.0, WARM, 4.2, 0.75], [4.8, 47.0, WARM, 2.4, 0.5],
+		[14.5, 62.0, WARM, 3.2, 0.3], [23.0, 62.0, WARM, 3.2, 0.3], [88.0, 62.0, WARM, 3.2, 0.3],
+		[66.5, 55.0, WARM, 1.8, 0.45], [71.5, 55.0, WARM, 1.8, 0.45], [76.5, 55.0, WARM, 1.8, 0.45], [81.0, 55.0, WARM, 1.8, 0.45]] },
+	"hd-show": { "sky": Color(0.88, 0.84, 0.94), "lights": [[34.0, 6.0, WARM, 4.6, 0.8], [10.0, 55.0, WARM, 3.0, 0.3], [60.0, 50.0, WARM, 3.0, 0.3], [88.0, 52.0, WARM, 3.0, 0.3]] },
+	"hd-eat": { "sky": Color(0.9, 0.86, 0.9), "lights": [
+		[12.0, 8.0, WARM, 2.6, 0.5], [30.5, 9.0, WARM, 2.6, 0.5], [43.5, 8.0, WARM, 2.6, 0.5], [57.5, 9.0, WARM, 2.6, 0.5], [70.5, 8.0, WARM, 2.6, 0.5], [84.0, 9.0, WARM, 2.6, 0.5]] },
 }
 # 거리 공연을 보고 돌아오면 해가 기운다. 가게의 창이 밝아진다.
 const DUSK := Color(0.9, 0.8, 0.82)
@@ -58,6 +88,11 @@ var tried: Array[String] = []
 var exit_misses := 0
 var saw_idol := false
 var knocks := 0
+var met := false             # 연습실에서 인사를 나눴는가
+var has_guitar := false
+var jam_tries := 0
+var table_right := 0         # 떡볶이 자리에서 한국에서 하는 대로 고른 횟수
+var signed := false          # 헤어지며 이름을 받았는가
 
 var turn := 0                # 화면을 다시 그릴 때마다 는다. 앞 화면이 걸어 둔 시계를 버리는 데 쓴다
 var busy := false
@@ -68,24 +103,32 @@ var target_x := 150.0
 var last_scene := ""
 var frame_h := 0.0
 var marks := {}              # 누를 곳의 이름 → { rect, say, ring, sign }
+var jam_on := false
+var jam_t := 0.0
+var jam_hits: Array[bool] = []
+var base_energy: Array[float] = []
+var focus_x := -1.0          # 0 이상이면 카메라가 유이가 아니라 이 자리를 가운데에 둔다
 
 var daylight: CanvasModulate
 var camera: Camera2D
 var stage: Node2D
 var picture: Sprite2D
+var people: Node2D
 var lights: Node2D
 var rings: Node2D
 var yui: AnimatedSprite2D
 var leaves: Array[CPUParticles2D] = []
 var glow: GradientTexture2D
 var ring: GradientTexture2D
+var root: Control
 var backdrop: ColorRect
+var flash: ColorRect
 var place: Label
 var dots: HBoxContainer
 var column: VBoxContainer
-var bubble: PanelContainer
-var bubble_text: Label
-var face: AtlasTexture
+var talk_row: HBoxContainer
+var beat_dot: Panel
+var faces := {}
 
 
 func _ready() -> void:
@@ -122,6 +165,8 @@ func _build_stage() -> void:
 	picture = Sprite2D.new()
 	picture.centered = false
 	stage.add_child(picture)
+	people = Node2D.new()
+	stage.add_child(people)
 	lights = Node2D.new()
 	stage.add_child(lights)
 	rings = Node2D.new()
@@ -143,7 +188,9 @@ func _build_stage() -> void:
 	yui.offset = Vector2(0, -130)
 	yui.position = Vector2(150, FEET)
 	stage.add_child(yui)
-	face = _cut(load("res://art/yui-stand.png"), Rect2(0, 0, 146, 150))
+	faces["y"] = _cut(load("res://art/yui-stand.png"), Rect2(0, 0, 146, 150))
+	for who: String in ["f", "m"]:
+		faces[who] = load("res://art/%s.png" % WHO[who].face)
 
 
 func _cut(sheet: Texture2D, region: Rect2) -> AtlasTexture:
@@ -161,7 +208,7 @@ func _build_ui() -> void:
 	var theme := Theme.new()
 	theme.default_font = font
 	theme.default_font_size = 32
-	var root := Control.new()
+	root = Control.new()
 	root.theme = theme
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -190,6 +237,12 @@ func _build_ui() -> void:
 	column.add_theme_constant_override(&"separation", 18)
 	root.add_child(column)
 
+	flash = ColorRect.new()      # 사진을 찍을 때 화면이 한 번 희어진다
+	flash.color = Color(1, 1, 1, 0)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.add_child(flash)
+
 
 func _box(color: Color, radius: int, pad_x: int, pad_y: int, border := Color(0, 0, 0, 0), width := 0) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
@@ -208,13 +261,13 @@ func _box(color: Color, radius: int, pad_x: int, pad_y: int, border := Color(0, 
 
 func _show() -> void:
 	turn += 1
+	if step != "hdStudio":
+		focus_x = -1.0
 	busy = false
 	held = false
 	arriving = ""
-	for child in column.get_children():
-		column.remove_child(child)
-		child.queue_free()
-	bubble = null
+	jam_on = false
+	_clear_column()
 	if closeup == "idol":
 		_still("hd-idol", "hdIdolTitle")
 		_talk("hdIdolSay", { "idol": t("idolName") })
@@ -240,16 +293,67 @@ func _show() -> void:
 				_still("hd-door", "hdDoorTitle")
 				_talk("hdDoorYui")
 				_button("hdKnock", _knock)
-			"hdSoon":
-				_still("hd-door", "hdDoorTitle")
-				_paper("", "", [["", t("hdSoonText")]], "")
-				_note(t("hdSoonNote"))
+			"hdStudio":
+				if not met:      # 문이 열리고 안으로 한 걸음 들어선 자리에서 인사를 나눈다
+					last_scene = "hdStudio"
+					yui.position.x = 0.36 * WORLD
+					yui.flip_h = true
+					focus_x = 0.47 * WORLD
+				_walk("hdStudio", "hdStudioTitle")
+				_stand("f", 46.5)
+				_stand("m", 57.0)
+				if met:
+					_talk("hdHaveGuitar" if has_guitar else "hdStudioYui")
+				else:
+					_lines([["f", "hdS1"], ["y", "hdS2"], ["m", "hdS3"], ["y", "hdS4"]], _greeted)
+			"hdJam":
+				_still("hd-jam", "hdJamTitle")
+				_talk("hdJamYui")
+				_beat_dot()
+				_button("hdStrum", _strum)
+				_note(t("hdJamHow"))
+				_start_jam()
+			"hdEvening":
+				_walk("hdEvening", "hdEveningTitle")
+				_stand("f", 33.0, false)
+				_stand("m", 38.5, false)
+				_talk("hdEveYui")
+			"hdShow":
+				_still("hd-show", "hdShowTitle")
+				_lines([["y", "hdShow1"], ["y", "hdShow2", true], ["y", "hdShow3"], ["m", "hdShow4"], ["f", "hdPhoto"]], _photo)
+			"hdEat":
+				_still("hd-eat", "hdEatTitle")
+				_talk("hdEatYui")
+				_button("next", _ask.bind(0))
+			"hdBye":
+				last_scene = "hdEvening"
+				yui.position.x = 0.265 * WORLD
+				yui.flip_h = true
+				_walk("hdEvening", "hdEveningTitle")
+				_stand("f", 33.0, false)
+				_stand("m", 38.5, false)
+				_lines([["f", "hdBye"], ["y", "hdSigned", false, { "f": t("nameF"), "m": t("nameM") }]], _sign_and_next)
+			"hdDone":
+				_no_stage("hdPlace")
+				var reply := [["replyHead", t("hdReply1")], ["", t("hdReply2")], ["", t("hdReply3")]]
+				if exit_misses == 0:
+					reply.append(["", t("hdReplyClean")])
+				_paper("", "", reply, "sign")
+				_note(t("hdDoneNote"))
 				_button("restart", _restart, true)
-	_note(t("note"))
+	_foot()
 	_draw_dots()
 	backdrop.position = Vector2(0, frame_h)
 	backdrop.size = Vector2(VIEW, 6000)
 	column.position = Vector2(24, frame_h + 24 if frame_h > 0 else 84)
+
+
+func _clear_column() -> void:
+	for child in column.get_children():
+		column.remove_child(child)
+		child.queue_free()
+	talk_row = null
+	beat_dot = null
 
 
 func _no_stage(title: String) -> void:
@@ -265,12 +369,13 @@ func _no_stage(title: String) -> void:
 
 
 func _clear_stage() -> void:
-	for node in lights.get_children() + rings.get_children():
+	for node in lights.get_children() + rings.get_children() + people.get_children():
 		node.queue_free()
 	for one in leaves:
 		one.queue_free()
 	leaves.clear()
 	marks.clear()
+	base_energy.clear()
 
 
 # 긴 그림 하나를 놓고 유이를 세운다.
@@ -306,6 +411,8 @@ func _walk(name: String, title: String) -> void:
 	if name == "hdStreet":
 		_add_leaves(Vector2(745, 150))
 		_add_leaves(Vector2(2090, 150))
+	elif name == "hdEvening":
+		_add_leaves(Vector2(1130, 150))
 
 
 # 가까이 본 그림 한 장. 유이는 걷지 않는다.
@@ -328,9 +435,22 @@ func _still(art_name: String, title: String) -> void:
 		_add_leaves(Vector2(640, 40))
 
 
+# 어른 한 사람을 긴 그림의 x% 자리에 세운다. 말을 걸 수 있으면 누를 곳이 된다.
+func _stand(who: String, x: float, can_talk := true) -> void:
+	var body := Sprite2D.new()
+	body.texture = load("res://art/singer-%s.png" % who)
+	body.centered = false
+	body.scale = Vector2(ADULT, ADULT)
+	var size := body.texture.get_size() * ADULT
+	body.position = Vector2(x / 100.0 * WORLD - size.x / 2.0, FEET - size.y + 6)
+	people.add_child(body)
+	if can_talk:
+		marks["singer_" + who] = { "rect": Rect2(body.position, size), "say": "", "ring": null, "sign": null }
+
+
 # 그 누를 곳에서 얻을 것을 이미 얻었는가.
 func _done(id: String) -> bool:
-	return (id == "posters" and found.has("word")) or (id == "stage" and found.has("idol"))
+	return (id == "posters" and found.has("word")) or (id == "stage" and found.has("idol")) or (id == "guitars" and has_guitar)
 
 
 # ── 빛 ──────────────────────────────────────────────────────────────
@@ -348,6 +468,7 @@ func _light_up(name: String, size: Vector2) -> void:
 		if one.size() > 6:
 			light.scale = Vector2(one[5], one[6])
 		lights.add_child(light)
+		base_energy.append(one[4])
 	if name == "hd-door":
 		_pulse(lights.get_child(1) as PointLight2D)
 
@@ -413,7 +534,7 @@ func _ring_at(at: Vector2) -> Sprite2D:
 func _sign(rect: Rect2, words: String, off: bool) -> Label:
 	var one := Label.new()
 	one.text = words
-	one.theme = column.get_parent().theme
+	one.theme = root.theme
 	one.add_theme_font_size_override(&"font_size", 22)
 	one.add_theme_color_override(&"font_color", Color.WHITE)
 	one.add_theme_stylebox_override(&"normal", _box(NAVY, 4, 10, 4))
@@ -462,6 +583,8 @@ func _add_leaves(at: Vector2) -> void:
 # ── 걷기 ────────────────────────────────────────────────────────────
 
 func _process(delta: float) -> void:
+	if jam_on:
+		_jam_tick(delta)
 	if not walking:
 		return
 	if held and not busy:
@@ -486,7 +609,8 @@ func _process(delta: float) -> void:
 
 
 func _camera_goal() -> float:
-	return clampf(yui.position.x - VIEW / 2.0, 0.0, WORLD - VIEW)
+	var centre := focus_x if focus_x >= 0.0 else yui.position.x
+	return clampf(centre - VIEW / 2.0, 0.0, WORLD - VIEW)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -512,7 +636,10 @@ func _go_to(id: String) -> void:
 	held = false
 	arriving = id
 	var rect: Rect2 = marks[id].rect
-	target_x = clampf(rect.get_center().x, 0.04 * WORLD, 0.96 * WORLD)
+	var x := rect.get_center().x
+	if id.begins_with("singer_"):      # 사람 앞에 선다. 겹쳐 서지 않는다
+		x -= 110.0 if yui.position.x < x else -110.0
+	target_x = clampf(x, 0.04 * WORLD, 0.96 * WORLD)
 
 
 # 누를 곳에 닿았다.
@@ -533,6 +660,26 @@ func _act(id: String) -> void:
 		_say("hdDown")
 		busy = true
 		_after(1.6, _next)
+	elif step == "hdStudio" and id == "guitars":
+		if has_guitar:
+			_say("hdHaveGuitar")
+		else:
+			has_guitar = true
+			_seen(mark)
+			_chain([["y", "hdBorrow"], ["m", "hdBorrowM"], ["y", "hdHeavy"]])
+	elif step == "hdStudio" and id == "singer_f":
+		_chain([["f", "hdAskF"], ["y", "hdAnsF"]])
+	elif step == "hdStudio" and id == "singer_m":
+		_say("hdBlush", true)
+	elif step == "hdStudio" and id == "mics":
+		if has_guitar:
+			_next()
+		else:
+			_say("hdNeedGuitar", true)
+	elif step == "hdEvening" and id == "spot":
+		_next()
+	elif step == "hdEvening" and id == "stall":
+		_say("hdStallLater")
 	elif mark.say != "":
 		_say(mark.say)
 
@@ -583,10 +730,14 @@ func _knock() -> void:
 		return
 	_say("hdKnocked")
 	busy = true
+	_lock_buttons()
+	_after(1.5, _next)
+
+
+func _lock_buttons() -> void:
 	for child in column.get_children():
 		if child is Button:
 			child.disabled = true
-	_after(1.5, _next)
 
 
 func _restart() -> void:
@@ -596,6 +747,12 @@ func _restart() -> void:
 	tried.clear()
 	exit_misses = 0
 	saw_idol = false
+	met = false
+	has_guitar = false
+	jam_tries = 0
+	table_right = 0
+	signed = false
+	focus_x = -1.0
 	last_scene = ""
 	_show()
 
@@ -608,44 +765,185 @@ func _after(sec: float, then: Callable) -> void:
 		then.call()
 
 
-# ── 그림 아래의 종이: 유이의 말, 단추, 할머니의 쪽 ─────────────────────
+# ── 사람과 주고받는 말 ──────────────────────────────────────────────
 
-func _talk(key: String, values := {}) -> void:
+# 말을 차례로 보인다. 줄은 [누가, 열쇠, 놀랐는가, 끼울 값] 이고 "다음"을 누르면 넘어간다. 다 하면 then 을 부른다.
+func _lines(lines: Array, then: Callable, at := 0) -> void:
+	busy = true
+	_clear_column()
+	var line: Array = lines[at]
+	_talk(line[1], line[3] if line.size() > 3 else {}, line[0], line.size() > 2 and line[2])
+	if at + 1 < lines.size():
+		_button("next", _lines.bind(lines, then, at + 1))
+	else:
+		_button("next", then)
+	_foot()
+	column.position = Vector2(24, frame_h + 24 if frame_h > 0 else 84)
+
+
+# 단추 없이 저절로 이어지는 짧은 말. 그동안은 걷지 못한다.
+func _chain(lines: Array) -> void:
+	busy = true
+	var mine := turn
+	for line: Array in lines:
+		_say(line[1], false, line[0])
+		await get_tree().create_timer(2.1).timeout
+		if mine != turn:
+			return
+	busy = false
+
+
+func _greeted() -> void:
+	met = true
+	focus_x = -1.0
+	_show()
+
+
+# 서윤이 유이의 필름 카메라로 셋을 찍는다.
+func _photo() -> void:
+	_gain("photo")
+	flash.color.a = 1.0
+	flash.create_tween().tween_property(flash, "color:a", 0.0, 0.6)
+	_clear_column()
+	_talk("shot")
+	_button("hdToEat", _next)
+	_foot()
+
+
+func _sign_and_next() -> void:
+	_gain("sign")
+	signed = true
+	_next()
+
+
+# ── 합주: 박자 맞추기 ───────────────────────────────────────────────
+
+# 알전구가 박마다 커진다. 처음 두 박은 듣기만 하고, 다음 네 박 가운데 세 번을 맞추면 된다.
+func _start_jam() -> void:
+	jam_on = true
+	jam_t = 0.0
+	jam_hits = [false, false, false, false, false, false]
+	jam_tries += 1
+
+
+func _jam_tick(delta: float) -> void:
+	jam_t += delta
+	var beat := pow(maxf(0.0, cos(TAU * jam_t / BEAT)), 6.0)     # 박에서 1, 그 사이에서 0
+	var all := lights.get_children()
+	for i in all.size():
+		(all[i] as PointLight2D).energy = base_energy[i] * (0.55 + 1.1 * beat)
+	if beat_dot != null:
+		beat_dot.scale = Vector2.ONE * (0.55 + 0.6 * beat)
+	if jam_t > 5.0 * BEAT + 0.45:
+		_end_jam()
+
+
+func _strum() -> void:
+	if not jam_on:
+		return
+	var k := roundi(jam_t / BEAT)
+	if k >= 2 and k <= 5 and absf(jam_t - k * BEAT) < ON_BEAT and not jam_hits[k]:
+		jam_hits[k] = true
+		if beat_dot != null:
+			beat_dot.modulate = GOLD
+			beat_dot.create_tween().tween_property(beat_dot, "modulate", Color.WHITE, 0.3)
+
+
+func _end_jam() -> void:
+	jam_on = false
+	if jam_hits.count(true) >= 3:
+		_clear_column()
+		_talk("hdJamOk", {}, "m")
+		_button("hdToEvening", _next)
+		_foot()
+	else:
+		_say("hdJamFail", false, "f")
+		_after(2.4, _start_jam)
+
+
+func _beat_dot() -> void:
+	beat_dot = Panel.new()
+	beat_dot.custom_minimum_size = Vector2(96, 96)
+	beat_dot.pivot_offset = Vector2(48, 48)
+	beat_dot.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	beat_dot.add_theme_stylebox_override(&"panel", _box(Color(1.0, 0.86, 0.5), 48, 0, 0, Color(INK, 0.25), 2))
+	column.add_child(beat_dot)
+
+
+# ── 떡볶이 자리: 일본에서 하던 대로와 한국에서 하는 대로 ──────────────
+
+func _ask(n: int) -> void:
+	_clear_column()
+	if n >= TABLE.size():
+		_talk("hdEatEnd")
+		_button("hdToBye", _next)
+		_foot()
+		return
+	var q: Array = TABLE[n]
+	_talk(q[0])
+	_button(q[1], _answer.bind(n, false))
+	_button(q[2], _answer.bind(n, true))
+	_foot()
+
+
+# 틀려도 벌은 없다. 곁의 사람이 일러 준다.
+func _answer(n: int, korean_way: bool) -> void:
+	var q: Array = TABLE[n]
+	if korean_way:
+		table_right += 1
+	_clear_column()
+	_talk(q[5] if korean_way else q[4], {}, q[3])
+	_button("next", _ask.bind(n + 1))
+	_foot()
+
+
+# ── 그림 아래의 종이: 말, 단추, 할머니의 쪽 ───────────────────────────
+
+func _talk(key: String, values := {}, who := "y", warn := false) -> void:
+	talk_row = _talk_row(t(key, values), who, warn)
+	column.add_child(talk_row)
+	column.move_child(talk_row, 0)
+
+
+func _talk_row(words: String, who: String, warn: bool) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override(&"separation", 14)
 	var head := TextureRect.new()
-	head.texture = face
+	head.texture = faces[who]
 	head.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	head.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	head.custom_minimum_size = Vector2(96, 100)
 	head.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	row.add_child(head)
-	bubble = PanelContainer.new()
+	var bubble := PanelContainer.new()
 	bubble.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	bubble.add_theme_stylebox_override(&"panel", _bubble_box(false))
-	bubble_text = Label.new()
-	bubble_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	bubble_text.add_theme_font_size_override(&"font_size", 34)
-	bubble_text.add_theme_color_override(&"font_color", Color("1b1730"))
-	bubble_text.text = t(key, values)
-	bubble.add_child(bubble_text)
-	row.add_child(bubble)
-	column.add_child(row)
-
-
-func _bubble_box(warn: bool) -> StyleBoxFlat:
-	var box := _box(Color("fde9b8") if warn else Color.WHITE, 22, 24, 16, Color(0.231, 0.165, 0.102, 0.15), 2)
+	var color: Color = Color("fde9b8") if warn else WHO[who].color
+	var box := _box(color, 22, 24, 16, Color(0.231, 0.165, 0.102, 0.15), 2)
 	box.corner_radius_bottom_left = 4
-	return box
+	bubble.add_theme_stylebox_override(&"panel", box)
+	var inside := VBoxContainer.new()
+	inside.add_theme_constant_override(&"separation", 2)
+	if WHO[who].name != "":
+		inside.add_child(_line(t(WHO[who].name), 24, LABEL))
+	var line := _line(words, 34, Color("1b1730"))
+	inside.add_child(line)
+	bubble.add_child(inside)
+	row.add_child(bubble)
+	row.modulate.a = 0.0
+	row.create_tween().tween_property(row, "modulate:a", 1.0, 0.25)
+	return row
 
 
-func _say(key: String, warn := false) -> void:
-	if bubble == null:
+# 말풍선의 말을 바꾼다. 말하는 사람이 바뀌면 얼굴도 바뀐다.
+func _say(key: String, warn := false, who := "y") -> void:
+	if talk_row == null:
 		return
-	bubble_text.text = t(key)
-	bubble.add_theme_stylebox_override(&"panel", _bubble_box(warn))
-	bubble.modulate.a = 0.0
-	bubble.create_tween().tween_property(bubble, "modulate:a", 1.0, 0.25)
+	var old := talk_row
+	talk_row = _talk_row(t(key), who, warn)
+	column.add_child(talk_row)
+	column.move_child(talk_row, old.get_index())
+	column.remove_child(old)
+	old.queue_free()
 
 
 func _button(key: String, then: Callable, plain := false) -> void:
@@ -666,14 +964,17 @@ func _button(key: String, then: Callable, plain := false) -> void:
 	column.add_child(one)
 
 
-func _note(words: String) -> void:
-	var one := Label.new()
-	one.text = words
-	one.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	one.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	one.add_theme_font_size_override(&"font_size", 22)
-	one.add_theme_color_override(&"font_color", SOFT)
+# 화면 맨 아래의 쪽지. 이미 있으면 다시 놓지 않는다.
+func _foot() -> void:
+	if column.has_node("Foot"):
+		return
+	var one := _line(t("note"), 22, SOFT, HORIZONTAL_ALIGNMENT_CENTER)
+	one.name = "Foot"
 	column.add_child(one)
+
+
+func _note(words: String) -> void:
+	column.add_child(_line(words, 22, SOFT, HORIZONTAL_ALIGNMENT_CENTER))
 
 
 # 할머니의 쪽. rows 는 [작은 제목의 열쇠, 글] 의 줄이다.
@@ -723,31 +1024,94 @@ func _draw_dots() -> void:
 
 # ── 손대지 않고 돌려 보기 ────────────────────────────────────────────
 
+# 화면의 맨 위 단추를 누른다(말을 넘길 때).
+func _tap(index := 0) -> void:
+	var buttons: Array[Button] = []
+	for child in column.get_children():
+		if child is Button:
+			buttons.append(child)
+	buttons[index].pressed.emit()
+
+
 func _demo() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://shots"))
-	await _shot("g1-page", 0.8)
+	await _shot("g01-page", 0.8)
 	_next()
-	await _shot("g2-station", 0.8)
+	await _shot("g02-station", 0.8)
 	_go_to("stairsB")
-	await _shot("g3-wrong-stairs", 4.6)
+	await _shot("g03-wrong-stairs", 4.6)
 	_go_to("posters")
-	await _shot("g4-posters", 1.6)
+	await _shot("g04-posters", 1.6)
 	_go_to("stairsC")
-	await _shot("g5-right-stairs", 2.6)
-	await _shot("g6-street", 2.4)
+	await _shot("g05-right-stairs", 2.6)
+	await _shot("g06-street", 2.4)
 	_go_to("stage")
-	await _shot("g7-idol", 4.4)
+	await _shot("g07-idol", 4.4)
 	_back_to_street()
-	await _shot("g8-sunset", 3.2)
+	await _shot("g08-sunset", 3.2)
 	_go_to("down")
-	await _shot("g9-down", 3.2)
+	await _shot("g09-down", 3.2)
 	await _shot("g10-door", 2.2)
 	_knock()
-	await _shot("g11-hesitate", 0.6)
 	_knock()
 	_knock()
-	await _shot("g12-open", 2.4)
-	print("demo: step=", step, " found=", found, " misses=", exit_misses)
+	await _shot("g11-studio-hello", 2.6)
+	_tap()
+	await _shot("g12-studio-yui", 0.6)
+	_tap()
+	_tap()
+	await _shot("g13-studio-thought", 0.6)
+	_tap()
+	await _shot("g14-studio", 0.8)
+	_go_to("guitars")
+	await _shot("g15-borrow", 4.8)
+	await get_tree().create_timer(3.4).timeout
+	_go_to("singer_f")
+	await _shot("g16-ask", 2.6)
+	await get_tree().create_timer(2.6).timeout
+	_go_to("mics")
+	await _shot("g17-jam", 2.2)
+	# 셋째 박부터 네 번을 박에 맞춰 친다
+	var started := jam_t
+	for k in [2, 3, 4, 5]:
+		await get_tree().create_timer(maxf(0.01, k * BEAT - jam_t)).timeout
+		_strum()
+	await _shot("g18-jam-ok", 1.4)
+	print("demo: jam hits=", jam_hits.count(true), " tries=", jam_tries, " from=", started)
+	_tap()
+	await _shot("g19-evening", 1.0)
+	_go_to("stall")
+	await _shot("g20-stall", 4.6)
+	_go_to("spot")
+	await _shot("g21-show", 3.4)
+	_tap()
+	await _shot("g22-show-wrong", 0.6)
+	_tap()
+	_tap()
+	_tap()
+	await _shot("g23-photo-ask", 0.6)
+	_tap()
+	await _shot("g24-photo", 1.0)
+	_tap()
+	await _shot("g25-eat", 0.8)
+	_tap()
+	await _shot("g26-q1", 0.6)
+	_tap(0)
+	await _shot("g27-q1-no", 0.6)
+	_tap()
+	_tap(1)
+	await _shot("g28-q2-ok", 0.6)
+	_tap()
+	_tap(1)
+	_tap()
+	await _shot("g29-eat-end", 0.6)
+	_tap()
+	await _shot("g30-bye", 1.0)
+	_tap()
+	await _shot("g31-signed", 0.6)
+	_tap()
+	await _shot("g32-reply", 0.8)
+	print("demo: step=", step, " found=", found, " misses=", exit_misses, " table=", table_right)
 	get_tree().quit()
 
 
