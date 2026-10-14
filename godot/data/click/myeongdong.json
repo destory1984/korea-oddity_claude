@@ -1,0 +1,227 @@
+{
+  "first": "station",
+  "start": { "flags": [], "bag": ["card", "photo", "bill"] },
+  "items": {
+    "card": { "name": "교통카드", "color": "#4f86c6" },
+    "photo": { "name": "2004년 사진", "color": "#c9a46a" },
+    "bill": { "name": "만 원", "color": "#7fae7a" },
+    "coins": { "name": "천 원 다발", "color": "#9ab7d6" },
+    "bread": { "name": "계란빵", "color": "#e2a93b" },
+    "sample": { "name": "샘플", "color": "#f0a6bd" },
+    "sticker": { "name": "스티커", "color": "#e06f5c" }
+  },
+  "goals": [
+    { "id": "exit", "name": "출구" },
+    { "id": "bread", "name": "계란빵" },
+    { "id": "clue", "name": "단서" },
+    { "id": "sticker", "name": "스티커" }
+  ],
+  "places": {
+    "station": { "art": "md-exit", "kind": "walk", "start": 50, "title": "명동역 - 개찰구 밖" },
+    "wrong": { "art": "md-wrong", "kind": "still", "title": "3번 출구 밖" },
+    "street": { "art": "md-street", "kind": "walk", "start": 8, "title": "명동 거리", "say": "나왔다! 계란빵 냄새가 나. 할머니의 사진을 누구한테 보여 줄까." }
+  },
+  "spots": {
+    "station": [
+      { "id": "exit3", "x": 1, "y": 28, "w": 13, "h": 44, "label": "3" },
+      { "id": "board", "x": 15.5, "y": 38, "w": 8, "h": 28, "label": "안내도" },
+      { "id": "exit8", "x": 58, "y": 36, "w": 12, "h": 36, "label": "8" },
+      { "id": "exit6", "x": 87.5, "y": 28, "w": 12, "h": 44, "label": "6" }
+    ],
+    "wrong": [
+      { "id": "back", "x": 0, "y": 0, "w": 100, "h": 100, "label": "되돌아간다" }
+    ],
+    "street": [
+      { "id": "down", "x": 0, "y": 30, "w": 9, "h": 50, "label": "명동역" },
+      { "id": "tower", "x": 22, "y": 6, "w": 8, "h": 32 },
+      { "id": "cart", "x": 67, "y": 38, "w": 6, "h": 40 },
+      { "id": "shop", "x": 80, "y": 30, "w": 15, "h": 45, "label": "화장품" }
+    ]
+  },
+  "people": {
+    "ajumma": { "place": "street", "x": 74, "height": 1.25, "color": "#d98c5f" },
+    "clerk": { "place": "street", "x": 88, "height": 1.3, "color": "#f0a6bd" },
+    "family": { "place": "street", "x": 62, "height": 1.3, "color": "#b9a27f" },
+    "dad": { "place": "street", "x": 57, "height": 1.35, "color": "#5f6f8f", "tap": false },
+    "kid": { "place": "street", "x": 59.5, "height": 0.75, "color": "#e8c35a", "tap": false }
+  },
+  "who": {
+    "y": { "name": "", "color": "#ffffff" },
+    "note": { "name": "할머니의 수첩", "color": "#f2e6c8" },
+    "ajumma": { "name": "계란빵 아주머니", "color": "#fbe3d0" },
+    "clerk": { "name": "화장품 가게 언니", "color": "#fde4ec" },
+    "family": { "name": "일본 손님", "color": "#efe6d6" },
+    "kid": { "name": "꼬마", "color": "#fbf0c8" }
+  },
+  "rules": [
+    { "on": "enter", "target": "station", "not": ["seenNote"], "do": [
+      ["say", "note", "3번으로 나갔더니 오르막뿐이었다. 세 번을 돌았다."],
+      ["say", "y", "할머니는 여기서 헤맸구나. 나는 안내도부터 볼래."],
+      ["set", "seenNote"]
+    ] },
+    { "on": "enter", "target": "station", "do": [
+      ["say", "y", "다시 개찰구 앞이야. 이번엔 맞는 출구로."]
+    ] },
+    { "on": "enter", "target": "wrong", "do": [
+      ["say", "y", "오르막뿐이야... 할머니가 여기서 돌았구나."],
+      ["say", "y", "명동 거리는 이쪽이 아니야. 되돌아가자."],
+      ["set", "wrongExit"]
+    ] },
+
+    { "on": "tap", "target": "board", "do": [
+      ["say", "y", "역 이름은 일본어로도 적혀 있네. 나머지는 번호랑 그림을 보자."],
+      ["say", "y", "3번은 산이랑 탑 그림, 6번은 가게 그림이야. 명동 거리는 6번!"]
+    ] },
+    { "on": "tap", "target": "exit3", "do": [["goto", "wrong"]] },
+    { "on": "tap", "target": "back", "do": [["goto", "station"]] },
+    { "on": "tap", "target": "exit8", "do": [
+      ["say", "y", "8번은 길 건너 쪽 같아. 가게 그림이 아니야."]
+    ] },
+    { "on": "tap", "target": "exit6", "do": [
+      ["set", "got:exit"],
+      ["set", "onStreet"],
+      ["goto", "street"]
+    ] },
+
+    { "on": "tap", "target": "ajumma", "not": ["queueFree"], "do": [
+      ["say", "ajumma", "줄 서! 지금 거스름돈이 없어서 난리야!"],
+      ["say", "y", "(일본 손님들이 만 원짜리를 들고 서 있어. 천 원짜리가 없나 봐.)"]
+    ] },
+    { "on": "give", "target": "ajumma", "item": "photo", "not": ["queueFree"], "do": [
+      ["say", "ajumma", "줄 서! 사진은 이따가!"]
+    ] },
+    { "on": "give", "target": "ajumma", "item": "bill", "not": ["queueFree"], "do": [
+      ["say", "ajumma", "만 원짜리는 이제 그만! 천 원짜리가 필요하다니까!"]
+    ] },
+    { "on": "give", "target": "ajumma", "item": "coins", "need": ["bag:coins"], "do": [
+      ["take", "coins"],
+      ["set", "queueFree"],
+      ["say", "ajumma", "천 원짜리! 살았다. 줄 다시 간다!"],
+      ["say", "family", "(일본말로) 아, 거스름돈이 나왔어요. 고마워요!"],
+      ["give", "bread"],
+      ["set", "got:bread"],
+      ["say", "ajumma", "학생도 하나 먹어. 서서 먹는 거야. 뜨거우니까 조심."],
+      ["say", "y", "얼마예요? 이천 원...?"],
+      ["say", "ajumma", "오늘은 됐어. 카드 되는 데도 있는데, 우리는 아직 현금이 편해. 작은 돈 챙겨 다녀."]
+    ] },
+    { "on": "tap", "target": "ajumma", "need": ["queueFree"], "not": ["hint"], "do": [
+      ["say", "ajumma", "이제 좀 보자. 무슨 사진이야?"],
+      ["say", "y", "할머니가 2004년에 서울에서 찍은 사진이에요. 이 가게를 찾고 있어요."],
+      ["say", "ajumma", "그때도 일본 손님이 꽤 왔지. 노란 주전자 간판... 명동엔 이런 가게 없었어."],
+      ["say", "ajumma", "사진 뒤에 탑이 보이네. 여기서는 탑이 어디 보이는지 봐 봐."],
+      ["set", "hint"]
+    ] },
+    { "on": "give", "target": "ajumma", "item": "photo", "need": ["queueFree"], "not": ["hint"], "do": [
+      ["say", "ajumma", "이제 좀 보자. 노란 주전자 간판... 명동엔 이런 가게 없었어. 그때도 일본 손님이 꽤 왔지."],
+      ["say", "ajumma", "사진 뒤에 탑이 보이네. 여기서는 탑이 어디 보이는지 봐 봐."],
+      ["set", "hint"]
+    ] },
+    { "on": "tap", "target": "ajumma", "need": ["hint"], "do": [
+      ["say", "ajumma", "탑 봤어? 위를 봐, 위를. 계란빵 식기 전에 먹고."]
+    ] },
+
+    { "on": "tap", "target": "clerk", "not": ["bag:sample"], "do": [
+      ["say", "clerk", "(일본말로) 어서 오세요! 이거 써 보세요, 이것도, 이것도!"],
+      ["give", "sample"],
+      ["say", "y", "(샘플을 한 줌 받았어. 아직 아무것도 안 샀는데.)"]
+    ] },
+    { "on": "tap", "target": "clerk", "need": ["bag:sample"], "do": [
+      ["say", "clerk", "(일본말로) 또 오세요! 샘플은 언제든지!"]
+    ] },
+    { "on": "give", "target": "clerk", "item": "bill", "need": ["bag:bill"], "do": [
+      ["take", "bill"],
+      ["say", "y", "저, 이거 천 원짜리로 바꿔 주실 수 있어요? 계란빵 아주머니가 거스름돈이 없대요."],
+      ["say", "clerk", "물론이죠! 천 원짜리 열 장! 그리고 샘플도!"],
+      ["give", "coins"],
+      ["give", "sample"]
+    ] },
+    { "on": "give", "target": "clerk", "item": "bill", "do": [
+      ["say", "clerk", "벌써 바꿔 드렸잖아요! 대신 샘플 하나 더?"]
+    ] },
+
+    { "on": "give", "target": "tower", "item": "photo", "not": ["hint"], "do": [
+      ["say", "y", "탑은 보이는데... 뭘 봐야 하지? 아주머니한테 사진부터 보여 드리자."]
+    ] },
+    { "on": "give", "target": "tower", "item": "photo", "need": ["hint"], "not": ["got:clue"], "do": [
+      ["say", "y", "(사진을 들어 탑에 맞춰 본다.)"],
+      ["say", "y", "여기선 탑이 왼쪽이야. 사진에선 오른쪽. 찍은 곳은 더 북쪽이야."],
+      ["say", "y", "그래서 할머니가 \"여기도 아니었다\"고 적었구나."],
+      ["set", "got:clue"]
+    ] },
+    { "on": "give", "target": "tower", "item": "photo", "need": ["got:clue"], "do": [
+      ["say", "y", "응, 탑은 왼쪽. 사진의 자리는 더 북쪽이야."]
+    ] },
+
+    { "on": "tap", "target": "down", "not": ["got:clue"], "do": [
+      ["say", "y", "아직 내려갈 때가 아니야. 할머니의 사진부터."]
+    ] },
+    { "on": "tap", "target": "down", "need": ["got:clue"], "not": ["askedWay"], "do": [
+      ["say", "family", "(일본말로) 저기, 아까 고마웠어요. 남산 탑에 가려면 어느 출구로 나가요?"],
+      ["set", "askedWay"],
+      ["say", "y", "(이번엔 내가 알려 드릴 차례야.)"],
+      ["ask", [
+        ["3번 출구", [
+          ["set", "helpedFamily"],
+          ["say", "y", "3번 출구요! 탑이랑 산 그림이 있는 쪽이에요."],
+          ["say", "kid", "고마워! (스티커를 하나 내민다)"],
+          ["give", "sticker"],
+          ["set", "got:sticker"],
+          ["say", "y", "할머니, 명동은 다 봤어. 이제 수첩에 적자."],
+          ["end"]
+        ]],
+        ["6번 출구", [
+          ["say", "family", "(지도를 보더니) 아, 3번이네요. 그래도 고마워요!"],
+          ["say", "y", "앗, 6번은 내가 나온 데야. 남산은 3번이었지."],
+          ["end"]
+        ]],
+        ["8번 통로", [
+          ["say", "family", "(지도를 보더니) 아, 3번이네요. 그래도 고마워요!"],
+          ["say", "y", "앗, 3번이었다. 할머니가 헤맨 그 출구."],
+          ["end"]
+        ]]
+      ]]
+    ] },
+    { "on": "tap", "target": "down", "need": ["got:clue", "askedWay"], "do": [["end"]] }
+  ],
+  "idle": {
+    "board": [["y", "출구마다 번호랑 그림이 있어."]],
+    "exit3": [["y", "3번 계단이야."]],
+    "exit8": [["y", "8번 통로야."]],
+    "exit6": [["y", "6번 계단이야."]],
+    "back": [["y", "명동역으로 되돌아가자."]],
+    "down": [["y", "명동역으로 내려가는 입구야."]],
+    "tower": [["y", "남산의 탑이 왼쪽 위에 보여."], ["y", "탑이 가을 하늘에 하얗게 서 있어."]],
+    "cart": [["y", "계란빵이 철판에서 노랗게 익어 가."], ["y", "줄이 길어. 다들 계란빵을 기다려."]],
+    "shop": [["y", "화장품 가게야. 문 앞에서 언니가 손을 흔들어."]],
+    "ajumma": [["ajumma", "줄 서!"]],
+    "clerk": [["clerk", "(일본말로) 어서 오세요!"]],
+    "family": [["family", "(일본말로) 만 원짜리밖에 없는데 어쩌지..."], ["kid", "계란빵 먹고 싶어..."]]
+  },
+  "wrong": {
+    "*": ["y", "그건 아닌 것 같아."],
+    "card>ajumma": ["ajumma", "교통카드? 버스는 저쪽이야!"],
+    "bread>ajumma": ["ajumma", "그건 학생 거야. 어서 먹어."],
+    "sample>ajumma": ["ajumma", "이걸로 계란빵 반죽해?"],
+    "sticker>ajumma": ["ajumma", "스티커? 수레에 붙여 줄까? 하하."],
+    "card>clerk": ["clerk", "교통카드로도 되죠! 그런데 뭘 사시게요?"],
+    "photo>clerk": ["clerk", "어머, 언니 이때 피부 좋았네! 이 가게요? 처음 봐요."],
+    "coins>clerk": ["clerk", "그건 아주머니 드릴 거잖아요!"],
+    "bread>clerk": ["clerk", "계란빵! 저도 그거 좋아해요. 저 아주머니 거 맛있어요."],
+    "sample>clerk": ["clerk", "그건 선물이에요! 가져가세요!"],
+    "sticker>clerk": ["clerk", "귀엽다! 거울에 붙여 둘까?"],
+    "card>family": ["family", "(일본말로) 교통카드는 저희도 있어요. 고마워요."],
+    "photo>family": ["family", "(일본말로) 옛날 서울이네요. 할머니세요?"],
+    "bill>family": ["family", "(엄마가 질겁한다) 아니, 아니, 돈은 괜찮아요!"],
+    "coins>family": ["family", "(일본말로) 아, 이건 아주머니께 드리면 될 것 같아요."],
+    "bread>family": ["kid", "(눈이 반짝인다) ...하지만 엄마가 사 준대."],
+    "sample>family": ["family", "(일본말로) 어머, 이 샘플 저기서 받았죠? 저희도 받았어요."],
+    "sticker>family": ["kid", "그거 내가 준 거야!"]
+  },
+  "end": "명동은 여기까지.",
+  "reply": [
+    { "text": "너도 3번으로 나갔구나. 나는 세 번 돌았단다.", "need": ["wrongExit"] },
+    { "text": "출구는 맞게 나왔구나. 나는 세 번 돌았단다.", "not": ["wrongExit"] },
+    { "text": "탑이 오른쪽이었다는 건 몰랐구나." },
+    { "text": "길 잃은 사람을 도왔다니, 내가 다 고맙다.", "need": ["helpedFamily"] }
+  ]
+}

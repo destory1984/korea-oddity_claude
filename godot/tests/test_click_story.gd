@@ -6,7 +6,8 @@ const Rules := preload("res://click_rules.gd")
 const DIR := "res://data/click/"
 # 쪽마다의 길 시험. 쪽에 매이지 않는 시험은 모든 쪽에 돈다.
 const OWN := {
-	"alley": ["test_alley_paths", "test_alley_repeat", "test_alley_buy_first", "test_alley_must_reply"],
+	"alley": ["test_alley_paths", "test_alley_repeat", "test_alley_buy_first", "test_alley_must_reply", "test_alley_every_pair"],
+	"myeongdong": ["test_md_paths", "test_md_photo_before_hint", "test_md_repeat", "test_md_reply_lines"],
 }
 const SHARED := ["test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]
 
@@ -32,6 +33,8 @@ func _init() -> void:
 		printerr("data/click/alley.json is missing")
 		quit(1)
 		return
+	for name: String in OWN:
+		check(chapters.has(name), "data/click/%s.json is missing" % name)
 	for name: String in chapters:
 		data = chapters[name]
 		for test: String in SHARED + OWN.get(name, []):
@@ -111,9 +114,10 @@ func _targets() -> Array:
 
 # ── 모든 쪽 ─────────────────────────────────────────────────────────
 
+# 사람에게 건네는 짝은 모두 제 대꾸가 있다. 사물에는 두루 쓰는 대꾸("*")로도 된다.
 func test_wrong_pairs() -> void:
 	for item: String in data.items:
-		for target: String in _targets():
+		for target: String in _targets().filter(func(t: String) -> bool: return data.people.has(t)):
 			var ruled: bool = data.rules.any(func(r: Dictionary) -> bool:
 				return r.on == "give" and r.target == target and r.get("item", "") == item)
 			if not ruled:
@@ -196,3 +200,63 @@ func test_alley_must_reply() -> void:
 	for pair: String in ["drinks>cat", "drinks>clerk", "card>cat", "card>rider"]:
 		check(data.wrong.has(pair), "must have %s" % pair)
 	check(data.idle.cat.size() >= 2, "the cat has two poses or more")
+
+
+func test_alley_every_pair() -> void:
+	for item: String in data.items:
+		for target: String in _targets():
+			var ruled: bool = data.rules.any(func(r: Dictionary) -> bool:
+				return r.on == "give" and r.target == target and r.get("item", "") == item)
+			if not ruled:
+				check(data.wrong.has(item + ">" + target), "no reply for %s>%s" % [item, target])
+
+
+# ── 명동 ────────────────────────────────────────────────────────────
+
+const MD_STREET := [["tap", "ajumma"], ["give", "bill", "clerk"], ["give", "coins", "ajumma"], ["tap", "ajumma"],
+	["give", "photo", "tower"], ["tap", "down"]]
+
+
+func _all_goals(g: Dictionary) -> bool:
+	return ["exit", "bread", "clue", "sticker"].all(func(k: String) -> bool: return g.state.flags.has("got:" + k))
+
+
+func test_md_paths() -> void:
+	var a := play(data, [["tap", "board"], ["tap", "exit6"]] + MD_STREET, [0])
+	check(a.ended and a.stuck == "", "A ends (%s)" % a.stuck)
+	check(_all_goals(a), "A has all four: %s" % [a.state.flags])
+	check(a.state.bag.has("bread"), "A keeps the bread")
+	var b := play(data, [["tap", "exit3"], ["tap", "back"], ["tap", "exit6"]] + MD_STREET, [0])
+	check(b.ended and b.stuck == "", "B ends (%s)" % b.stuck)
+	check(b.state.flags.has("wrongExit"), "B went out at 3")
+	var c := play(data, [["tap", "exit6"]] + MD_STREET, [2])
+	check(c.ended and c.stuck == "", "C ends (%s)" % c.stuck)
+	check(not c.state.flags.has("helpedFamily") and not c.state.flags.has("got:sticker"), "C told the wrong way")
+
+
+func test_md_photo_before_hint() -> void:
+	var g := play(data, [["tap", "exit6"], ["give", "photo", "tower"]], [])
+	check(not g.state.flags.has("got:clue"), "no clue before the hint")
+	check(g.said.any(func(s: Array) -> bool: return s[1] == "y" and "탑은 보이는데" in s[2]), "Yui wonders")
+	var h := play(data, [["tap", "exit6"], ["give", "photo", "tower"]] + MD_STREET.slice(0, 5), [])
+	check(h.state.flags.has("got:clue"), "clue after the hint")
+
+
+func test_md_repeat() -> void:
+	var g := play(data, [["tap", "exit6"], ["give", "bill", "clerk"], ["give", "bill", "clerk"], ["give", "coins", "ajumma"],
+		["give", "coins", "ajumma"]], [])
+	check(g.state.bag.count("bread") == 1, "one bread")
+	check(g.state.bag.count("coins") == 0 and g.state.bag.count("bill") == 0, "money spent once: %s" % [g.state.bag])
+	var clerk: Array = g.said.filter(func(s: Array) -> bool: return s[1] == "clerk")
+	check(clerk.size() >= 2 and clerk[-1] != clerk[0], "the clerk says something new the second time")
+	var twice := play(data, [["tap", "exit3"], ["tap", "back"], ["tap", "exit3"], ["tap", "back"]], [])
+	check(twice.state.flags.count("wrongExit") == 1, "wrongExit once")
+
+
+func test_md_reply_lines() -> void:
+	var a := play(data, [["tap", "exit6"]] + MD_STREET, [0])
+	var ra := Rules.reply(data, a.state)
+	check(ra.size() == 3 and "출구는 맞게" in ra[0] and "탑이 오른쪽" in ra[1] and "도왔다니" in ra[2], "A reply %s" % [ra])
+	var b := play(data, [["tap", "exit3"], ["tap", "back"], ["tap", "exit6"]] + MD_STREET, [1])
+	var rb := Rules.reply(data, b.state)
+	check(rb.size() == 2 and "너도 3번으로" in rb[0], "B reply %s" % [rb])
