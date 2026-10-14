@@ -19,7 +19,7 @@
   "places": {
     "station": { "art": "md-exit", "kind": "walk", "start": 50, "title": "명동역 - 개찰구 밖" },
     "wrong": { "art": "md-wrong", "kind": "still", "title": "3번 출구 밖" },
-    "street": { "art": "md-street", "kind": "walk", "start": 8, "title": "명동 거리", "say": "나왔다! 계란빵 냄새가 나. 할머니의 사진을 누구한테 보여 줄까." }
+    "street": { "art": "md-street-b", "kind": "walk", "start": 8, "title": "명동 거리", "say": "나왔다! 계란빵 냄새가 나. 할머니의 사진을 누구한테 보여 줄까." }
   },
   "spots": {
     "station": [
@@ -39,11 +39,11 @@
     ]
   },
   "people": {
-    "ajumma": { "place": "street", "x": 74, "height": 1.25, "color": "#d98c5f" },
-    "clerk": { "place": "street", "x": 88, "height": 1.3, "color": "#f0a6bd" },
-    "family": { "place": "street", "x": 62, "height": 1.3, "color": "#b9a27f" },
-    "dad": { "place": "street", "x": 57, "height": 1.35, "color": "#5f6f8f", "tap": false },
-    "kid": { "place": "street", "x": 59.5, "height": 0.75, "color": "#e8c35a", "tap": false }
+    "ajumma": { "place": "street", "art": "md-ajumma", "face": "md-ajumma-face", "x": 74, "height": 1.25, "color": "#d98c5f" },
+    "clerk": { "place": "street", "art": "md-clerk", "face": "md-clerk-face", "x": 88, "height": 1.3, "color": "#f0a6bd" },
+    "family": { "place": "street", "art": "md-mom", "face": "md-mom-face", "x": 62, "height": 1.3, "color": "#b9a27f" },
+    "dad": { "place": "street", "art": "md-dad", "face": "md-dad-face", "x": 57, "height": 1.35, "color": "#5f6f8f", "tap": false },
+    "kid": { "place": "street", "art": "md-kid", "face": "md-kid-face", "x": 59.5, "height": 0.75, "color": "#e8c35a", "tap": false }
   },
   "who": {
     "y": { "name": "", "color": "#ffffff" },
