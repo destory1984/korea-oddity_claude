@@ -310,6 +310,8 @@ func _show() -> void:
 				_walk("hdStudio", "hdStudioTitle")
 				_stand("f", 46.5)
 				_stand("m", 57.0)
+				_stand("b", 68.0, false)     # 베이스 하린과 드럼 지호. 아직 말이 없다
+				_stand("d", 78.5, false)
 				if met:
 					_talk("hdHaveGuitar" if has_guitar else "hdStudioYui")
 				else:
@@ -1070,6 +1072,11 @@ func _demo() -> void:
 	await _shot("g13-studio-thought", 0.6)
 	_tap()
 	await _shot("g14-studio", 0.8)
+	var back_x := yui.position.x      # 오른쪽의 베이스와 드럼을 찍고 돌아온다
+	yui.position.x = 0.8 * WORLD
+	await _shot("g14b-band", 1.0)
+	yui.position.x = back_x
+	target_x = back_x
 	_go_to("guitars")
 	await _shot("g15-borrow", 4.8)
 	await get_tree().create_timer(3.4).timeout
