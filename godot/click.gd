@@ -84,6 +84,7 @@ func _restart() -> void:
 	turns.clear()
 	shown_bag.clear()
 	shown_bag.assign(state.bag)
+	_draw_bag()
 	_enter("alley")
 
 
@@ -184,9 +185,9 @@ func _enter(key: String) -> void:
 func _stand(who: String) -> void:
 	var one: Dictionary = data.people[who]
 	var h: float = YUI_H * one.height
-	var w := h * (0.45 if h > 150.0 else 1.5)
+	var w := h * (0.3 if h > 150.0 else 1.5)
 	var body := Panel.new()
-	var box := _box(Color(one.color), int(w / 2.6), 0, 0, Color(INK, 0.35), 3)
+	var box := _box(Color(Color(one.color), 0.82), int(w / 2.2), 0, 0, Color(INK, 0.35), 3)
 	body.add_theme_stylebox_override(&"panel", box)
 	body.size = Vector2(w, h)
 	body.position = Vector2(one.x / 100.0 * WORLD - w / 2.0, FEET - h + 6)
@@ -564,5 +565,77 @@ func _line(words: String, size: int, color: Color) -> Label:
 	return one
 
 
+# ── 시연: 손대지 않고 끝까지 돌며 화면을 찍는다(godot/shots/c*.png) ──
+
+var shots := 0
+
+
 func _demo() -> void:
-	pass
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://shots"))
+	await _shot("first", 0.8)
+	await _go("cat")
+	await _shot("cat-1", 0.6)
+	await _go("cat")
+	await _shot("cat-2", 0.6)
+	await _go("door")
+	await _shot("door-shaky", 0.6)
+	await _through("door-note")
+	press(Vector2(0.5 * WORLD, 500))        # 걷는 중에 다른 데를 누른다
+	await get_tree().create_timer(0.6).timeout
+	await _go("clerk")
+	await _shot("clerk", 0.4)
+	await _through("clerk-card-hint")
+	pick("card")
+	await _shot("card-held", 0.3)
+	press(Vector2(0.4 * WORLD, 500))        # 들고 빈 데를 누르면 내려놓고 걷는다
+	await _shot("card-dropped", 1.2)
+	pick("card")
+	await _go("clerk")
+	await _through("bought")
+	pick("drinks")
+	await _go("cat")
+	await _shot("drinks-to-cat", 0.6)
+	await _go("rider")
+	await _through("rider")
+	await _go("board")
+	await _through("board-ask")
+	choose(0)
+	await _through("board-wrong")
+	await _go("board")
+	await _through("board-ask-again")
+	choose(1)
+	await _through("door-open")
+	pick("drinks")
+	await _shot("drinks-held-open", 0.3)
+	press(marks["singer"].get_center())
+	await _through("end")
+	print("click demo: place=", place, " flags=", state.flags, " bag=", state.bag)
+	get_tree().quit()
+
+
+# 그 앞까지 걸어가 닿을 때까지 기다린다.
+func _go(id: String) -> void:
+	press(marks[id].get_center())
+	while arriving != "":
+		await get_tree().process_frame
+	await get_tree().create_timer(0.1).timeout
+
+
+# "다음"이 있는 동안 넘기며 찍는다. 고를 말이 뜨거나 말이 끝나면 멈춘다.
+func _through(name_: String) -> void:
+	var i := 0
+	while true:
+		await _shot("%s-%d" % [name_, i], 0.5)
+		var next := column.get_children().filter(func(c: Node) -> bool:
+			return c is Button and not c.is_queued_for_deletion() and c.text == "다음")
+		if next.is_empty():
+			return
+		(next[0] as Button).pressed.emit()
+		i += 1
+
+
+func _shot(name_: String, wait: float) -> void:
+	await get_tree().create_timer(wait).timeout
+	await RenderingServer.frame_post_draw
+	shots += 1
+	get_viewport().get_texture().get_image().save_png("res://shots/c%02d-%s.png" % [shots, name_])

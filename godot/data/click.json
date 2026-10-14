@@ -15,13 +15,13 @@
       { "id": "door", "x": 77.3, "y": 38, "w": 5, "h": 34 }
     ],
     "open": [
-      { "id": "singer", "x": 35, "y": 10, "w": 30, "h": 85 }
+      { "id": "singer", "x": 30, "y": 50, "w": 40, "h": 42, "label": "문이 열렸다. 서윤" }
     ]
   },
   "people": {
-    "clerk": { "place": "alley", "x": 26, "height": 0.9, "color": "#7fbf8e" },
-    "rider": { "place": "alley", "x": 69, "height": 0.95, "color": "#d9774f" },
-    "cat": { "place": "alley", "x": 75.5, "height": 0.3, "color": "#c9a27a" }
+    "clerk": { "place": "alley", "x": 26, "height": 0.85, "color": "#7fbf8e" },
+    "rider": { "place": "alley", "x": 63, "height": 0.9, "color": "#d9774f" },
+    "cat": { "place": "alley", "x": 85.5, "height": 0.22, "color": "#c9a27a" }
   },
   "who": {
     "y": { "name": "", "color": "#ffffff" },
