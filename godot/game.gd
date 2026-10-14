@@ -145,6 +145,7 @@ func _ready() -> void:
 
 func t(key: String, values := {}) -> String:
 	var line: String = text[lang].get(key, key)
+	line = line.replace(" · ", " - ")     # 개구 글꼴에 가운뎃점이 없어 네모로 나온다
 	for name: String in values:
 		line = line.replace("{%s}" % name, str(values[name]))
 	return line
@@ -902,7 +903,6 @@ func _answer(n: int, korean_way: bool) -> void:
 func _talk(key: String, values := {}, who := "y", warn := false) -> void:
 	talk_row = _talk_row(t(key, values), who, warn)
 	column.add_child(talk_row)
-	column.move_child(talk_row, 0)
 
 
 func _talk_row(words: String, who: String, warn: bool) -> HBoxContainer:
