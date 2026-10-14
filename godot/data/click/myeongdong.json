@@ -3,7 +3,7 @@
   "start": { "flags": [], "bag": ["card", "photo", "bill"] },
   "items": {
     "card": { "name": "교통카드", "color": "#4f86c6" },
-    "photo": { "name": "2004년 사진", "color": "#c9a46a" },
+    "photo": { "name": "2004년 사진", "color": "#c9a46a", "art": "photo-2004" },
     "bill": { "name": "만 원", "color": "#7fae7a" },
     "coins": { "name": "천 원 다발", "color": "#9ab7d6" },
     "bread": { "name": "계란빵", "color": "#e2a93b" },
@@ -106,12 +106,14 @@
     ] },
     { "on": "tap", "target": "ajumma", "need": ["queueFree"], "not": ["hint"], "do": [
       ["say", "ajumma", "이제 좀 보자. 무슨 사진이야?"],
+      ["show", "photo-2004"],
       ["say", "y", "할머니가 2004년에 서울에서 찍은 사진이에요. 이 가게를 찾고 있어요."],
       ["say", "ajumma", "그때도 일본 손님이 꽤 왔지. 노란 주전자 간판... 명동엔 이런 가게 없었어."],
       ["say", "ajumma", "사진 뒤에 탑이 보이네. 여기서는 탑이 어디 보이는지 봐 봐."],
       ["set", "hint"]
     ] },
     { "on": "give", "target": "ajumma", "item": "photo", "need": ["queueFree"], "not": ["hint"], "do": [
+      ["show", "photo-2004"],
       ["say", "ajumma", "이제 좀 보자. 노란 주전자 간판... 명동엔 이런 가게 없었어. 그때도 일본 손님이 꽤 왔지."],
       ["say", "ajumma", "사진 뒤에 탑이 보이네. 여기서는 탑이 어디 보이는지 봐 봐."],
       ["set", "hint"]
@@ -144,6 +146,7 @@
     ] },
     { "on": "give", "target": "tower", "item": "photo", "need": ["hint"], "not": ["got:clue"], "do": [
       ["say", "y", "(사진을 들어 탑에 맞춰 본다.)"],
+      ["show", "photo-2004"],
       ["say", "y", "여기선 탑이 왼쪽이야. 사진에선 오른쪽. 찍은 곳은 더 북쪽이야."],
       ["say", "y", "그래서 할머니가 \"여기도 아니었다\"고 적었구나."],
       ["set", "got:clue"]

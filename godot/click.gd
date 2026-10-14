@@ -406,6 +406,15 @@ func _next() -> void:
 				busy = false
 			else:
 				_button("다음", _next)
+		"show":      # 그림 한 장을 말 칸에 크게 띄운다(2004년 사진 같은 것). "다음"으로 넘긴다
+			_clear_column()
+			var picture := TextureRect.new()
+			picture.texture = load("res://art/%s.webp" % one[1])
+			picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			picture.custom_minimum_size = Vector2(VIEW - 48, 300)
+			column.add_child(picture)
+			_button("다음", _next)
 		"ask":
 			for row in column.get_children():
 				if row is Button:
@@ -464,7 +473,12 @@ func _draw_bag() -> void:
 			slot.add_theme_stylebox_override(look, box)
 		if item != "":
 			var info: Dictionary = data.items[item]
-			slot.icon = _dot(Color(info.color), 40)
+			var art := "res://art/%s.webp" % info.get("art", "")
+			if info.has("art") and ResourceLoader.exists(art):
+				slot.icon = load(art)
+				slot.expand_icon = true
+			else:
+				slot.icon = _dot(Color(info.color), 40)
 			slot.text = info.name
 			slot.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			slot.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP

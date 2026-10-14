@@ -7,7 +7,7 @@ const DIR := "res://data/click/"
 # 쪽마다의 길 시험. 쪽에 매이지 않는 시험은 모든 쪽에 돈다.
 const OWN := {
 	"alley": ["test_alley_paths", "test_alley_repeat", "test_alley_buy_first", "test_alley_must_reply", "test_alley_every_pair"],
-	"myeongdong": ["test_md_paths", "test_md_photo_before_hint", "test_md_repeat", "test_md_reply_lines", "test_md_bag_fits"],
+	"myeongdong": ["test_md_paths", "test_md_photo_before_hint", "test_md_repeat", "test_md_reply_lines", "test_md_bag_fits", "test_md_photo_seen"],
 }
 const SHARED := ["test_wrong_pairs", "test_everyone_speaks", "test_targets_exist", "test_font_has_glyphs"]
 
@@ -57,7 +57,7 @@ func check(ok: bool, what: String) -> void:
 # 놀이 한 판. moves 는 ["tap", 대상] 이나 ["give", 물건, 대상]. picks 는 고를 말이 뜰 때마다 고를 차례.
 func play(story: Dictionary, moves: Array, picks: Array) -> Dictionary:
 	var game := { "state": { "flags": [] as Array[String], "bag": [] as Array[String] }, "place": story.first,
-		"said": [], "ended": false, "stuck": "" }
+		"said": [], "shown": [], "ended": false, "stuck": "" }
 	game.state.flags.assign(story.start.flags)
 	game.state.bag.assign(story.start.bag)
 	var queue := picks.duplicate()
@@ -93,6 +93,8 @@ func _obey(story: Dictionary, game: Dictionary, out: Array, queue: Array) -> voi
 		match one[0]:
 			"say":
 				game.said.append(one)
+			"show":
+				game.shown.append(one[1])
 			"ask":
 				var pick: int = queue.pop_front()
 				_obey(story, game, Rules.run(one[1][pick][1], game.state), queue)
@@ -267,3 +269,11 @@ func test_md_bag_fits() -> void:
 	var slots: int = load("res://click.gd").get_script_constant_map().SLOTS
 	var g := play(data, [["tap", "exit6"]] + MD_STREET, [0])
 	check(g.state.bag.size() <= slots, "bag holds %d, slots %d" % [g.state.bag.size(), slots])
+
+
+# 단서가 "사진에선 탑이 오른쪽"이니, 놀이하는 이가 사진을 직접 본다.
+func test_md_photo_seen() -> void:
+	var photo: Dictionary = data.items.photo
+	check(photo.has("art") and ResourceLoader.exists("res://art/%s.webp" % photo.art), "the photo item has a picture")
+	var g := play(data, [["tap", "exit6"]] + MD_STREET.slice(0, 5), [])
+	check(g.shown.has("photo-2004"), "the photo is shown big before the clue: %s" % [g.shown])
