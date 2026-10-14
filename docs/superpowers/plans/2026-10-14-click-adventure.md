@@ -19,7 +19,7 @@
 - 밝고 따뜻하게. 어둑한 빛을 쓰지 않는다. 인물을 야하게 그리지 않는다. 실제 가게와 상표의 이름을 쓰지 않는다.
 - 엇나간 건네기에는 벌이 없다. 우스운 대꾸만 나온다.
 - 확인이 안 된 사실은 말에서 빼거나 "가게마다 다르긴 해"처럼 누그러뜨린다.
-- Godot: `C:/Users/eofeo/Downloads/Godot_v4.7.2-stable_win64/Godot_v4.7.2-stable_win64_console.exe` (아래에서 `$GODOT`)
+- Godot: 사용자의 내려받기 폴더에 있는 `Godot_v4.7.2-stable_win64_console.exe` (아래에서 `$GODOT`)
 - 커밋 작성자 주소는 `13573570+destory1984@users.noreply.github.com`. 깃허브에 올리는 것은 이 계획에 없다.
 - 문서에 틸드를 쓰지 않는다. 범위는 → 로 적는다.
 
