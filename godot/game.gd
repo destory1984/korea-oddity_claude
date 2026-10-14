@@ -42,11 +42,13 @@ const WHO := {
 	"y": { "face": "", "name": "", "color": Color.WHITE },
 	"f": { "face": "singer-f-face", "name": "nameF", "color": Color("f7e4e8") },
 	"m": { "face": "singer-m-face", "name": "nameM", "color": Color("fbf0cc") },
+	"b": { "face": "singer-b-face", "name": "nameB", "color": Color("e3ecf7") },
+	"d": { "face": "singer-d-face", "name": "nameD", "color": Color("ececec") },
 }
 # 떡볶이 자리에서 배우는 것 셋: [묻는 말, 일본 버릇대로, 한국에서 하는 대로, 일러 주는 사람, 틀렸을 때, 맞았을 때]
 const TABLE := [
 	["hdQ1", "hdQ1a", "hdQ1b", "m", "hdQ1no", "hdQ1ok"],
-	["hdQ2", "hdQ2a", "hdQ2b", "f", "hdQ2no", "hdQ2ok"],
+	["hdQ2", "hdQ2a", "hdQ2b", "b", "hdQ2no", "hdQ2ok"],
 	["hdQ3", "hdQ3a", "hdQ3b", "m", "hdQ3no", "hdQ3ok"],
 ]
 
@@ -197,7 +199,7 @@ func _build_stage() -> void:
 	yui.position = Vector2(150, FEET)
 	stage.add_child(yui)
 	faces["y"] = _cut(load("res://art/yui-stand.png"), Rect2(0, 0, 122, 112))     # 선 모습(122 × 328)의 머리
-	for who: String in ["f", "m"]:
+	for who: String in ["f", "m", "b", "d"]:
 		faces[who] = load("res://art/%s.png" % WHO[who].face)
 
 
@@ -310,12 +312,12 @@ func _show() -> void:
 				_walk("hdStudio", "hdStudioTitle")
 				_stand("f", 46.5)
 				_stand("m", 57.0)
-				_stand("b", 68.0, false)     # 베이스 하린과 드럼 지호. 아직 말이 없다
-				_stand("d", 78.5, false)
+				_stand("b", 68.0)
+				_stand("d", 78.5)
 				if met:
 					_talk("hdHaveGuitar" if has_guitar else "hdStudioYui")
 				else:
-					_lines([["f", "hdS1"], ["y", "hdS2"], ["m", "hdS3"], ["y", "hdS4"]], _greeted)
+					_lines([["f", "hdS1"], ["y", "hdS2"], ["m", "hdS3"], ["b", "hdSB"], ["d", "hdSD"], ["b", "hdSD2"], ["y", "hdS4"]], _greeted)
 			"hdJam":
 				_still("hd-jam", "hdJamTitle")
 				_talk("hdJamYui")
@@ -327,10 +329,12 @@ func _show() -> void:
 				_walk("hdEvening", "hdEveningTitle")
 				_stand("f", 33.0, false)
 				_stand("m", 38.5, false)
+				_stand("b", 44.0, false)
+				_stand("d", 20.5, false)
 				_talk("hdEveYui")
 			"hdShow":
 				_still("hd-show", "hdShowTitle")
-				_lines([["y", "hdShow1"], ["y", "hdShow2", true], ["y", "hdShow3"], ["m", "hdShow4"], ["f", "hdPhoto"]], _photo)
+				_lines([["y", "hdShow1"], ["y", "hdShow2", true], ["y", "hdShow3"], ["m", "hdShow4"], ["d", "hdShowD"], ["f", "hdPhoto"]], _photo)
 			"hdEat":
 				_still("hd-eat", "hdEatTitle")
 				_talk("hdEatYui")
@@ -342,7 +346,9 @@ func _show() -> void:
 				_walk("hdEvening", "hdEveningTitle")
 				_stand("f", 33.0, false)
 				_stand("m", 38.5, false)
-				_lines([["f", "hdBye"], ["y", "hdSigned", false, { "f": t("nameF"), "m": t("nameM") }]], _sign_and_next)
+				_stand("b", 44.0, false)
+				_stand("d", 20.5, false)
+				_lines([["f", "hdBye"], ["y", "hdSigned", false, { "f": t("nameF"), "m": t("nameM"), "b": t("nameB"), "d": t("nameD") }]], _sign_and_next)
 			"hdDone":
 				_no_stage("hdPlace")
 				var reply := [["replyHead", t("hdReply1")], ["", t("hdReply2")], ["", t("hdReply3")]]
@@ -681,6 +687,10 @@ func _act(id: String) -> void:
 		_chain([["f", "hdAskF"], ["y", "hdAnsF"]])
 	elif step == "hdStudio" and id == "singer_m":
 		_say("hdBlush", true)
+	elif step == "hdStudio" and id == "singer_b":
+		_chain([["b", "hdAskB"], ["y", "hdAnsB"]])
+	elif step == "hdStudio" and id == "singer_d":
+		_chain([["d", "hdAskD"], ["b", "hdAskD2"]])
 	elif step == "hdStudio" and id == "mics":
 		if has_guitar:
 			_next()
@@ -867,7 +877,7 @@ func _end_jam() -> void:
 		_button("hdToEvening", _next)
 		_foot()
 	else:
-		_say("hdJamFail", false, "f")
+		_say("hdJamFail", false, "b")
 		_after(2.4, _start_jam)
 
 
@@ -1069,6 +1079,10 @@ func _demo() -> void:
 	await _shot("g12-studio-yui", 0.6)
 	_tap()
 	_tap()
+	_tap()
+	_tap()
+	await _shot("g12b-studio-harin", 0.6)
+	_tap()
 	await _shot("g13-studio-thought", 0.6)
 	_tap()
 	await _shot("g14-studio", 0.8)
@@ -1102,6 +1116,8 @@ func _demo() -> void:
 	await _shot("g22-show-wrong", 0.6)
 	_tap()
 	_tap()
+	_tap()
+	await _shot("g22b-show-jiho", 0.6)
 	_tap()
 	await _shot("g23-photo-ask", 0.6)
 	_tap()
