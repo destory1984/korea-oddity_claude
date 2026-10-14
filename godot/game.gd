@@ -180,22 +180,23 @@ func _build_stage() -> void:
 	stage.add_child(rings)
 
 	var sheet: Texture2D = load("res://art/yui-walk.png")
+	var cell := Vector2(sheet.get_width() / 4.0, sheet.get_height())     # 걷는 네 컷이 가로로 나란하다
 	var frames := SpriteFrames.new()
 	frames.remove_animation(&"default")
 	frames.add_animation(&"stand")
-	frames.add_frame(&"stand", _cut(sheet, Rect2(137, 0, 137, 260)))
+	frames.add_frame(&"stand", _cut(sheet, Rect2(Vector2(cell.x, 0), cell)))
 	frames.add_animation(&"walk")
 	frames.set_animation_speed(&"walk", 7.7)
 	for i in 4:
-		frames.add_frame(&"walk", _cut(sheet, Rect2(137 * i, 0, 137, 260)))
+		frames.add_frame(&"walk", _cut(sheet, Rect2(Vector2(cell.x * i, 0), cell)))
 	yui = AnimatedSprite2D.new()
 	yui.sprite_frames = frames
 	yui.animation = &"stand"
 	yui.scale = Vector2(1.2, 1.2)      # 웹의 것과 같다: 틀 높이의 43.5%
-	yui.offset = Vector2(0, -130)
+	yui.offset = Vector2(0, -cell.y / 2.0)
 	yui.position = Vector2(150, FEET)
 	stage.add_child(yui)
-	faces["y"] = _cut(load("res://art/yui-stand.png"), Rect2(0, 0, 146, 150))
+	faces["y"] = _cut(load("res://art/yui-stand.png"), Rect2(0, 0, 122, 112))     # 선 모습(122 × 328)의 머리
 	for who: String in ["f", "m"]:
 		faces[who] = load("res://art/%s.png" % WHO[who].face)
 
