@@ -12,7 +12,8 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 [display]
 
 window/size/viewport_width=720
-window/size/viewport_height=1480
+; 기준 높이를 낮게 잡는다. 손전화의 보이는 칸이 이보다 길면 아래로 늘고, 짧으면 양옆이 빈다(keep_width). 카카오톡 안의 브라우저에서 1480으로 두었더니 양옆이 비었다(2026.10.14).
+window/size/viewport_height=1040
 window/size/window_width_override=414
 window/size/window_height_override=851
 window/stretch/mode="canvas_items"
